@@ -1,8 +1,8 @@
 <template>
-  <div>Login</div>
+  <v-app>Login</v-app>
 </template>
 
 
 <script>
-export default { name: "" };
+export default { name: "Login" };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <v-app class="container">
     <div class="sidenav">
       <div class="login-main-text">
         <h2>
@@ -11,7 +11,7 @@
     </div>
     <button @click="$router.push('/register')">register</button>
     <button @click="$router.push('/login')">login</button>
-  </div>
+  </v-app>
 </template>
 
 

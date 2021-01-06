@@ -14,10 +14,9 @@ class Student(models.Model):
     userid = models.IntegerField(primary_key=True, serialize=False,
                                  verbose_name='Userid', null=False)
     year = models.CharField(max_length=6, choices=YEAR_CHOICES, default='1')
-    password = models.CharField(max_length=140)
     name = models.CharField(max_length=140, unique=True)
     surname = models.CharField(max_length=140)
-    idcard = models.CharField(max_length=14)
+    idcard = models.CharField(max_length=13)
     commencementday = models.DateField(
         null=True, auto_now=False, auto_now_add=False)
     email = models.EmailField(max_length=140)
