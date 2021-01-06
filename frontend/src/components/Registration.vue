@@ -149,6 +149,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: "Registration",
   data() {
@@ -170,19 +172,17 @@ export default {
       }
     },
     async getStudents() {
-      var response = await fetch("http://localhost:8000/api/students/");
-      this.students = await response.json();
+      let students = await axios.get("api/students/").then((r)=>r.data);
+      console.log(students)
+      this.students = students
     },
     async createStudent() {
       await this.getStudents();
 
-      await fetch("http://localhost:8000/api/students/", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(this.student),
-      });
+      //let name = 'john';
+      //let formatString = `student name : ${name}`
+
+      await axios.post("api/students/", this.student);
       alert("Registration Completed success");
       await this.getStudents();
       this.student = {};
@@ -190,16 +190,8 @@ export default {
     async editStudent() {
       await this.getStudents();
 
-      await fetch(
-        `http://localhost:8000/api/students/${this.student.userid}/`,
-        {
-          method: "save",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(this.student),
-        }
-      );
+      await axios.post(
+        `api/students/${this.student.userid}/`, this.student);
 
       await this.getStudents();
       this.student = {};
@@ -207,13 +199,7 @@ export default {
     async deleteStudent(student) {
       await this.getStudents();
 
-      await fetch(`http://localhost:8000/api/students/${student.userid}/`, {
-        method: "delete",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(this.student),
-      });
+      await axios.delete(`http://localhost:8000/api/students/${student.userid}/`, this.student);
 
       await this.getStudents();
       this.student = {};
