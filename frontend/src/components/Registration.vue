@@ -17,10 +17,10 @@
         <tbody>
           <tr
             v-for="student in students"
-            :key="student.userid"
+            :key="student.studentcode"
             @dblclick="$data.student = student"
           >
-            <td>{{ student.userid }}</td>
+            <td>{{ student.studentcode }}</td>
             <td>{{ student.year }}</td>
             <td>{{ student.name }}</td>
             <td>{{ student.surname }}</td>
@@ -40,14 +40,13 @@
         </tbody>
       </template>
     </v-simple-table>
-
     <validation-observer
       class="container d-flex card"
       ref="observer"
       v-slot="{ invalid }"
     >
-      <h2 style="text-align: center">กรอกข้อมูล</h2>
-      <v-form @submit.prevent="submitForm">
+      <h2 style="text-align: center">บันทึกข้อมูล</h2>
+      <v-form>
         <v-container>
           <validation-provider
             v-slot="{ errors }"
@@ -64,7 +63,7 @@
               </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.userid"
+                  v-model="student.studentcode"
                   outlined
                   dense
                   :error-messages="errors"
@@ -212,7 +211,7 @@
             </v-row>
           </validation-provider>
         </v-container>
-        <v-btn type="submit" :disabled="invalid" class="btn btn-success"
+        <v-btn @click="submitForm" :disabled="invalid" class="btn btn-success"
           >บันทึก</v-btn
         >
       </v-form>
@@ -285,8 +284,6 @@ export default {
     },
 
     async createStudent() {
-      //await this.getStudents();
-
       await axios
         .post("api/students/", this.student)
         .then(alert("บันทึกข้อมูลเรียบร้อยแล้ว"));
@@ -295,10 +292,8 @@ export default {
       this.student = {};
     },
     async deleteStudent(student) {
-      //await this.getStudents();
-
       await axios.delete(
-        `http://localhost:8000/api/students/${student.userid}/`,
+        `http://localhost:8000/api/students/${student.studentcode}/`,
         this.student
       );
 

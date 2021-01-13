@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Register from "../views/Register.vue";
+import RatingSkills from "../views/Skills.vue";
 
 Vue.use(VueRouter);
 
@@ -26,9 +27,10 @@ export default new VueRouter({
       name: "Register",
       component: Register,
     },
+    {
+      path: "/ratingskills",
+      name: "RatingSkills",
+      component: RatingSkills,
+    },
   ],
-  /*     path: '/about',
-            name: 'About',
-            component: () =>
-                import (  webpackChunkName: "about"  '../views/About.vue')  */
 });
