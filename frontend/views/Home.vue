@@ -10,7 +10,7 @@
       </div>
     </div>
     <button @click="$router.push('/register')">register</button>
-    <button @click="$router.push('/login')">login</button>
+    <button @click="$router.push('/generatepdf')">Generatepdf</button>
     <button @click="$router.push('/ratingskills')">Skill</button>
   </v-app>
 </template>
@@ -20,11 +20,10 @@
 <script>
 export default {
   name: "Home",
-  components: {},
 };
 </script>
 
-<style>
+<style >
 body {
   font-family: "Lato", sans-serif;
 }

@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+<<<<<<< HEAD
     <v-simple-table dark dense class="text-center">
       <template v-slot:default>
         <thead>
@@ -40,6 +41,8 @@
         </tbody>
       </template>
     </v-simple-table>
+=======
+>>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
     <validation-observer
       class="container d-flex card"
       ref="observer"
@@ -253,7 +256,11 @@ extend("regex", {
 
 extend("email", {
   ...email,
+<<<<<<< HEAD
   message: "Email must be valid",
+=======
+  message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง",
+>>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
 });
 
 export default {
@@ -288,8 +295,12 @@ export default {
         .post("api/students/", this.student)
         .then(alert("บันทึกข้อมูลเรียบร้อยแล้ว"));
 
+<<<<<<< HEAD
       await this.getStudents();
       this.student = {};
+=======
+      this.$router.push({ name: "RatingSkills" });
+>>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
     },
     async deleteStudent(student) {
       await axios.delete(
