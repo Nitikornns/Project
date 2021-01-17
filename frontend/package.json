@@ -17,10 +17,7 @@
     "package.json": "^2.0.1",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
-<<<<<<< HEAD
-=======
     "vue-html2pdf": "^1.8.0",
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
     "vue-router": "^3.4.9",
     "vue-select": "^3.11.2",
     "vuetify": "^2.4.1"

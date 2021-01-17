@@ -33,10 +33,8 @@
 
     <v-container>
       <v-form>
-<<<<<<< HEAD
-=======
         <v-text-field v-model="skill.studentname"></v-text-field>
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
+
         <v-selects
           v-model="skill.languagename"
           :options="lanname"
@@ -52,12 +50,8 @@
           small
         ></v-rating>
 
-<<<<<<< HEAD
-        <v-btn @click="createskills">บันทึก</v-btn>
-=======
         <v-btn @click="createskills" class="buttonleft">บันทึก</v-btn>
         <v-btn @click="gotogeneratepdf" class="buttonright">ถัดไป</v-btn>
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
       </v-form>
     </v-container>
   </v-app>
@@ -104,24 +98,18 @@ export default {
       await this.getskill();
       this.skill = {};
     },
-<<<<<<< HEAD
-=======
     gotogeneratepdf() {
       this.$router.push({ name: "Generatepdf" });
     },
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
   },
 };
 </script>
 
 <style scoped>
-<<<<<<< HEAD
-=======
 .buttonleft {
   float: left;
 }
 .buttonright {
   float: right;
 }
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
 </style>

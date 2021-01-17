@@ -1,48 +1,5 @@
 <template>
   <v-app id="app">
-<<<<<<< HEAD
-    <v-simple-table dark dense class="text-center">
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th>รหัสนิสิต</th>
-            <th>ชั้นปี</th>
-            <th>ชื่อ</th>
-            <th>นามสกุล</th>
-            <th>เลขบัตรประชาชน</th>
-            <th>วันจบการศึกษา</th>
-            <th>อีเมล</th>
-            <th>เบอร์โทรศัพท์</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="student in students"
-            :key="student.studentcode"
-            @dblclick="$data.student = student"
-          >
-            <td>{{ student.studentcode }}</td>
-            <td>{{ student.year }}</td>
-            <td>{{ student.name }}</td>
-            <td>{{ student.surname }}</td>
-            <td>{{ student.idcard }}</td>
-            <td>{{ student.commencementday }}</td>
-            <td>{{ student.email }}</td>
-            <td>{{ student.telphoneNumber }}</td>
-            <td>
-              <v-btn
-                class="btn btn-outline-danger btn-sm mx-1"
-                @click="deleteStudent(student)"
-              >
-                X
-              </v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </template>
-    </v-simple-table>
-=======
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
     <validation-observer
       class="container d-flex card"
       ref="observer"
@@ -256,11 +213,7 @@ extend("regex", {
 
 extend("email", {
   ...email,
-<<<<<<< HEAD
-  message: "Email must be valid",
-=======
   message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง",
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
 });
 
 export default {
@@ -295,12 +248,7 @@ export default {
         .post("api/students/", this.student)
         .then(alert("บันทึกข้อมูลเรียบร้อยแล้ว"));
 
-<<<<<<< HEAD
-      await this.getStudents();
-      this.student = {};
-=======
       this.$router.push({ name: "RatingSkills" });
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
     },
     async deleteStudent(student) {
       await axios.delete(

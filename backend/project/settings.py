@@ -41,11 +41,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'students',
     'rating',
-<<<<<<< HEAD
-
-
-=======
->>>>>>> caecf8424281ca9f9be6f3e80b06a37a7c2dc5a8
 ]
 
 MIDDLEWARE = [
