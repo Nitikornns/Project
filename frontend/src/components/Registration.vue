@@ -239,7 +239,6 @@ export default {
     },
     async getStudents() {
       let students = await axios.get("api/students/").then((r) => r.data);
-      console.log(students);
       this.students = students;
     },
 

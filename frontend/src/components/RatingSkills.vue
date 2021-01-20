@@ -80,13 +80,11 @@ export default {
     },
     async getskill() {
       let skills = await axios.get("api/skills/").then((r) => r.data);
-      console.log(skills);
       this.skills = skills;
     },
     async createskills() {
       await axios
         .post("api/skills/", this.skill)
-        .then(console.log(this.skill))
         .catch(alert("กรุณาเข้าสู่ระบบ"));
 
       await this.getskill();

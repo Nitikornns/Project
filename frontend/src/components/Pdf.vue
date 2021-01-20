@@ -117,12 +117,10 @@ export default {
     },
     async getStudents() {
       let students = await axios.get("api/students/").then((r) => r.data);
-      console.log(students);
       this.students = students;
     },
     async getskill() {
       let skills = await axios.get("api/skills/").then((r) => r.data);
-      console.log(skills);
       this.skills = skills;
     },
   },
