@@ -1,8 +1,14 @@
 <template>
-  <v-app>Login</v-app>
+  <v-app >
+  <Logins></Logins>
+  </v-app>
 </template>
 
 
 <script>
-export default { name: "Login" };
+import Logins from "../src/components/Logins.vue"
+export default {
+  name: "Login",
+  components: { Logins }
+  }
 </script>

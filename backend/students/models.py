@@ -1,8 +1,6 @@
 from django.db import models
-# Create your models here.
-from django.db.models import Exists
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.conf import settings
 
 YEAR_CHOICES = (
     ("1", "1"),
@@ -30,9 +28,10 @@ class Student(models.Model):
     surname = models.CharField(max_length=140)
     idcard = models.CharField(max_length=13)
     commencementday = models.DateField(
-        null=True, auto_now=False, auto_now_add=False)
+        blank=True, null=True, auto_now=False, auto_now_add=False)
     email = models.EmailField(max_length=140)
     telphoneNumber = models.CharField(max_length=10)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -48,8 +47,14 @@ class Skill(models.Model):
         Student, related_name='skills', on_delete=models.CASCADE)
     languagename = models.CharField(
         max_length=140, choices=PROGRAMING_LANGUAGES)
-    score = models.IntegerField(default=0, validators=[
-        MaxValueValidator(5), MinValueValidator(0)])
+    score = models.DecimalField(default=0.0, validators=[
+        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20)
+    langscore = models.DecimalField(validators=[
+        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=0, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.langscore = round(int(self.score))
+        super(Skill, self).save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.languagename}"

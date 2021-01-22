@@ -12,4 +12,5 @@ class StudentSerializer(ModelSerializer):
 class SkillSerializer(ModelSerializer):
     class Meta:
         model = Skill
-        fields = ['skillid', 'studentname', 'languagename', 'score']
+        fields = ['skillid', 'languagename',
+                  'studentname', 'langscore']

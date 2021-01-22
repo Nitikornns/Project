@@ -4,6 +4,7 @@ import Home from "../views/Home.vue";
 import Register from "../views/Register.vue";
 import RatingSkills from "../views/RateSkills.vue";
 import Generatepdf from "../views/Generatepdf.vue";
+import Login from "../views/Login.vue"
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,11 @@ export default new VueRouter({
       path: "/ratingskills",
       name: "RatingSkills",
       component: RatingSkills,
+    },
+    {
+      path: "/login",
+      name: "Login",
+      component: Login,
     },
   ],
 });

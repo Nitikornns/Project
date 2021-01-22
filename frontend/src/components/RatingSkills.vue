@@ -1,4 +1,4 @@
-<template >
+<template>
   <v-app
     ><h2>ทักษะภาษาโปรแกรม</h2>
     <v-simple-table dark dense class="text-center">
@@ -16,7 +16,7 @@
             @dblclick="$data.skill = skill"
           >
             <td>{{ skill.languagename }}</td>
-            <td>{{ skill.score }}</td>
+            <td>{{ skill.langscore }}%</td>
 
             <td>
               <v-btn
@@ -42,13 +42,15 @@
           outlined
           required
         ></v-selects>
-
-        <v-rating
+        <br />
+        <v-progress-linear
           v-model="skill.score"
-          background-color="purple lighten-3"
-          color="purple"
-          small
-        ></v-rating>
+          background-color="#607D8B"
+          color="#E91E63"
+          height="25"
+        >
+          <strong>{{ Math.trunc(skill.score) }}%</strong>
+        </v-progress-linear>
 
         <v-btn @click="createskills" class="buttonleft">บันทึก</v-btn>
         <v-btn @click="gotogeneratepdf" class="buttonright">ถัดไป</v-btn>
@@ -56,7 +58,6 @@
     </v-container>
   </v-app>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -81,6 +82,7 @@ export default {
     async getskill() {
       let skills = await axios.get("api/skills/").then((r) => r.data);
       this.skills = skills;
+      this.skill = { score: 0 };
     },
     async createskills() {
       await axios
@@ -88,13 +90,13 @@ export default {
         .catch(alert("กรุณาเข้าสู่ระบบ"));
 
       await this.getskill();
-      this.skill = {};
+      this.skill = { score: 0 };
     },
     async deleteSkill(skill) {
       await axios.delete(`api/skills/${skill.skillid}/`, this.skill);
 
       await this.getskill();
-      this.skill = {};
+      this.skill = { score: 0 };
     },
     gotogeneratepdf() {
       this.$router.push({ name: "Generatepdf" });

@@ -12,6 +12,7 @@
     <button @click="$router.push('/register')">register</button>
     <button @click="$router.push('/generatepdf')">Generatepdf</button>
     <button @click="$router.push('/ratingskills')">Skill</button>
+    <button @click="$router.push('/login')">Login</button>
   </v-app>
 </template>
 
