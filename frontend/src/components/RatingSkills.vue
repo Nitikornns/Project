@@ -33,7 +33,10 @@
 
     <v-container>
       <v-form>
-        <v-text-field v-model="skill.studentname"></v-text-field>
+        <v-text-field
+          v-model="skill.studentname"
+          label="รหัสนิสิต"
+        ></v-text-field>
 
         <v-selects
           v-model="skill.languagename"
@@ -85,9 +88,7 @@ export default {
       this.skill = { score: 0 };
     },
     async createskills() {
-      await axios
-        .post("api/skills/", this.skill)
-        .catch(alert("กรุณาเข้าสู่ระบบ"));
+      await axios.post("api/skills/", this.skill);
 
       await this.getskill();
       this.skill = { score: 0 };

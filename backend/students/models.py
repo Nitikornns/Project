@@ -46,7 +46,7 @@ class Skill(models.Model):
     studentname = models.ForeignKey(
         Student, related_name='skills', on_delete=models.CASCADE)
     languagename = models.CharField(
-        max_length=140, choices=PROGRAMING_LANGUAGES)
+        max_length=140, choices=PROGRAMING_LANGUAGES, unique=True)
     score = models.DecimalField(default=0.0, validators=[
         MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20)
     langscore = models.DecimalField(validators=[
