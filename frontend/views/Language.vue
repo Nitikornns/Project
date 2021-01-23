@@ -1,13 +1,14 @@
 <template>
-  <v-app id="app"><Pdf></Pdf></v-app>
+  <v-app id="app">
+    <Listlanguages></Listlanguages>
+  </v-app>
 </template>
 
 <script>
-import Pdf from "../src/components/Pdf";
-
+import Listlanguages from "../src/components/Listlanguages";
 export default {
-  name: "Generatepdf",
-  components: { Pdf },
+  name: "Language",
+  components: { Listlanguages },
 };
 </script>
 

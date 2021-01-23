@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 
-from .models import Student, Skill
-from .serializers import StudentSerializer, SkillSerializer
+from .models import Student, Skill, Language
+from .serializers import StudentSerializer, SkillSerializer, LanguageSerializer
 
 
 class StudentsViewSet(ModelViewSet):
@@ -12,3 +12,8 @@ class StudentsViewSet(ModelViewSet):
 class SkillsViewSet(ModelViewSet):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+
+class LanguagesViewSet(ModelViewSet):
+    queryset = Language.objects.all()
+    serializer_class = LanguageSerializer

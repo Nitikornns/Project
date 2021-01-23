@@ -14,6 +14,8 @@
     "@vuejs-community/vue-filter-date-format": "^1.6.3",
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
+    "languages-js": "^2.3.3",
+    "languages-list": "^1.0.2",
     "package.json": "^2.0.1",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",

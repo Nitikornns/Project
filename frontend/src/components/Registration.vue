@@ -178,7 +178,6 @@
     </validation-observer>
   </v-app>
 </template>
-
 <script>
 import axios from "axios";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
@@ -243,20 +242,9 @@ export default {
     },
 
     async createStudent() {
-      await axios
-        .post("api/students/", this.student)
-        .then(alert("บันทึกข้อมูลเรียบร้อยแล้ว"));
+      await axios.post("api/students/", this.student);
 
       this.$router.push({ name: "RatingSkills" });
-    },
-    async deleteStudent(student) {
-      await axios.delete(
-        `http://localhost:8000/api/students/${student.studentcode}/`,
-        this.student
-      );
-
-      await this.getStudents();
-      this.student = {};
     },
   },
 };

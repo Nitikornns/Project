@@ -5,7 +5,7 @@
       ref="observer"
       v-slot="{ invalid }"
     >
-      <h2 style="text-align: center">ทักษะภาษาโปรแกรมมิ่ง</h2>
+      <h2 style="text-align: center">ทักษะภาษา</h2>
 
       <v-simple-table
         fixed-header
@@ -25,21 +25,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="skill in skills" :key="skill.skillid">
-              <td>{{ skill.name }}</td>
-              <td>{{ skill.sumscore }}%</td>
+            <tr v-for="language in languages" :key="language.languageid">
+              <td>{{ language.name }}</td>
+              <td>{{ language.sumscore }}%</td>
               <td>
                 <v-icon
                   small
                   class="mr-2"
-                  @click="$data.skill = skill"
+                  @click="$data.language = language"
                   @click.stop="dialogedit = true"
                 >
                   mdi-pencil
                 </v-icon>
                 <v-icon
                   small
-                  @click="$data.skill = skill"
+                  @click="$data.language = language"
                   @click.stop="dialogDelete = true"
                 >
                   mdi-delete
@@ -61,7 +61,7 @@
           }"
         >
           <v-text-field
-            v-model="skill.studentname"
+            v-model="language.studentname"
             label="รหัสนิสิต"
             outlined
             dense
@@ -69,17 +69,18 @@
           ></v-text-field>
         </validation-provider>
 
-        <v-selects v-model="skill.name" :options="lanname"> </v-selects>
+        <v-selects v-model="language.name" :options="itemlistlanguages">
+        </v-selects>
         <!-- <v-btn @click="maxbar" class="btn btn-success buttonright">เต็ม</v-btn-->
 
         <br /><v-progress-linear
-          v-model="skill.score"
+          v-model="language.score"
           background-color="#607D8B"
           color="#E91E63"
           height="30"
           class="rounded-pill"
         >
-          <strong>{{ Math.trunc(skill.score) }}%</strong>
+          <strong>{{ Math.trunc(language.score) }}%</strong>
         </v-progress-linear>
 
         <br /><v-btn
@@ -88,12 +89,12 @@
           class="btn btn-success buttonleft"
           >บันทึก</v-btn
         >
-        <v-btn @click="gotoLanguagepage" class="btn btn-success buttonright"
+        <v-btn @click="gotogeneratepdf" class="btn btn-success buttonright"
           >ถัดไป</v-btn
         >
 
-        <v-dialog v-model="dialogedit" max-width="800px">
-          <v-card height="400px">
+        <v-dialog v-model="dialogedit" max-width="1000px">
+          <v-card height="1000px">
             <v-card-title>
               <span class="headline">{{ formTitle }}</span>
             </v-card-title>
@@ -108,7 +109,7 @@
                     }"
                   >
                     <v-text-field
-                      v-model="skill.studentname"
+                      v-model="language.studentname"
                       label="รหัสนิสิต"
                       outlined
                       dense
@@ -117,18 +118,21 @@
                   </validation-provider>
                 </v-col>
                 <v-col cols="12" sm="6" md="12">
-                  <v-selects v-model="skill.name" :options="lanname">
+                  <v-selects
+                    v-model="language.name"
+                    :options="itemlistlanguages"
+                  >
                   </v-selects>
                 </v-col>
                 <v-col cols="12" sm="6" md="12">
                   <v-progress-linear
-                    v-model="skill.score"
+                    v-model="language.score"
                     background-color="#607D8B"
                     color="#E91E63"
                     height="30"
                     class="rounded-pill"
                   >
-                    <strong>{{ Math.trunc(skill.score) }}%</strong>
+                    <strong>{{ Math.trunc(language.score) }}%</strong>
                   </v-progress-linear>
                 </v-col>
               </v-container>
@@ -142,7 +146,7 @@
               <v-btn
                 class="btn btn-success buttonleft"
                 text
-                @click="save(skill)"
+                @click="save(language)"
               >
                 ยินยัน
               </v-btn>
@@ -164,7 +168,7 @@
               ><v-btn
                 class="btn btn-success buttonleft"
                 text
-                @click="deleteItemConfirm(skill)"
+                @click="deleteItemConfirm(language)"
                 >ยืนยัน</v-btn
               >
               <v-btn
@@ -181,7 +185,6 @@
     </validation-observer>
   </v-app>
 </template>
-
 <script>
 import axios from "axios";
 import "vue-select/dist/vue-select.css";
@@ -221,20 +224,72 @@ extend("email", {
 });
 
 export default {
-  name: "RatingSkills",
+  name: "Listlanguages",
   components: {
     ValidationProvider,
     ValidationObserver,
   },
   data() {
     return {
-      skill: {},
-      skills: [],
+      language: {},
+      languages: [],
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
-      deletedIndex: -1,
-      lanname: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
+      //itemlistlanguages: itemlistlanguages,
+      itemlistlanguages: [
+        "กัมพูชา",
+        "กาตาร์",
+        "เกาหลีใต้",
+        "เกาหลีเหนือ",
+        "คาซัคสถาน",
+        "คีร์กีซสถาน",
+        "คูเวต",
+        "จอร์เจีย",
+        "จอร์แดน",
+        "จีน",
+        "ซาอุดีอาระเบีย",
+        "ซีเรีย",
+        "ไซปรัส",
+        "ญี่ปุ่น",
+        "ติมอร์ตะวันออกติมอร์-เลสเต",
+        "ตุรกี",
+        "เติร์กเมนิสถาน",
+        "ไต้หวัน",
+        "ทาจิกิสถาน",
+        "ไทย",
+        "เนปาล",
+        "บรูไน",
+        "บังกลาเทศ",
+        "บาห์เรน",
+        "ปากีสถาน",
+        "ปาเลสไตน์",
+        "ฝรั่งเศษ",
+        "พม่าเมียนมา",
+        "ฟิลิปปินส์",
+        "ภูฏาน",
+        "มองโกเลีย",
+        "มัลดีฟส์",
+        "มาเลเซีย",
+        "เยเมน",
+        "ลาว",
+        "เลบานอน",
+        "เวียดนาม",
+        "ศรีลังกา",
+        "สหรัฐอาหรับเอมิเรตส์",
+        "สิงคโปร์",
+        "อัฟกานิสถาน",
+        "อาเซอร์ไบจาน",
+        "อาร์มีเนีย",
+        "อินเดีย",
+        "อินโดนีเซีย",
+        "อิรัก",
+        "อิสราเอล",
+        "อิหร่าน",
+        "อุซเบกิสถาน",
+        "โอมาน",
+        "อังกฤษ",
+      ],
     };
   },
   computed: {
@@ -243,67 +298,73 @@ export default {
     },
   },
   async created() {
-    await this.getskill();
+    await this.getLanguage();
   },
   methods: {
     submitForm() {
-      this.createskills();
+      this.createLanguage();
     },
-    async getskill() {
-      let skills = await axios.get("api/skills/").then((r) => r.data);
-      this.skills = skills;
-      this.skill = { score: 0 };
+    async getLanguage() {
+      let languages = await axios.get("api/languages/").then((r) => r.data);
+      this.languages = languages;
+      this.language = { score: 0 };
     },
-    async createskills() {
-      await axios.post("api/skills/", this.skill);
+    async createLanguage() {
+      await axios.post("api/languages/", this.language);
 
-      await this.getskill();
-      this.skill = { score: 0 };
+      await this.getLanguage();
+      this.language = { score: 0 };
     },
-    async editskills(skill) {
-      await axios.put(`api/skills/${skill.skillid}/`, this.skill);
+    async editlanguage(language) {
+      await axios.put(`api/languages/${language.languageid}/`, this.language);
 
-      await this.getskill();
+      await this.getLanguage();
       this.closeEdit();
-      this.skill = { score: 0 };
+      this.language = { score: 0 };
     },
-    async deleteSkill(skill) {
-      await axios.delete(`api/skills/${skill.skillid}/`, this.skill);
+    async deleteLanguage(language) {
+      await axios.delete(
+        `api/languages/${language.languageid}/`,
+        this.language
+      );
 
-      await this.getskill();
+      await this.getLanguage();
     },
-    gotoLanguagepage() {
-      this.$router.push({ name: "Language" });
+    gotogeneratepdf() {
+      this.$router.push({ name: "Generatepdf" });
     },
     async closeEdit() {
-      await this.getskill();
+      await this.getLanguage();
       this.dialogedit = false;
     },
-    async save(skill) {
+    async save(language) {
       if (this.editedIndex > -1) {
-        //Object.assign(this.skill[this.editedIndex], this.editedItem);
+        //Object.assign(this.language[this.editedIndex], this.editedItem);
       } else {
-        await axios.put(`api/skills/${skill.skillid}/`, this.skill);
+        await axios.put(`api/languages/${language.languageid}/`, this.language);
 
-        await this.getskill();
-        this.skill = { score: 0 };
+        await this.getLanguage();
+        this.language = { score: 0 };
       }
       this.closeEdit();
     },
     async closeDelete() {
-      await this.getskill();
+      await this.getLanguage();
       this.dialogDelete = false;
     },
-    async deleteItemConfirm(skill) {
-      await axios.delete(`api/skills/${skill.skillid}/`, this.skill);
+    async deleteItemConfirm(language) {
+      await axios.delete(
+        `api/languages/${language.languageid}/`,
+        this.language
+      );
 
-      this.getskill();
-      this.skill = {};
+      this.getLanguage();
+      this.language = {};
       this.closeDelete();
     },
     async maxbar() {
-      await this.getskill();
-      this.skill = { score: 100 };
+      await this.getLanguage();
+      this.language = { score: 100 };
     },
   },
 };

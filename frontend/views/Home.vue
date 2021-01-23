@@ -11,12 +11,11 @@
     </div>
     <button @click="$router.push('/register')">register</button>
     <button @click="$router.push('/generatepdf')">Generatepdf</button>
-    <button @click="$router.push('/ratingskills')">Skill</button>
+    <button @click="$router.push('/ratingskill')">Skill</button>
     <button @click="$router.push('/login')">Login</button>
+    <button @click="$router.push('/language')">Language</button>
   </v-app>
 </template>
-
-
 
 <script>
 export default {
@@ -24,7 +23,7 @@ export default {
 };
 </script>
 
-<style >
+<style>
 body {
   font-family: "Lato", sans-serif;
 }

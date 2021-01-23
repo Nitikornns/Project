@@ -89,14 +89,15 @@
                           ><i
                             class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
                           ></i
-                          >Programming Languages</b
+                          >ภาษาโปรแกรมมิ่ง</b
                         >
                       </p>
 
-                      <ul v-for="skill in skills" :key="skill.languagename">
+                      <ul v-for="skill in skills" :key="skill.name">
                         {{
-                          skill.languagename
+                          skill.name
                         }}
+
                         <div>
                           <v-progress-linear
                             class="w3-round-xlarge"
@@ -114,36 +115,36 @@
                         </div>
                       </ul>
                       <br />
-
-                      <p class="w3-large w3-text-theme">
+                      <p class="w3-mediam">
                         <b
                           ><i
-                            class="fa fa-globe fa-fw w3-margin-right w3-text-teal"
+                            class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
                           ></i
-                          >Languages</b
+                          >ภาษา</b
                         >
                       </p>
-                      <p>English</p>
-                      <div class="w3-light-grey w3-round-xlarge">
-                        <div
-                          class="w3-round-xlarge w3-teal"
-                          style="height:24px;width:100%"
-                        ></div>
-                      </div>
-                      <p>Spanish</p>
-                      <div class="w3-light-grey w3-round-xlarge">
-                        <div
-                          class="w3-round-xlarge w3-teal"
-                          style="height:24px;width:55%"
-                        ></div>
-                      </div>
-                      <p>German</p>
-                      <div class="w3-light-grey w3-round-xlarge">
-                        <div
-                          class="w3-round-xlarge w3-teal"
-                          style="height:24px;width:25%"
-                        ></div>
-                      </div>
+                      <ul v-for="language in languages" :key="language.name">
+                        {{
+                          language.name
+                        }}
+
+                        <div class="w3-light-grey w3-round-xlarge">
+                          <div>
+                            <v-progress-linear
+                              class="w3-round-xlarge"
+                              v-model="language.score"
+                              background-color="w3-light-grey"
+                              color="#009383"
+                              height="19"
+                              ><td style="text-align:center;font-size:12px">
+                                <strong
+                                  >{{ Math.trunc(language.score) }}%</strong
+                                >
+                              </td>
+                            </v-progress-linear>
+                          </div>
+                        </div>
+                      </ul>
                       <br />
                     </div>
                   </div>
@@ -157,9 +158,9 @@
                   <div class="w3-container w3-card w3-white w3-margin-bottom">
                     <h2 class="w3-text-grey w3-padding-16">
                       <i
-                        class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+                        class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"
                       ></i
-                      >Work Experience
+                      >Education
                     </h2>
                     <div class="w3-container">
                       <h5 class="w3-opacity">
@@ -171,40 +172,33 @@
                         <span class="w3-tag w3-teal w3-round">Current</span>
                       </h6>
                       <p>
-                        Lorem ipsum dolor sit amet. Praesentium magnam
-                        consectetur vel in deserunt aspernatur est reprehenderit
-                        sunt hic. Nulla tempora soluta ea et odio, unde
-                        doloremque repellendus iure, iste.
+                        Web Development! All I need to know in one place
                       </p>
                       <hr />
                     </div>
                     <div class="w3-container">
                       <h5 class="w3-opacity">
-                        <b>Web Developer / something.com</b>
+                        <b>London Business School</b>
                       </h5>
                       <h6 class="w3-text-teal">
                         <i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar
                         2012 - Dec 2014
                       </h6>
                       <p>
-                        Consectetur adipisicing elit. Praesentium magnam
-                        consectetur vel in deserunt aspernatur est reprehenderit
-                        sunt hic. Nulla tempora soluta ea et odio, unde
-                        doloremque repellendus iure, iste.
+                        Master Degree
                       </p>
                       <hr />
                     </div>
                     <div class="w3-container">
                       <h5 class="w3-opacity">
-                        <b>Graphic Designer / designsomething.com</b>
+                        <b>School of Coding</b>
                       </h5>
                       <h6 class="w3-text-teal">
                         <i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun
                         2010 - Mar 2012
                       </h6>
                       <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing
-                        elit.
+                        Bachelor Degree
                       </p>
                       <br />
                     </div>
@@ -215,7 +209,7 @@
                       <i
                         class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"
                       ></i
-                      >Education
+                      >work
                     </h2>
                     <div class="w3-container">
                       <h5 class="w3-opacity"><b>W3Schools.com</b></h5>
@@ -293,23 +287,30 @@ export default {
       students: [],
       skill: {},
       skills: [],
+      language: {},
+      languages: [],
     };
   },
   async created() {
-    await this.getStudents();
-    await this.getskill();
+    await this.getStudent();
+    await this.getSkill();
+    await this.getLanguage();
   },
   methods: {
     generateReport() {
       this.$refs.html2Pdf.generatePdf();
     },
-    async getStudents() {
+    async getStudent() {
       let students = await axios.get("api/students/").then((r) => r.data);
       this.students = students;
     },
-    async getskill() {
+    async getSkill() {
       let skills = await axios.get("api/skills/").then((r) => r.data);
       this.skills = skills;
+    },
+    async getLanguage() {
+      let languages = await axios.get("api/languages/").then((r) => r.data);
+      this.languages = languages;
     },
   },
 };
