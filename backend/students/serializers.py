@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Student, Skill, Language
+from .models import Student, Skill, Language, Education
 
 
 class StudentSerializer(ModelSerializer):
@@ -21,3 +21,10 @@ class LanguageSerializer(ModelSerializer):
         model = Language
         fields = ['languageid', 'studentname',
                   'name', 'score', 'sumscore']
+
+
+class EducationSerializer(ModelSerializer):
+    class Meta:
+        model = Education
+        fields = ['educationid', 'datestart',
+                  'dateend', 'studentname', 'schoolname', 'detail']

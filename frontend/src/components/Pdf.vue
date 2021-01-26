@@ -107,9 +107,7 @@
                             height="19"
                           >
                             <td style="text-align:center;font-size:12px">
-                              <strong
-                                >{{ Math.trunc(skill.score) + 1 - 1 }}%</strong
-                              >
+                              <strong>{{ Math.trunc(skill.score) }}%</strong>
                             </td>
                           </v-progress-linear>
                         </div>
@@ -160,47 +158,24 @@
                       <i
                         class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"
                       ></i
-                      >Education
+                      >การศึกษา
                     </h2>
-                    <div class="w3-container">
+                    <div
+                      class="w3-container"
+                      v-for="education in educations"
+                      :key="education.educationid"
+                    >
                       <h5 class="w3-opacity">
-                        <b>Front End Developer / w3schools.com</b>
+                        <b>{{ education.schoolname }}</b>
                       </h5>
                       <h6 class="w3-text-teal">
-                        <i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan
-                        2015 -
-                        <span class="w3-tag w3-teal w3-round">Current</span>
+                        <i class="fa fa-calendar fa-fw w3-margin-right"></i>
+                        {{ education.datestart }} - {{ education.dateend }}
                       </h6>
                       <p>
-                        Web Development! All I need to know in one place
+                        {{ education.detail }}
                       </p>
                       <hr />
-                    </div>
-                    <div class="w3-container">
-                      <h5 class="w3-opacity">
-                        <b>London Business School</b>
-                      </h5>
-                      <h6 class="w3-text-teal">
-                        <i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar
-                        2012 - Dec 2014
-                      </h6>
-                      <p>
-                        Master Degree
-                      </p>
-                      <hr />
-                    </div>
-                    <div class="w3-container">
-                      <h5 class="w3-opacity">
-                        <b>School of Coding</b>
-                      </h5>
-                      <h6 class="w3-text-teal">
-                        <i class="fa fa-calendar fa-fw w3-margin-right"></i>Jun
-                        2010 - Mar 2012
-                      </h6>
-                      <p>
-                        Bachelor Degree
-                      </p>
-                      <br />
                     </div>
                   </div>
 
@@ -289,12 +264,15 @@ export default {
       skills: [],
       language: {},
       languages: [],
+      education: {},
+      educations: [],
     };
   },
   async created() {
     await this.getStudent();
     await this.getSkill();
     await this.getLanguage();
+    await this.getEducation();
   },
   methods: {
     generateReport() {
@@ -311,6 +289,10 @@ export default {
     async getLanguage() {
       let languages = await axios.get("api/languages/").then((r) => r.data);
       this.languages = languages;
+    },
+    async getEducation() {
+      let educations = await axios.get("api/educations/").then((r) => r.data);
+      this.educations = educations;
     },
   },
 };

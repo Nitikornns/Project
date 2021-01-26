@@ -216,7 +216,7 @@ extend("email", {
 });
 
 export default {
-  name: "Registration",
+  name: "AddInfo",
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -241,10 +241,14 @@ export default {
       this.students = students;
     },
 
-    async createStudent() {
-      await axios.post("api/students/", this.student);
-
-      this.$router.push({ name: "RatingSkills" });
+    createStudent() {
+      try {
+        axios.post("api/students/", this.student);
+        this.$dialog.alert("บันทึกข้อมูลสำเร็จ!");
+        this.$router.push({ name: "Skill" });
+      } catch (error) {
+        console.log(error);
+      }
     },
   },
 };

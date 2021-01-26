@@ -14,14 +14,15 @@
     "@vuejs-community/vue-filter-date-format": "^1.6.3",
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
-    "languages-js": "^2.3.3",
-    "languages-list": "^1.0.2",
+    "moment": "^2.29.1",
     "package.json": "^2.0.1",
     "vee-validate": "^3.4.5",
     "vue": "^2.6.11",
     "vue-html2pdf": "^1.8.0",
     "vue-router": "^3.4.9",
     "vue-select": "^3.11.2",
+    "vue2-datepicker": "^3.8.2",
+    "vuejs-dialog": "^1.4.2",
     "vuetify": "^2.4.1"
   },
   "devDependencies": {

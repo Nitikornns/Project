@@ -141,3 +141,20 @@ class Language(models.Model):
 
     class Meta:
         ordering = ["name"]
+
+
+class Education(models.Model):
+    educationid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="EDUCATIONID")
+    datestart = models.DateField()
+    dateend = models.DateField()
+    studentname = models.ForeignKey(
+        Student, related_name="education", on_delete=models.CASCADE)
+    schoolname = models.CharField(max_length=140, verbose_name="School Name")
+    detail = models.CharField(max_length=1000, blank=True)
+
+    def __str__(self):
+        return f"{self.schoolname}"
+
+    class Meta:
+        ordering = ["schoolname"]

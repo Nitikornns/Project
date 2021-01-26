@@ -8,6 +8,7 @@ router = routers.DefaultRouter()
 router.register('students', StudentsViewSet)
 router.register('skills', SkillsViewSet)
 router.register('languages', LanguagesViewSet)
+router.register('educations', EducationsViewSet)
 
 
 urlpatterns = router.urls

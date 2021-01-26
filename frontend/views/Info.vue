@@ -1,15 +1,14 @@
 <template>
   <v-app id="app">
-    <RatingSkills></RatingSkills>
+    <AddInfo></AddInfo>
   </v-app>
 </template>
 
 <script>
-import RatingSkills from "../src/components/RatingSkills.vue";
-
+import AddInfo from "../src/components/AddInfo.vue";
 export default {
-  components: { RatingSkills },
-  name: "Skills",
+  name: "Info",
+  components: { AddInfo },
 };
 </script>
 

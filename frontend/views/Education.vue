@@ -1,23 +1,22 @@
 <template>
   <v-app id="app">
-    <Registration></Registration>
+    <TableEducation></TableEducation><AddEducation></AddEducation>
   </v-app>
 </template>
 
 <script>
-import Registration from "../src/components/Registration.vue";
+import AddEducation from "../src/components/AddEducation.vue";
+import TableEducation from "../src/components/TableEducation.vue";
 export default {
-  components: { Registration },
-  name: "Register",
+  name: "Education",
+  components: { AddEducation, TableEducation },
 };
 </script>
-
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 </style>

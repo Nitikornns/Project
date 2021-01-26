@@ -9,11 +9,12 @@
         <p>Login or register from here to access.</p>
       </div>
     </div>
-    <button @click="$router.push('/register')">register</button>
+    <button @click="$router.push('/info')">Info</button>
     <button @click="$router.push('/generatepdf')">Generatepdf</button>
-    <button @click="$router.push('/ratingskill')">Skill</button>
+    <button @click="$router.push('/skill')">Skill</button>
     <button @click="$router.push('/login')">Login</button>
     <button @click="$router.push('/language')">Language</button>
+    <button @click="$router.push('/education')">Education</button>
   </v-app>
 </template>
 
