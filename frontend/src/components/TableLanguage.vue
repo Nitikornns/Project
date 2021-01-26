@@ -82,21 +82,23 @@
           <tr v-for="language in languages" :key="language.languageid">
             <td>{{ language.name }}</td>
             <td>{{ language.sumscore }}</td>
-            <td>
-              <v-icon
-                small
-                class="mr-2"
-                @click.stop="dialogedit = true"
-                @click="$data.language = language"
-                >mdi-pencil</v-icon
-              >
-              <v-icon
-                small
-                @click="$data.language = language"
-                @click.stop="dialogDelete = true"
-                >mdi-delete</v-icon
-              >
-            </td>
+            <v-btn
+              fab
+              small
+              @click.stop="dialogedit = true"
+              @click="$data.language = language"
+            >
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
+
+            <v-btn
+              fab
+              small
+              @click="$data.language = language"
+              @click.stop="dialogDelete = true"
+            >
+              <v-icon small>mdi-delete</v-icon>
+            </v-btn>
           </tr>
         </tbody>
       </template>

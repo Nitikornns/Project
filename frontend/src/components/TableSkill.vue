@@ -83,7 +83,6 @@
             <v-btn
               fab
               small
-              class="v-data-footer__icons-after"
               @click.stop="dialogedit = true"
               @click="$data.skill = skill"
             >
@@ -93,7 +92,6 @@
             <v-btn
               fab
               small
-              class="v-data-footer__icons-after"
               @click="$data.skill = skill"
               @click.stop="dialogDelete = true"
             >

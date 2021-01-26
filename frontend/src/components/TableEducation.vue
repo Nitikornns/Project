@@ -94,21 +94,23 @@
             <td>{{ education.datestart }}</td>
             <td>{{ education.dateend }}</td>
             <td>{{ education.detail }}</td>
-            <td>
-              <v-icon
-                small
-                class="mr-2"
-                @click.stop="dialogedit = true"
-                @click="$data.education = education"
-                >mdi-pencil</v-icon
-              >
-              <v-icon
-                small
-                @click="$data.education = education"
-                @click.stop="dialogDelete = true"
-                >mdi-delete</v-icon
-              >
-            </td>
+            <v-btn
+              fab
+              small
+              @click.stop="dialogedit = true"
+              @click="$data.education = education"
+            >
+              <v-icon small>mdi-pencil</v-icon>
+            </v-btn>
+
+            <v-btn
+              fab
+              small
+              @click="$data.education = education"
+              @click.stop="dialogDelete = true"
+            >
+              <v-icon small>mdi-delete</v-icon>
+            </v-btn>
           </tr>
         </tbody>
       </template>
