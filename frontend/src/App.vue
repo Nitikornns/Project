@@ -4,8 +4,6 @@
     <!-- <router-link to="/">Home</router-link> -->
   </div>
 </template>
-
-;
 <script>
 export default {
   name: "App",
@@ -13,7 +11,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
-
-
+<style scoped></style>

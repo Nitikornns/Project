@@ -18,36 +18,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="dialogedit"
-      persistent
-      hide-overlay
-      scrollable
-      max-width="400px"
-    >
-      <v-card height="400px">
+    <v-dialog v-model="dialogedit" persistent max-width="400px">
+      <v-card height="320px">
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
+            <h6 class="message">{{ message }}</h6>
             <v-row>
               <v-col cols="12">
-                <v-text-field
-                  v-model="languages.studentname"
-                  label="รหัสนิสิต"
-                  outlined
-                  dense
-                  disabled
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-selects
+                <v-select
                   v-model="language.name"
-                  :options="itemlistlanguages"
-                  disabled
+                  :items="itemlistlanguages"
+                  dense
+                  outlined
                 >
-                </v-selects>
+                </v-select>
               </v-col>
               <v-col cols="12">
                 <v-progress-linear
@@ -65,18 +52,19 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="btn btn-danger" text @click="closeEdit">
-            ยกเลิก
-          </v-btn>
-          <v-btn class="btn btn-success" text @click="edit(language)">
+          <v-btn
+            class="btn btn-success"
+            text
+            @click="editItemConfirm(language)"
+          >
             ยืนยัน
           </v-btn>
+          <v-btn class="btn btn-danger" text @click="closeEdit"> ยกเลิก </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-data-table :headers="headers" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
           <tr v-for="language in languages" :key="language.languageid">
@@ -85,12 +73,11 @@
             <v-btn
               fab
               small
-              @click.stop="dialogedit = true"
               @click="$data.language = language"
+              @click.stop="dialogedit = true"
             >
               <v-icon small>mdi-pencil</v-icon>
             </v-btn>
-
             <v-btn
               fab
               small
@@ -121,14 +108,11 @@ export default {
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
+      message: "",
       headers: [
-        {
-          text: "ภาษา",
-          align: "start",
-          value: "name",
-        },
+        { text: "ภาษา", align: "start", sortable: false },
         { text: "ความถนัด (%)", sortable: false },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "ตัวเลือก", sortable: false },
       ],
       itemlistlanguages: [
         "กัมพูชา",
@@ -190,43 +174,68 @@ export default {
       return this.editedIndex === -1 ? "แก้ไข" : "";
     },
   },
-  async created() {
-    await this.getLanguage();
+  created() {
+    this.getLanguage();
+    this.intervalFetchData();
   },
   methods: {
     async getLanguage() {
       let languages = await axios.get("api/languages/").then((r) => r.data);
       this.languages = languages;
     },
-    deleteItemConfirm(language) {
+    intervalFetchData() {
+      setInterval(this.getLanguage, 1000);
+    },
+    getSuccessDeleteMessage() {
+      this.$dialog.alert("ลบสำเร็จ");
+    },
+    getFailDeleteMessage() {
+      this.$dialog.alert("ลบไม่สำเร็จ");
+    },
+    getSuccessEditMessage() {
+      this.$dialog.alert("แก้ไขสำเร็จ");
+    },
+    getFailEditMessage() {
+      this.message = "ภาษาที่เลือกถูกเพิ่มอยู่ก่อนแล้ว";
+    },
+    getMessage() {
+      this.message = "";
+    },
+    async deleteItemConfirm(language) {
       try {
-        axios.delete(`api/languages/${language.languageid}/`, this.language);
-        this.getLanguage();
+        await axios.delete(
+          `api/languages/${language.languageid}/`,
+          this.language
+        );
         this.closeDelete();
-        this.$dialog.alert("ลบสำเร็จ!");
+        this.getSuccessDeleteMessage();
       } catch (error) {
-        this.$dialog.alert("!ลบไม่สำเร็จ");
+        this.closeDelete();
+        this.getFailDeleteMessage();
       }
     },
-    edit(language) {
+    async editItemConfirm(language) {
       try {
-        axios.put(`api/languages/${language.languageid}/`, this.language);
+        await axios.put(`api/languages/${language.languageid}/`, this.language);
         this.closeEdit();
-        this.getLanguage();
-        this.$dialog.alert("แก้ไขสำเร็จ!");
+        this.getMessage();
+        this.getSuccessEditMessage();
       } catch (error) {
-        this.closeEdit();
-        this.$dialog.alert("!แก้ไขไม่สำเร็จ รายการซ้ำกับที่มีอยู่");
+        this.getFailEditMessage();
       }
     },
     closeDelete() {
-      this.getLanguage();
       this.dialogDelete = false;
     },
     closeEdit() {
-      this.getLanguage();
+      this.getMessage();
       this.dialogedit = false;
     },
   },
 };
 </script>
+<style scoped>
+.message {
+  color: red;
+}
+</style>

@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <h6 class="message">{{ message }}</h6>
     <validation-observer
       class="container d-flex card"
       ref="observer"
@@ -10,11 +11,7 @@
         <v-col cols="12">
           <validation-provider
             name="รหัสนิสิต"
-            :rules="{
-              required: true,
-              max: 8,
-              digits: 8,
-            }"
+            :rules="{ required: true, max: 8, digits: 8 }"
           >
             <v-text-field
               v-model="education.studentname"
@@ -24,12 +21,7 @@
               :counter="8"
             ></v-text-field>
           </validation-provider>
-          <validation-provider
-            name="ชื่อโรงเรียน"
-            :rules="{
-              required: true,
-            }"
-          >
+          <validation-provider name="ชื่อโรงเรียน" :rules="{ required: true }">
             <v-text-field
               v-model="education.schoolname"
               label="ชื่อโรงเรียน"
@@ -57,7 +49,6 @@
             placeholder="วันจบ"
           ></date-picker>
         </v-col>
-
         <br /><v-btn
           @click="submitForm"
           :disabled="invalid"
@@ -82,65 +73,41 @@ import {
 } from "vee-validate";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
-
 setInteractionMode("eager");
-
-extend("digits", {
-  ...digits,
-  message: "{_field_} เป็นตัวเลข {length} หลัก",
-});
-
-extend("required", {
-  ...required,
-  message: "{_field_} ไม่สามารถเว้นว่างได้",
-});
-
-extend("max", {
-  ...max,
-  message: "{_field_} ไม่เกิน {length} หลัก",
-});
-
-extend("regex", {
-  ...regex,
-  message: "{_field_} {_value_} รูปแบบไม่ถูกต้อง ",
-});
-
-extend("email", {
-  ...email,
-  message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง",
-});
-
+extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
+extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
+extend("max", { ...max, message: "{_field_} ไม่เกิน {length} หลัก" });
+extend("regex", { ...regex, message: "{_field_} {_value_} รูปแบบไม่ถูกต้อง " });
+extend("email", { ...email, message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง" });
 export default {
   name: "AddEducation",
-  components: {
-    DatePicker,
-    ValidationProvider,
-    ValidationObserver,
-  },
-
+  components: { DatePicker, ValidationProvider, ValidationObserver },
   data() {
-    return {
-      education: {},
-      educations: [],
-    };
+    return { education: {}, educations: [], message: "" };
   },
   created() {
-    this.getEducation();
+    this.setFormData();
   },
   methods: {
     submitForm() {
       this.createEducation();
     },
-    getEducation() {
-      let educations = axios.get("api/educations/").then((r) => r.data);
-      this.educations = educations;
+    getMessage() {
+      this.message = "";
     },
-    createEducation() {
+    getFailMessage() {
+      this.message = "กรอกข้อมูลให้ครบ";
+    },
+    setFormData() {
+      this.education = {};
+    },
+    async createEducation() {
       try {
-        axios.post("api/educations/", this.education);
-        window.location.reload();
+        await axios.post("api/educations/", this.education);
+        this.setFormData();
+        this.getMessage();
       } catch (error) {
-        this.$dialog.alert("!เพิ่มไม่สำเร็จ โปรดระบุวันที่");
+        this.getFailMessage();
       }
     },
     gotoNextPage() {
@@ -155,5 +122,8 @@ export default {
 }
 .buttonright {
   float: right;
+}
+.message {
+  color: red;
 }
 </style>

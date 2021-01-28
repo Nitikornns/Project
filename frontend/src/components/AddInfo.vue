@@ -228,8 +228,8 @@ export default {
       yearsitem: ["1", "2", "3", "4"],
     };
   },
-  async created() {
-    await this.getStudents();
+  created() {
+    this.getStudents();
   },
 
   methods: {
@@ -240,11 +240,9 @@ export default {
       let students = await axios.get("api/students/").then((r) => r.data);
       this.students = students;
     },
-
-    createStudent() {
+    async createStudent() {
       try {
-        axios.post("api/students/", this.student);
-        this.$dialog.alert("บันทึกข้อมูลสำเร็จ!");
+        await axios.post("api/students/", this.student);
         this.$router.push({ name: "Skill" });
       } catch (error) {
         console.log(error);

@@ -7,9 +7,7 @@ import Generatepdf from "../views/Generatepdf.vue";
 import Login from "../views/Login.vue"
 import Language from "../views/Language.vue"
 import Education from "../views/Education.vue"
-
 Vue.use(VueRouter);
-
 export default new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,

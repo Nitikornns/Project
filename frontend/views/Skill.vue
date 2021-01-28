@@ -1,5 +1,5 @@
-<template>
-  <v-app id="app"> <TableSkill></TableSkill><AddSkill></AddSkill> </v-app>
+<template
+  ><div id="app"><TableSkill></TableSkill><AddSkill></AddSkill></div>
 </template>
 <script>
 import TableSkill from "../src/components/TableSkill.vue";

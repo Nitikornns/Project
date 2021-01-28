@@ -18,36 +18,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="dialogedit"
-      persistent
-      hide-overlay
-      scrollable
-      max-width="800px"
-    >
-      <v-card height="550px">
+    <v-dialog v-model="dialogedit" persistent max-width="800px">
+      <v-card height="490px">
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
+            <h6 class="message">{{ message }}</h6>
             <v-col cols="12">
-              <v-text-field
-                v-model="education.studentname"
-                label="รหัสนิสิต"
-                outlined
-                dense
-                disabled
-              ></v-text-field>
-
               <v-text-field
                 v-model="education.schoolname"
                 label="ชื่อโรงเรียน"
                 outlined
                 dense
-                disabled
               ></v-text-field>
-
               <v-textarea
                 v-model="education.detail"
                 label="รายละเอียด"
@@ -55,14 +40,12 @@
                 dense
                 height="150"
               ></v-textarea>
-
               <date-picker
                 v-model="education.datestart"
                 valueType="format"
                 name="วันเริ่ม"
                 placeholder="วันเริ่ม"
               ></date-picker>
-
               <date-picker
                 v-model="education.dateend"
                 valueType="format"
@@ -75,18 +58,19 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="btn btn-danger" text @click="closeEdit">
-            ยกเลิก
-          </v-btn>
-          <v-btn class="btn btn-success" text @click="edit(education)">
+          <v-btn
+            class="btn btn-success"
+            text
+            @click="editItemConfirm(education)"
+          >
             ยืนยัน
           </v-btn>
+          <v-btn class="btn btn-danger" text @click="closeEdit"> ยกเลิก </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-data-table :headers="headers" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
           <tr v-for="education in educations" :key="education.educationid">
@@ -102,7 +86,6 @@
             >
               <v-icon small>mdi-pencil</v-icon>
             </v-btn>
-
             <v-btn
               fab
               small
@@ -136,16 +119,13 @@ export default {
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
+      message: "",
       headers: [
-        {
-          text: "ชื่อ",
-          align: "start",
-          value: "name",
-        },
+        { text: "ชื่อ", align: "start", sortable: false },
         { text: "วันเริ่ม", sortable: false },
         { text: "วันจบ", sortable: false },
         { text: "รายละเอียด", sortable: false },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "ตัวเลือก", sortable: false },
       ],
     };
   },
@@ -154,44 +134,64 @@ export default {
       return this.editedIndex === -1 ? "แก้ไข" : "";
     },
   },
-  async created() {
-    await this.getEducation();
+  created() {
+    this.getEducation();
+    this.intervalFetchData();
   },
   methods: {
     async getEducation() {
       let educations = await axios.get("api/educations/").then((r) => r.data);
       this.educations = educations;
     },
-    deleteItemConfirm(education) {
+    intervalFetchData() {
+      setInterval(this.getEducation, 1000);
+    },
+    getSuccessDeleteMessage() {
+      this.$dialog.alert("ลบสำเร็จ");
+    },
+    getFailDeleteMessage() {
+      this.$dialog.alert("ลบไม่สำเร็จ");
+    },
+    getSuccessEditMessage() {
+      this.$dialog.alert("แก้ไขสำเร็จ");
+    },
+    getFailEditMessage() {
+      this.message = "กรอกข้อมูลให้ครบ";
+    },
+    getMessage() {
+      this.message = "";
+    },
+    async deleteItemConfirm(education) {
       try {
-        axios.delete(
+        await axios.delete(
           `api/educations/${education.educationid}/`,
           this.education
         );
-        this.getEducation();
         this.closeDelete();
-        this.$dialog.alert("ลบสำเร็จ!");
+        this.getSuccessDeleteMessage();
       } catch (error) {
-        this.$dialog.alert("!ลบไม่สำเร็จ");
+        this.closeDelete();
+        this.getFailDeleteMessage();
       }
     },
-    edit(education) {
+    async editItemConfirm(education) {
       try {
-        axios.put(`api/educations/${education.educationid}/`, this.education);
+        await axios.put(
+          `api/educations/${education.educationid}/`,
+          this.education
+        );
         this.closeEdit();
-        this.getEducation();
-        this.$dialog.alert("แก้ไขสำเร็จ!");
+        this.getMessage();
+        this.getSuccessEditMessage();
       } catch (error) {
-        this.closeEdit();
-        this.$dialog.alert("!แก้ไขไม่สำเร็จ รายการซ้ำกับที่มีอยู่");
+        this.getFailEditMessage();
       }
     },
     closeDelete() {
-      this.getEducation();
       this.dialogDelete = false;
     },
     closeEdit() {
-      this.getEducation();
+      this.getMessage();
       this.dialogedit = false;
     },
   },
@@ -200,5 +200,8 @@ export default {
 <style scoped>
 .dateend {
   left: 10px;
+}
+.message {
+  color: red;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="app">
     <Logins></Logins>
   </v-app>
 </template>

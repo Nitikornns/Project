@@ -15,36 +15,23 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-      v-model="dialogedit"
-      persistent
-      hide-overlay
-      scrollable
-      max-width="400px"
-    >
-      <v-card height="400px">
+    <v-dialog v-model="dialogedit" persistent max-width="400px">
+      <v-card height="320px">
         <v-card-title>
           <span class="headline">{{ formTitle }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
+            <h6 class="message">{{ message }}</h6>
             <v-row>
               <v-col cols="12">
-                <v-text-field
-                  v-model="skill.studentname"
-                  label="รหัสนิสิต"
-                  outlined
-                  dense
-                  disabled
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-selects
+                <v-select
                   v-model="skill.name"
-                  :options="itemlistskill"
-                  disabled
+                  :items="itemlistskill"
+                  dense
+                  outlined
                 >
-                </v-selects>
+                </v-select>
               </v-col>
               <v-col cols="12">
                 <v-progress-linear
@@ -62,33 +49,28 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="btn btn-danger" text @click="closeEdit">
-            ยกเลิก
-          </v-btn>
-          <v-btn class="btn btn-success" text @click="edit(skill)">
+          <v-btn class="btn btn-success" text @click="editItemConfirm(skill)">
             ยืนยัน
           </v-btn>
+          <v-btn class="btn btn-danger" text @click="closeEdit"> ยกเลิก </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-data-table :headers="headers" sort-by="calories" class="elevation-1">
+    <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
           <tr v-for="skill in skills" :key="skill.skillid">
             <td>{{ skill.name }}</td>
             <td>{{ skill.sumscore }}</td>
-
             <v-btn
               fab
               small
-              @click.stop="dialogedit = true"
               @click="$data.skill = skill"
+              @click.stop="dialogedit = true"
             >
               <v-icon small>mdi-pencil</v-icon>
             </v-btn>
-
             <v-btn
               fab
               small
@@ -100,18 +82,13 @@
           </tr>
         </tbody>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">
-          <v-btn @click="getSkill">Refresh</v-btn>
-        </v-btn>
-      </template>
     </v-data-table>
   </v-app>
 </template>
 <script>
 import axios from "axios";
 export default {
-  name: "TableSkill",
+  name: "TableLanguage",
   data() {
     return {
       skill: {},
@@ -119,14 +96,11 @@ export default {
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
+      message: "",
       headers: [
-        {
-          text: "ภาษา",
-          align: "start",
-          value: "name",
-        },
+        { text: "ภาษา", align: "start", sortable: false },
         { text: "ความถนัด (%)", sortable: false },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "ตัวเลือก", sortable: false },
       ],
       itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
     };
@@ -136,43 +110,65 @@ export default {
       return this.editedIndex === -1 ? "แก้ไข" : "";
     },
   },
-  async created() {
-    await this.getSkill();
+  created() {
+    this.getSkill();
+    this.intervalFetchData();
   },
   methods: {
     async getSkill() {
       let skills = await axios.get("api/skills/").then((r) => r.data);
       this.skills = skills;
     },
-    deleteItemConfirm(skill) {
+    intervalFetchData() {
+      setInterval(this.getSkill, 1000);
+    },
+    getSuccessDeleteMessage() {
+      this.$dialog.alert("ลบสำเร็จ");
+    },
+    getFailDeleteMessage() {
+      this.$dialog.alert("ลบไม่สำเร็จ");
+    },
+    getSuccessEditMessage() {
+      this.$dialog.alert("แก้ไขสำเร็จ");
+    },
+    getFailEditMessage() {
+      this.message = "ภาษาที่เลือกถูกเพิ่มอยู่ก่อนแล้ว";
+    },
+    getMessage() {
+      this.message = "";
+    },
+    async deleteItemConfirm(skill) {
       try {
-        axios.delete(`api/skills/${skill.skillid}/`, this.skill);
-        this.getSkill();
+        await axios.delete(`api/skills/${skill.skillid}/`, this.skill);
         this.closeDelete();
-        this.$dialog.alert("ลบสำเร็จ!");
+        this.getSuccessDeleteMessage();
       } catch (error) {
-        this.$dialog.alert("!ลบไม่สำเร็จ");
+        this.closeDelete();
+        this.getFailDeleteMessage();
       }
     },
-    edit(skill) {
+    async editItemConfirm(skill) {
       try {
-        axios.put(`api/skills/${skill.skillid}/`, this.skill);
+        await axios.put(`api/skills/${skill.skillid}/`, this.skill);
         this.closeEdit();
-        this.getSkill();
-        this.$dialog.alert("แก้ไขสำเร็จ!");
+        this.getMessage();
+        this.getSuccessEditMessage();
       } catch (error) {
-        this.closeEdit();
-        this.$dialog.alert("!แก้ไขไม่สำเร็จ รายการซ้ำกับที่มีอยู่");
+        this.getFailEditMessage();
       }
     },
     closeDelete() {
-      this.getSkill();
       this.dialogDelete = false;
     },
     closeEdit() {
-      this.getSkill();
+      this.getMessage();
       this.dialogedit = false;
     },
   },
 };
 </script>
+<style scoped>
+.message {
+  color: red;
+}
+</style>
