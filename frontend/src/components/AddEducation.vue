@@ -83,7 +83,7 @@ export default {
   name: "AddEducation",
   components: { DatePicker, ValidationProvider, ValidationObserver },
   data() {
-    return { education: {}, educations: [], message: "" };
+    return { education: {}, message: "" };
   },
   created() {
     this.setFormData();
@@ -111,7 +111,7 @@ export default {
       }
     },
     gotoNextPage() {
-      this.$router.push({ name: "Generatepdf" });
+      this.$router.push({ name: "Picture" });
     },
   },
 };

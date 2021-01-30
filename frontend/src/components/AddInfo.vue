@@ -224,7 +224,6 @@ export default {
   data() {
     return {
       student: {},
-      students: [],
       yearsitem: ["1", "2", "3", "4"],
     };
   },
@@ -235,10 +234,6 @@ export default {
   methods: {
     submitForm() {
       this.createStudent();
-    },
-    async getStudents() {
-      let students = await axios.get("api/students/").then((r) => r.data);
-      this.students = students;
     },
     async createStudent() {
       try {

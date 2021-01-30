@@ -158,3 +158,17 @@ class Education(models.Model):
 
     class Meta:
         ordering = ["schoolname"]
+
+
+class Picture(models.Model):
+    pictureid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="PICTUREID")
+    studentname = models.ForeignKey(
+        Student, related_name="picture", on_delete=models.CASCADE)
+    picturefile = models.FileField(null=True)
+
+    def __str__(self):
+        return f"{self.pictureid}"
+
+    class Meta:
+        ordering = ["pictureid"]

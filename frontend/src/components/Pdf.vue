@@ -42,11 +42,13 @@
                 <div class="w3-third">
                   <div class="w3-white w3-text-grey w3-card-4">
                     <div class="w3-display-container">
-                      <!--<img
-                        src="/w3images/avatar_hat.jpg"
-                        style="width:100%"
-                        alt="Avatar"
-                      />-->
+                      <ul v-for="picture in pictures" :key="picture.pictureid">
+                        <img
+                          :src="picture.picturefile"
+                          style="width:100%"
+                          alt="Avatar"
+                        />
+                      </ul>
 
                       <div
                         class="w3-display-bottomleft w3-container w3-text-black"
@@ -266,6 +268,8 @@ export default {
       languages: [],
       education: {},
       educations: [],
+      picture: {},
+      pictures: [],
     };
   },
   async created() {
@@ -273,6 +277,7 @@ export default {
     await this.getSkill();
     await this.getLanguage();
     await this.getEducation();
+    await this.getPicture();
   },
   methods: {
     generateReport() {
@@ -293,6 +298,10 @@ export default {
     async getEducation() {
       let educations = await axios.get("api/educations/").then((r) => r.data);
       this.educations = educations;
+    },
+    async getPicture() {
+      let pictures = await axios.get("api/pictures/").then((r) => r.data);
+      this.pictures = pictures;
     },
   },
 };

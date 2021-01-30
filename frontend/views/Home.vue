@@ -15,6 +15,7 @@
     <button @click="$router.push('/login')">Login</button>
     <button @click="$router.push('/language')">Language</button>
     <button @click="$router.push('/education')">Education</button>
+    <button @click="$router.push('/picture')">Picture</button>
   </v-app>
 </template>
 

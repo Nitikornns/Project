@@ -7,6 +7,7 @@ import Generatepdf from "../views/Generatepdf.vue";
 import Login from "../views/Login.vue"
 import Language from "../views/Language.vue"
 import Education from "../views/Education.vue"
+import Picture from "../views/Picture.vue"
 Vue.use(VueRouter);
 export default new VueRouter({
   mode: "history",
@@ -46,6 +47,11 @@ export default new VueRouter({
       path: "/education",
       name: "Education",
       component: Education,
+    },
+    {
+      path: "/picture",
+      name: "Picture",
+      component: Picture,
     },
   ],
 });

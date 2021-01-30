@@ -68,7 +68,6 @@ export default {
   data() {
     return {
       language: {},
-      languages: [],
       message: "",
       itemlistlanguages: [
         "กัมพูชา",

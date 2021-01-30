@@ -67,7 +67,6 @@ export default {
   data() {
     return {
       skill: {},
-      skills: [],
       message: "",
       itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
     };
