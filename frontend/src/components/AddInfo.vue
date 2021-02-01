@@ -227,10 +227,6 @@ export default {
       yearsitem: ["1", "2", "3", "4"],
     };
   },
-  created() {
-    this.getStudents();
-  },
-
   methods: {
     submitForm() {
       this.createStudent();

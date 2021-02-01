@@ -81,7 +81,7 @@ class Student(models.Model):
                                       verbose_name="Studentcode", null=False)
     year = models.CharField(
         max_length=6, choices=YEAR_CHOICES, default="1")
-    name = models.CharField(max_length=140, verbose_name="first Name")
+    name = models.CharField(max_length=140, verbose_name="firstName")
     surname = models.CharField(max_length=140)
     idcard = models.CharField(max_length=13)
     commencementday = models.DateField(
@@ -99,15 +99,15 @@ class Student(models.Model):
 
 class Skill(models.Model):
     skillid = models.AutoField(
-        primary_key=True, serialize=False, verbose_name="SKILLID")
+        primary_key=True, serialize=False, verbose_name="SkillId")
     studentname = models.ForeignKey(
         Student, related_name="skills", on_delete=models.CASCADE)
     name = models.CharField(
-        max_length=140, choices=PROGRAMING_LANGUAGES, unique=True, verbose_name="SKILLNAME")
+        max_length=140, choices=PROGRAMING_LANGUAGES, unique=True, verbose_name="SkillName")
     score = models.DecimalField(default=0.0, validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="SKILLSCORE")
+        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="SkillScore")
     sumscore = models.DecimalField(validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=0, blank=True, verbose_name="SKILLSUMSCORE")
+        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=0, blank=True, verbose_name="SkillSumScore")
 
     def save(self, *args, **kwargs):
         self.sumscore = round(int(self.score))
@@ -122,15 +122,15 @@ class Skill(models.Model):
 
 class Language(models.Model):
     languageid = models.AutoField(
-        primary_key=True, serialize=False, verbose_name="LANGUAGEID")
+        primary_key=True, serialize=False, verbose_name="LanguageId")
     studentname = models.ForeignKey(
         Student, related_name="languages", on_delete=models.CASCADE)
     name = models.CharField(
-        max_length=140, choices=LISTLANGUAGE_CHOICES, unique=True, verbose_name="LANGUAGENAME")
+        max_length=140, choices=LISTLANGUAGE_CHOICES, unique=True, verbose_name="LanguageName")
     score = models.DecimalField(default=0.0, validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="LANGSCORE")
+        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="LanguageScore")
     sumscore = models.DecimalField(validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=0, blank=True, verbose_name="LANGSUMSCORE")
+        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=0, blank=True, verbose_name="LanguageSumScore")
 
     def save(self, *args, **kwargs):
         self.sumscore = round(int(self.score))
@@ -145,24 +145,24 @@ class Language(models.Model):
 
 class Education(models.Model):
     educationid = models.AutoField(
-        primary_key=True, serialize=False, verbose_name="EDUCATIONID")
+        primary_key=True, serialize=False, verbose_name="EducationId")
     datestart = models.DateField()
     dateend = models.DateField()
     studentname = models.ForeignKey(
         Student, related_name="education", on_delete=models.CASCADE)
-    schoolname = models.CharField(max_length=140, verbose_name="School Name")
-    detail = models.CharField(max_length=1000, blank=True)
+    name = models.CharField(max_length=140, verbose_name="EducationName")
+    detail = models.CharField(max_length=1000)
 
     def __str__(self):
-        return f"{self.schoolname}"
+        return f"{self.name}"
 
     class Meta:
-        ordering = ["schoolname"]
+        ordering = ["name"]
 
 
 class Picture(models.Model):
     pictureid = models.AutoField(
-        primary_key=True, serialize=False, verbose_name="PICTUREID")
+        primary_key=True, serialize=False, verbose_name="PictureId")
     studentname = models.ForeignKey(
         Student, related_name="picture", on_delete=models.CASCADE)
     picturefile = models.FileField(null=True)
@@ -172,3 +172,18 @@ class Picture(models.Model):
 
     class Meta:
         ordering = ["pictureid"]
+
+
+class Work(models.Model):
+    workid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="WorkId")
+    studentname = models.ForeignKey(
+        Student, related_name="work", on_delete=models.CASCADE)
+    name = models.CharField(max_length=140, verbose_name="WorkName")
+    detail = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return f"{self.workid}"
+
+    class Meta:
+        ordering = ["workid"]

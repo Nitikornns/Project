@@ -7,10 +7,7 @@
         >
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            class="btn btn-success"
-            text
-            @click="deleteItemConfirm(education)"
+          <v-btn class="btn btn-success" text @click="deleteItemConfirm(work)"
             >ยืนยัน</v-btn
           >
           <v-btn class="btn btn-danger" text @click="closeDelete">ยกเลิก</v-btn
@@ -25,44 +22,27 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 class="message">{{ message }}</h6>
+            <h6 class="message">{{ messageedit }}</h6>
             <v-col cols="12">
               <v-text-field
-                v-model="education.name"
-                label="ชื่อโรงเรียน"
+                v-model="work.name"
+                label="ชื่อที่ทำงาน"
                 outlined
                 dense
               ></v-text-field>
               <v-textarea
-                v-model="education.detail"
+                v-model="work.detail"
                 label="รายละเอียด"
                 outlined
                 dense
                 height="150"
               ></v-textarea>
-              <date-picker
-                v-model="education.datestart"
-                valueType="format"
-                name="วันเริ่ม"
-                placeholder="วันเริ่ม"
-              ></date-picker>
-              <date-picker
-                v-model="education.dateend"
-                valueType="format"
-                name="วันจบ"
-                placeholder="วันจบ"
-                class="dateend"
-              ></date-picker>
             </v-col>
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            class="btn btn-success"
-            text
-            @click="editItemConfirm(education)"
-          >
+          <v-btn class="btn btn-success" text @click="editItemConfirm(work)">
             ยืนยัน
           </v-btn>
           <v-btn class="btn btn-danger" text @click="closeEdit"> ยกเลิก </v-btn>
@@ -73,23 +53,21 @@
     <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
-          <tr v-for="education in educations" :key="education.educationid">
-            <td>{{ education.name }}</td>
-            <td>{{ education.datestart }}</td>
-            <td>{{ education.dateend }}</td>
-            <td>{{ education.detail }}</td>
+          <tr v-for="work in works" :key="work.workid">
+            <td>{{ work.name }}</td>
+            <td>{{ work.detail }}</td>
             <v-btn
               fab
               small
               @click.stop="dialogedit = true"
-              @click="$data.education = education"
+              @click="$data.work = work"
             >
               <v-icon small>mdi-pencil</v-icon>
             </v-btn>
             <v-btn
               fab
               small
-              @click="$data.education = education"
+              @click="$data.work = work"
               @click.stop="dialogDelete = true"
             >
               <v-icon small>mdi-delete</v-icon>
@@ -102,23 +80,20 @@
 </template>
 <script>
 import axios from "axios";
-import DatePicker from "vue2-datepicker";
-import "vue2-datepicker/index.css";
 export default {
-  name: "TableEducation",
-  components: { DatePicker },
+  name: "TableWork",
+  components: {},
   data() {
     return {
-      education: {},
-      educations: [],
+      work: {},
+      works: [],
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
-      message: "",
+      messagecreate: "",
+      messageedit: "",
       headers: [
         { text: "ชื่อ", align: "start", sortable: false },
-        { text: "วันเริ่ม", sortable: false },
-        { text: "วันจบ", sortable: false },
         { text: "รายละเอียด", sortable: false },
         { text: "ตัวเลือก", sortable: false },
       ],
@@ -130,16 +105,25 @@ export default {
     },
   },
   created() {
-    this.getEducation();
-    this.intervalFetchData();
+    this.getWork();
   },
   methods: {
-    async getEducation() {
-      let educations = await axios.get("api/educations/").then((r) => r.data);
-      this.educations = educations;
+    async createEducation() {
+      try {
+        await axios.post("api/works/", this.work);
+        this.setFormData();
+        this.getMessageCreate();
+        this.getWork();
+      } catch (error) {
+        this.getFailMessage();
+      }
     },
-    intervalFetchData() {
-      setInterval(this.getEducation, 1000);
+    gotoNextPage() {
+      this.$router.push({ name: "Work" });
+    },
+    async getWork() {
+      let works = await axios.get("api/works/").then((r) => r.data);
+      this.works = works;
     },
     getSuccessDeleteMessage() {
       this.$dialog.alert("ลบสำเร็จ");
@@ -151,17 +135,14 @@ export default {
       this.$dialog.alert("แก้ไขสำเร็จ");
     },
     getFailEditMessage() {
-      this.message = "กรอกข้อมูลให้ครบ";
+      this.messageedit = "กรอกข้อมูลให้ครบ";
     },
-    getMessage() {
-      this.message = "";
+    getMessageEdit() {
+      this.messageedit = "";
     },
-    async deleteItemConfirm(education) {
+    async deleteItemConfirm(work) {
       try {
-        await axios.delete(
-          `api/educations/${education.educationid}/`,
-          this.education
-        );
+        await axios.delete(`api/works/${work.workid}/`, this.work);
         this.closeDelete();
         this.getSuccessDeleteMessage();
       } catch (error) {
@@ -169,14 +150,11 @@ export default {
         this.getFailDeleteMessage();
       }
     },
-    async editItemConfirm(education) {
+    async editItemConfirm(work) {
       try {
-        await axios.put(
-          `api/educations/${education.educationid}/`,
-          this.education
-        );
+        await axios.put(`api/works/${work.workid}/`, this.work);
         this.closeEdit();
-        this.getMessage();
+        this.getMessageEdit();
         this.getSuccessEditMessage();
       } catch (error) {
         this.getFailEditMessage();
@@ -184,10 +162,14 @@ export default {
     },
     closeDelete() {
       this.dialogDelete = false;
+      this.getWork();
+      this.setFormData();
     },
     closeEdit() {
-      this.getMessage();
+      this.getMessageEdit();
       this.dialogedit = false;
+      this.getWork();
+      this.setFormData();
     },
   },
 };

@@ -10,6 +10,7 @@ router.register('skills', SkillsViewSet)
 router.register('languages', LanguagesViewSet)
 router.register('educations', EducationsViewSet)
 router.register('pictures', PicturesViewSet)
+router.register('works', WorksViewSet)
 
 
 urlpatterns = router.urls

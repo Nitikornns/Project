@@ -89,11 +89,6 @@
           </tr>
         </tbody>
       </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">
-          <v-btn @click="getLanguage">Refresh</v-btn>
-        </v-btn>
-      </template>
     </v-data-table>
   </v-app>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-app>
     <validation-observer
       class="container d-flex card"
       ref="observer"
@@ -26,12 +26,9 @@
         placeholder="เลือกรูปภาพ"
         :show-size="1000"
       ></v-file-input>
-      <v-btn @click="submitForm" :disabled="invalid">Submit</v-btn>
-      <v-btn @click="gotoNextPage" class="btn btn-success buttonright"
-        >ถัดไป</v-btn
-      >
+      <v-btn @click="submitForm" :disabled="invalid">บันทึก</v-btn>
     </validation-observer>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -85,12 +82,10 @@ export default {
         await axios.post("api/pictures/", formData);
         this.SuccessMessage();
         this.SetFormData();
+        this.$router.push({ name: "Generatepdf" });
       } catch (error) {
         this.FailedMessage();
       }
-    },
-    gotoNextPage() {
-      this.$router.push({ name: "Generatepdf" });
     },
     async getPicture() {
       let pictures = await axios.get("api/pictures/").then((r) => r.data);
