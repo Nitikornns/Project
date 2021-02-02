@@ -109,12 +109,12 @@
       <v-form>
         <v-col cols="12">
           <validation-provider
-            name="รหัสนิสิต"
+            name="รหัสผู้ใช้"
             :rules="{ required: true, max: 8, digits: 8 }"
           >
             <v-text-field
               v-model="education.studentname"
-              label="รหัสนิสิต"
+              label="รหัสผู้ใช้"
               outlined
               dense
               :counter="8"

@@ -10,7 +10,7 @@
         <v-container>
           <validation-provider
             v-slot="{ errors }"
-            name="รหัสนิสิต"
+            name="รหัสผู้ใช้"
             :rules="{
               required: true,
               max: 8,
@@ -19,7 +19,7 @@
           >
             <v-row align="center" justify="center">
               <v-col cols="3">
-                <v-subheader>รหัสนิสิต</v-subheader>
+                <v-subheader>รหัสผู้ใช้</v-subheader>
               </v-col>
               <v-col cols="7">
                 <v-text-field
