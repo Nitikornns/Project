@@ -5,12 +5,12 @@ from rest_framework import routers
 from .views import *
 
 router = routers.DefaultRouter()
-router.register(r'students', StudentsViewSet)
-router.register(r'skills', SkillsViewSet)
-router.register(r'languages', LanguagesViewSet)
-router.register(r'educations', EducationsViewSet)
-router.register(r'pictures', PicturesViewSet)
-router.register(r'works', WorksViewSet)
+router.register('students', StudentsViewSet)
+router.register('skills', SkillsViewSet)
+router.register('languages', LanguagesViewSet)
+router.register('educations', EducationsViewSet)
+router.register('pictures', PicturesViewSet)
+router.register('works', WorksViewSet)
 
 
 urlpatterns = router.urls

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
+from django.db import models
 
 
 YEAR_CHOICES = (
@@ -77,6 +78,8 @@ LISTLANGUAGE_CHOICES = (
 
 
 class Student(models.Model):
+    account = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     studentcode = models.IntegerField(primary_key=True, serialize=False,
                                       verbose_name="Studentcode", null=False)
     year = models.CharField(
@@ -98,6 +101,8 @@ class Student(models.Model):
 
 
 class Skill(models.Model):
+    account = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     skillid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="SkillId")
     studentname = models.ForeignKey(
@@ -121,6 +126,8 @@ class Skill(models.Model):
 
 
 class Language(models.Model):
+    account = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     languageid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="LanguageId")
     studentname = models.ForeignKey(
@@ -144,6 +151,8 @@ class Language(models.Model):
 
 
 class Education(models.Model):
+    account = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     educationid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="EducationId")
     datestart = models.DateField()
@@ -161,6 +170,8 @@ class Education(models.Model):
 
 
 class Picture(models.Model):
+    account = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     pictureid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="PictureId")
     studentname = models.ForeignKey(
@@ -175,6 +186,8 @@ class Picture(models.Model):
 
 
 class Work(models.Model):
+    account = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     workid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="WorkId")
     studentname = models.ForeignKey(
