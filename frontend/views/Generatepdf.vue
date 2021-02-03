@@ -199,24 +199,6 @@
                       </p>
                       <hr />
                     </div>
-                    <div class="w3-container">
-                      <h5 class="w3-opacity"><b>London Business School</b></h5>
-                      <h6 class="w3-text-teal">
-                        <i class="fa fa-calendar fa-fw w3-margin-right"></i>2013
-                        - 2015
-                      </h6>
-                      <p>Master Degree</p>
-                      <hr />
-                    </div>
-                    <div class="w3-container">
-                      <h5 class="w3-opacity"><b>School of Coding</b></h5>
-                      <h6 class="w3-text-teal">
-                        <i class="fa fa-calendar fa-fw w3-margin-right"></i>2010
-                        - 2013
-                      </h6>
-                      <p>Bachelor Degree</p>
-                      <br />
-                    </div>
                   </div>
 
                   <!-- End Right Column -->
