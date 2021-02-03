@@ -60,7 +60,7 @@
     <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
-          <tr v-for="skill in skills" :key="skill.skillid">
+          <tr v-for="skill in APIData" :key="skill.skillid">
             <td>{{ skill.name }}</td>
             <td>{{ skill.sumscore }}</td>
             <v-btn
@@ -138,6 +138,8 @@ import {
   ValidationProvider,
   setInteractionMode,
 } from "vee-validate";
+import { getAPI } from "../axios-api";
+import { mapState } from "vuex";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
 extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
@@ -146,11 +148,16 @@ extend("regex", { ...regex, message: "{_field_} {_value_} รูปแบบไ�
 extend("email", { ...email, message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง" });
 export default {
   name: "Skill",
+  onIdle() {
+    this.$store.dispatch("userLogout").then(() => {
+      this.$router.push({ name: "login" });
+    });
+  },
   components: { ValidationProvider, ValidationObserver },
   data() {
     return {
       skill: {},
-      skills: [],
+      //skills: [],
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
@@ -165,6 +172,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["APIData"]),
     formTitle() {
       return this.editedIndex === -1 ? "แก้ไข" : "";
     },
@@ -197,7 +205,18 @@ export default {
     async createSkill() {
       if (this.skill.name) {
         try {
-          await axios.post("api/skills/", this.skill);
+          getAPI
+            .get("/api/skills/", this.skill, {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            })
+            .then((response) => {
+              this.$store.state.APIData = response.data;
+            })
+            .catch((err) => {
+              console.log(err);
+            });
           this.setFormData();
           this.getSkill();
         } catch (error) {
@@ -211,8 +230,16 @@ export default {
       this.$router.push({ name: "Language" });
     },
     async getSkill() {
-      let skills = await axios.get("api/skills/").then((r) => r.data);
-      this.skills = skills;
+      getAPI
+        .get("/api/skills/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     intervalFetchData() {
       setInterval(this.getSkill, 1000);

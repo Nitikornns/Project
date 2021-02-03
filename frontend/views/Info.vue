@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+    <NavBar></NavBar>
     <validation-observer
       class="container d-flex card"
       ref="observer"
@@ -179,7 +180,6 @@
   </v-app>
 </template>
 <script>
-import axios from "axios";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
 import {
   extend,
@@ -187,7 +187,9 @@ import {
   ValidationProvider,
   setInteractionMode,
 } from "vee-validate";
-
+import { getAPI } from "../axios-api";
+import { mapState } from "vuex";
+import NavBar from "../src/components/Navbar.vue";
 setInteractionMode("eager");
 
 extend("digits", {
@@ -220,6 +222,10 @@ export default {
   components: {
     ValidationProvider,
     ValidationObserver,
+    NavBar,
+  },
+  computed: {
+    ...mapState(["APIData"]),
   },
   data() {
     return {
@@ -232,12 +238,18 @@ export default {
       this.createStudent();
     },
     async createStudent() {
-      try {
-        await axios.post("api/students/", this.student);
-        this.$router.push({ name: "Skill" });
-      } catch (error) {
-        console.log(error);
-      }
+      getAPI
+        .post("/api/students/", this.student, {
+          headers: {
+            Authorization: `Bearer ${this.$store.state.accessToken}`,
+          },
+        })
+        .then(() => {
+          this.$router.push({ name: "Skill" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 };

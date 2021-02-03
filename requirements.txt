@@ -13,6 +13,7 @@ django-filter==2.4.0
 django-language-field==0.0.3
 django-model-utils==4.1.1
 djangorestframework==3.12.2
+djangorestframework-simplejwt==4.6.0
 future==0.18.2
 html5lib==1.1
 importlib-metadata==3.3.0
@@ -23,6 +24,7 @@ mccabe==0.6.1
 Pillow==8.1.0
 pycodestyle==2.6.0
 pycparser==2.20
+PyJWT==2.0.1
 pylint==2.6.0
 PyPDF2==1.26.0
 python-bidi==0.4.2

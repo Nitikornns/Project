@@ -5,38 +5,34 @@ from .models import Student, Skill, Language, Education, Picture, Work
 class StudentSerializer(ModelSerializer):
     class Meta:
         model = Student
-        fields = ['studentcode', 'year', 'name', 'surname', 'idcard',
-                  'commencementday', 'email', 'telphoneNumber']
+        fields = '__all__'
 
 
 class SkillSerializer(ModelSerializer):
     class Meta:
         model = Skill
-        fields = ['skillid', 'name',
-                  'studentname', 'sumscore', 'score']
+        fields = '__all__'
 
 
 class LanguageSerializer(ModelSerializer):
     class Meta:
         model = Language
-        fields = ['languageid', 'studentname',
-                  'name', 'score', 'sumscore']
+        fields = '__all__'
 
 
 class EducationSerializer(ModelSerializer):
     class Meta:
         model = Education
-        fields = ['educationid', 'datestart',
-                  'dateend', 'studentname', 'name', 'detail']
+        fields = '__all__'
 
 
 class PictureSerializer(ModelSerializer):
     class Meta:
         model = Picture
-        fields = ['pictureid', 'studentname', 'picturefile']
+        fields = '__all__'
 
 
 class WorkSerializer(ModelSerializer):
     class Meta:
         model = Work
-        fields = ['workid', 'studentname', 'name', 'detail']
+        fields = '__all__'

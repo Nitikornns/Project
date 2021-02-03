@@ -1,14 +1,11 @@
 <template>
-  <v-app>
-    <Info></Info>
-  </v-app>
+  <v-app> </v-app>
 </template>
 
 <script>
-import Info from "../views/Info.vue";
 export default {
   name: "Home",
-  components: { Info },
+  components: {},
 };
 </script>
 

@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'e9xj!!92r6zfkhm8nbwueh)a$)00-jr148t0@z9*$dg4y+sz(l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'students.apps.StudentsConfig',
     'account',
+    'rest_framework_simplejwt.token_blacklist'
 
 ]
 
@@ -61,7 +62,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project.urls'
 
+
 CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:8000',
+    'http://localhost:8080',
+)
+
 
 TEMPLATES = [
     {
@@ -138,3 +146,9 @@ MEDIA_URL = '/images/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/images')
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
