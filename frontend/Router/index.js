@@ -9,6 +9,8 @@ import Picture from "../views/Picture.vue";
 import Work from "../views/Work.vue";
 import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
+import Register from "../views/Register.vue";
+
 Vue.use(VueRouter);
 export default new VueRouter({
   mode: "history",
@@ -61,6 +63,11 @@ export default new VueRouter({
       path: "/logout",
       name: "Logout",
       component: Logout,
+    },
+    {
+      path: "/register",
+      name: "Register",
+      component: Register,
     },
   ],
 });

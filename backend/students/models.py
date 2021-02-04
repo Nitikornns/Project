@@ -78,10 +78,9 @@ LISTLANGUAGE_CHOICES = (
 
 
 class Student(models.Model):
-    account = models.ForeignKey(
+    accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    studentcode = models.IntegerField(primary_key=True, serialize=False,
-                                      verbose_name="Studentcode", null=False)
+    studentcode = models.CharField(max_length=10, null=False, blank=False)
     year = models.CharField(
         max_length=6, choices=YEAR_CHOICES, default="1")
     name = models.CharField(max_length=140, verbose_name="firstName")
@@ -101,12 +100,10 @@ class Student(models.Model):
 
 
 class Skill(models.Model):
-    account = models.ForeignKey(
+    accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     skillid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="SkillId")
-    studentname = models.ForeignKey(
-        Student, related_name="skills", on_delete=models.CASCADE)
     name = models.CharField(
         max_length=140, choices=PROGRAMING_LANGUAGES, unique=True, verbose_name="SkillName")
     score = models.DecimalField(default=0.0, validators=[
@@ -126,12 +123,10 @@ class Skill(models.Model):
 
 
 class Language(models.Model):
-    account = models.ForeignKey(
+    accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     languageid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="LanguageId")
-    studentname = models.ForeignKey(
-        Student, related_name="languages", on_delete=models.CASCADE)
     name = models.CharField(
         max_length=140, choices=LISTLANGUAGE_CHOICES, unique=True, verbose_name="LanguageName")
     score = models.DecimalField(default=0.0, validators=[
@@ -151,14 +146,12 @@ class Language(models.Model):
 
 
 class Education(models.Model):
-    account = models.ForeignKey(
+    accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     educationid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="EducationId")
     datestart = models.DateField()
     dateend = models.DateField()
-    studentname = models.ForeignKey(
-        Student, related_name="education", on_delete=models.CASCADE)
     name = models.CharField(max_length=140, verbose_name="EducationName")
     detail = models.CharField(max_length=1000)
 
@@ -174,8 +167,6 @@ class Picture(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     pictureid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="PictureId")
-    studentname = models.ForeignKey(
-        Student, related_name="picture", on_delete=models.CASCADE)
     picturefile = models.FileField(null=True)
 
     def __str__(self):
@@ -186,12 +177,10 @@ class Picture(models.Model):
 
 
 class Work(models.Model):
-    account = models.ForeignKey(
+    accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     workid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="WorkId")
-    studentname = models.ForeignKey(
-        Student, related_name="work", on_delete=models.CASCADE)
     name = models.CharField(max_length=140, verbose_name="WorkName")
     detail = models.CharField(max_length=1000)
 

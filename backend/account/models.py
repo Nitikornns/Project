@@ -11,7 +11,7 @@ class MyAccountManager(BaseUserManager):
         if not username:
             raise ValueError('Users must have a username')
         if not password:
-            raise ValueError('Users must have a password')
+            raise ValueError('Users must have a passwords')
 
         user = self.model(
             email=self.normalize_email(email),
@@ -39,11 +39,15 @@ class MyAccountManager(BaseUserManager):
 
 
 class Account(AbstractBaseUser):
-    email = models.EmailField(verbose_name="email", max_length=60, unique=True)
+    id = models.AutoField(auto_created=True, primary_key=True,
+                          serialize=False, verbose_name='ID')
+    email = models.EmailField(verbose_name="email",
+                              max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
     date_joined = models.DateTimeField(
         verbose_name='date joined', auto_now_add=True)
-    last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
+    last_login = models.DateTimeField(
+        verbose_name='last login', auto_now=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -53,6 +57,10 @@ class Account(AbstractBaseUser):
     REQUIRED_FIELDS = ['username']
 
     objects = MyAccountManager()
+
+    """ def sample_view(request):
+        current_user = request.user.id
+        return current_user.id """
 
     def __str__(self):
         return self.email
