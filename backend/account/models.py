@@ -58,10 +58,6 @@ class Account(AbstractBaseUser):
 
     objects = MyAccountManager()
 
-    """ def sample_view(request):
-        current_user = request.user.id
-        return current_user.id """
-
     def __str__(self):
         return self.email
 
