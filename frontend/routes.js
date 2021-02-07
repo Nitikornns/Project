@@ -17,7 +17,7 @@ export default new VueRouter({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/login",
+      path: "/",
       name: "Login",
       component: Login,
       meta: {
@@ -41,7 +41,7 @@ export default new VueRouter({
       },
     },
     {
-      path: "/",
+      path: "/info",
       name: "Info",
       component: Info,
       meta: {
