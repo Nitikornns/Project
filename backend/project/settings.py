@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'students.apps.StudentsConfig',
     'account',
-    'rest_framework_simplejwt.token_blacklist'
 
 ]
 
