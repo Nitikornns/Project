@@ -1,6 +1,7 @@
 <template>
   <v-app>
-    <button @click="generateReport">ดาวโหลดpdf</button>
+    <Navbar></Navbar>
+    <v-btn @click="generateReport">ดาวโหลดpdf</v-btn>
     <vue-html2pdf
       :show-layout="false"
       :float-layout="true"
@@ -175,7 +176,7 @@
                         {{ education.datestart }} - {{ education.dateend }}
                       </h6>
                       <p>
-                        {{ education.detail }}
+                        {{ education.degree }}
                       </p>
                       <hr />
                     </div>
@@ -188,17 +189,17 @@
                       ></i
                       >การทำงาน
                     </h2>
-                    <div class="w3-container">
-                      <h5 class="w3-opacity">
-                        <b v-for="work in works" :key="work.workid">{{
-                          work.name
-                        }}</b>
-                      </h5>
-                      <p v-for="work in works" :key="work.workid">
-                        {{ work.detail }}
-                      </p>
-                      <hr />
-                    </div>
+                    <ul v-for="work in works" :key="work.workid">
+                      <div class="w3-container">
+                        <h5 class="w3-opacity">
+                          <b>{{ work.name }}</b>
+                        </h5>
+                        <p>
+                          {{ work.degree }}
+                        </p>
+                        <hr />
+                      </div>
+                    </ul>
                   </div>
 
                   <!-- End Right Column -->
@@ -221,13 +222,17 @@
 </template>
 
 <script>
-import axios from "axios";
+import Navbar from "../src/components/Navbar";
 import VueHtml2pdf from "vue-html2pdf";
+import { getAPI } from "../axios-api";
+import { mapState } from "vuex";
 export default {
   name: "Generatepdf",
   components: {
     VueHtml2pdf,
+    Navbar,
   },
+  computed: { ...mapState(["APIData"]) },
   data() {
     return {
       student: {},
@@ -244,41 +249,95 @@ export default {
       works: [],
     };
   },
-  async created() {
-    await this.getStudent();
-    await this.getSkill();
-    await this.getLanguage();
-    await this.getEducation();
-    await this.getPicture();
-    await this.getWork();
+  created() {
+    this.getStudent();
+    this.getSkill();
+    this.getLanguage();
+    this.getEducation();
+    this.getPicture();
+    this.getWork();
   },
   methods: {
     generateReport() {
       this.$refs.html2Pdf.generatePdf();
     },
     async getStudent() {
-      let students = await axios.get("api/students/").then((r) => r.data);
-      this.students = students;
+      await getAPI
+        .get("/api/students/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.students = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getSkill() {
-      let skills = await axios.get("api/skills/").then((r) => r.data);
-      this.skills = skills;
+      await getAPI
+        .get("/api/skills/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.skills = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getLanguage() {
-      let languages = await axios.get("api/languages/").then((r) => r.data);
-      this.languages = languages;
+      await getAPI
+        .get("/api/languages/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.languages = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getEducation() {
-      let educations = await axios.get("api/educations/").then((r) => r.data);
-      this.educations = educations;
+      await getAPI
+        .get("/api/educations/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.educations = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getPicture() {
-      let pictures = await axios.get("api/pictures/").then((r) => r.data);
-      this.pictures = pictures;
+      await getAPI
+        .get("/api/pictures/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.pictures = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getWork() {
-      let works = await axios.get("api/works/").then((r) => r.data);
-      this.works = works;
+      await getAPI
+        .get("/api/works/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.works = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,9 +26,15 @@ SECRET_KEY = 'e9xj!!92r6zfkhm8nbwueh)a$)00-jr148t0@z9*$dg4y+sz(l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
-#LOGIN_REDIRECT_URL = '/'
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080'
+]
+
+CORS_ALLOW_HEADERS = default_headers + (
+    'contenttype',
+)
 
 # Application definition
 

@@ -11,6 +11,15 @@ YEAR_CHOICES = (
     ("4", "4"),
 )
 
+EDUCATION_DEEGREE = (
+    ("มัธยมศึกษา", "มัธยมศึกษา"),
+    ("ประกาศนียบัตรวิชาชีพ (ปวช.)", "ประกาศนียบัตรวิชาชีพ (ปวช.)"),
+    ("ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)", "ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)"),
+    ("ปริญญาตรี", "ปริญญาตรี"),
+    ("ปริญญาโท", "ปริญญาโท"),
+    ("ปริญญาเอก", "ปริญญาเอก"),
+)
+
 PROGRAMING_LANGUAGES = (
     ("Java", "Java"),
     ("Python", "Python"),
@@ -153,7 +162,8 @@ class Education(models.Model):
     datestart = models.DateField()
     dateend = models.DateField()
     name = models.CharField(max_length=140, verbose_name="EducationName")
-    detail = models.CharField(max_length=1000)
+    degree = models.CharField(
+        choices=EDUCATION_DEEGREE, unique=True, max_length=150)
 
     def __str__(self):
         return f"{self.name}"
@@ -163,7 +173,7 @@ class Education(models.Model):
 
 
 class Picture(models.Model):
-    account = models.ForeignKey(
+    accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     pictureid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="PictureId")

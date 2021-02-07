@@ -1,5 +1,6 @@
 <template>
   <v-app
+    ><Navbar></Navbar
     ><v-dialog v-model="dialogDelete" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center"
@@ -27,20 +28,19 @@
           <v-container>
             <h6 class="message">{{ messageedit }}</h6>
             <v-col cols="12">
-              <v-text-field
+              <v-selects v-model="education.degree" :options="educationdegree">
+              </v-selects>
+            </v-col>
+            <v-col cols="12"
+              ><v-text-field
                 v-model="education.name"
                 label="ชื่อ"
                 outlined
                 dense
-              ></v-text-field>
-              <v-textarea
-                v-model="education.detail"
-                label="รายละเอียด"
-                outlined
-                dense
-                height="150"
-              ></v-textarea>
-              <date-picker
+              ></v-text-field
+            ></v-col>
+            <v-col cols="12"
+              ><date-picker
                 v-model="education.datestart"
                 valueType="format"
                 name="วันเริ่ม"
@@ -52,8 +52,8 @@
                 name="วันจบ"
                 placeholder="วันจบ"
                 class="dateend"
-              ></date-picker>
-            </v-col>
+              ></date-picker
+            ></v-col>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -73,11 +73,11 @@
     <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
-          <tr v-for="education in educations" :key="education.educationid">
+          <tr v-for="education in APIData" :key="education.educationid">
+            <td>{{ education.degree }}</td>
             <td>{{ education.name }}</td>
             <td>{{ education.datestart }}</td>
             <td>{{ education.dateend }}</td>
-            <td>{{ education.detail }}</td>
             <v-btn
               fab
               small
@@ -100,42 +100,23 @@
     </v-data-table>
 
     <h6 class="message">{{ messagecreate }}</h6>
-    <validation-observer
-      class="container d-flex card"
-      ref="observer"
-      v-slot="{ invalid }"
-    >
+    <validation-observer class="container d-flex card" ref="observer">
       <h2 style="text-align: center">การศึกษา</h2>
       <v-form>
         <v-col cols="12">
-          <validation-provider
-            name="รหัสผู้ใช้"
-            :rules="{ required: true, max: 8, digits: 8 }"
-          >
-            <v-text-field
-              v-model="education.studentname"
-              label="รหัสผู้ใช้"
-              outlined
-              dense
-              :counter="8"
-            ></v-text-field>
-          </validation-provider>
-          <validation-provider name="ชื่อ" :rules="{ required: true }">
-            <v-text-field
-              v-model="education.name"
-              label="ชื่อ"
-              outlined
-              dense
-            ></v-text-field>
-          </validation-provider>
-          <v-textarea
-            v-model="education.detail"
-            label="รายละเอียด"
+          <v-selects v-model="education.degree" :options="educationdegree">
+          </v-selects>
+        </v-col>
+        <v-col cols="12"
+          ><v-text-field
+            v-model="education.name"
+            label="ชื่อ"
             outlined
             dense
-            height="150"
-          ></v-textarea>
-          <date-picker
+          ></v-text-field
+        ></v-col>
+        <v-col cols="12"
+          ><date-picker
             v-model="education.datestart"
             valueType="format"
             name="วันเริ่ม"
@@ -146,12 +127,10 @@
             valueType="format"
             name="วันจบ"
             placeholder="วันจบ"
-          ></date-picker>
-        </v-col>
-        <br /><v-btn
-          @click="submitForm"
-          :disabled="invalid"
-          class="btn btn-success buttonleft"
+            class="dateend"
+          ></date-picker
+        ></v-col>
+        <br /><v-btn @click="submitForm" class="btn btn-success buttonleft"
           >บันทึก</v-btn
         >
         <v-btn @click="gotoNextPage" class="btn btn-success buttonright"
@@ -163,16 +142,14 @@
 </template>
 
 <script>
-import axios from "axios";
-import { required, digits, email, max, regex } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationObserver,
-  ValidationProvider,
-  setInteractionMode,
-} from "vee-validate";
+import "vue-select/dist/vue-select.css";
+import { getAPI, axiosBase } from "../axios-api";
+import { mapState } from "vuex";
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import Navbar from "../src/components/Navbar";
+import { required, digits, email, max, regex } from "vee-validate/dist/rules";
+import { extend, ValidationObserver, setInteractionMode } from "vee-validate";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
 extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
@@ -181,7 +158,7 @@ extend("regex", { ...regex, message: "{_field_} {_value_} รูปแบบไ�
 extend("email", { ...email, message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง" });
 export default {
   name: "Education",
-  components: { DatePicker, ValidationProvider, ValidationObserver },
+  components: { DatePicker, ValidationObserver, Navbar },
   data() {
     return {
       education: {},
@@ -191,16 +168,26 @@ export default {
       editedIndex: -1,
       messagecreate: "",
       messageedit: "",
+      accountid: {},
       headers: [
-        { text: "ชื่อ", align: "start", sortable: false },
+        { text: "ระดับ", align: "start", sortable: false },
+        { text: "ชื่อ", sortable: false },
         { text: "วันเริ่ม", sortable: false },
         { text: "วันจบ", sortable: false },
-        { text: "รายละเอียด", sortable: false },
         { text: "ตัวเลือก", sortable: false },
+      ],
+      educationdegree: [
+        "มัธยมศึกษา",
+        "ประกาศนียบัตรวิชาชีพ (ปวช.)",
+        "ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)",
+        "ปริญญาตรี",
+        "ปริญญาโท",
+        "ปริญญาเอก",
       ],
     };
   },
   computed: {
+    ...mapState(["APIData"]),
     formTitle() {
       return this.editedIndex === -1 ? "แก้ไข" : "";
     },
@@ -213,73 +200,141 @@ export default {
     submitForm() {
       this.createEducation();
     },
-    getMessageCreate() {
-      this.messagecreate = "";
-    },
-    getFailMessage() {
-      this.messagecreate = "กรอกข้อมูลให้ครบ";
-    },
     setFormData() {
       this.education = {};
       this.getMessageEdit();
       this.getMessageCreate();
     },
-    async createEducation() {
-      try {
-        await axios.post("api/educations/", this.education);
-        this.setFormData();
-        this.getEducation();
-      } catch (error) {
-        this.getFailMessage();
-      }
-    },
-    gotoNextPage() {
-      this.$router.push({ name: "Work" });
-    },
-    async getEducation() {
-      let educations = await axios.get("api/educations/").then((r) => r.data);
-      this.educations = educations;
-    },
-    getSuccessDeleteMessage() {
-      this.$dialog.alert("ลบสำเร็จ");
-    },
-    getFailDeleteMessage() {
-      this.$dialog.alert("ลบไม่สำเร็จ");
-    },
-    getSuccessEditMessage() {
-      this.$dialog.alert("แก้ไขสำเร็จ");
-    },
-    getFailEditMessage() {
-      this.messageedit = "กรอกข้อมูลให้ครบ";
+    getMessageCreate() {
+      this.messagecreate = "";
     },
     getMessageEdit() {
       this.messageedit = "";
     },
-    async deleteItemConfirm(education) {
+    getFailMessage() {
+      this.messagecreate = "กรอกข้อมูลไม่ครบ";
+    },
+    getFailEditMessage() {
+      this.messageedit = "กรอกข้อมูลไม่ครบ";
+    },
+    getAlreadyExistMessage() {
+      let message = "ข้อมูลไม่ครบหรือเป็นรายการที่มีอยู่แล้ว";
+      let options = {
+        okText: "ปิด",
+        cancelText: "Cancel",
+        animation: "bounce",
+        type: "basic",
+      };
+      this.$dialog.alert(message, options);
+    },
+    async getEducation() {
+      await getAPI
+        .get("/api/educations/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async getAccountid() {
+      await getAPI
+        .get("/account/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.accountid = response.data;
+          return this.accountid;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async createEducation() {
+      await this.getAccountid();
       try {
-        await axios.delete(
-          `api/educations/${education.educationid}/`,
-          this.education
-        );
-        this.closeDelete();
-        this.getSuccessDeleteMessage();
-        this.setFormData();
+        await axiosBase
+          .post(
+            "/api/educations/",
+            {
+              accountid: this.accountid[0].id,
+              educationid: this.education.educationid,
+              datestart: this.education.datestart,
+              dateend: this.education.dateend,
+              name: this.education.name,
+              degree: this.education.degree,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
+          .then(() => {
+            this.setFormData();
+            this.getEducation();
+          })
+          .catch(() => {
+            this.getEducation();
+            this.getAlreadyExistMessage();
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteItemConfirm(education) {
+      await this.getAccountid();
+      try {
+        await axiosBase
+          .delete(`api/educations/${education.educationid}/`, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeDelete();
+            this.setFormData();
+          })
+          .catch(() => {
+            this.closeDelete();
+            this.getFailDeleteMessage();
+          });
       } catch (error) {
         this.closeDelete();
         this.getFailDeleteMessage();
       }
     },
     async editItemConfirm(education) {
+      await this.getAccountid();
+      let data = {
+        accountid: this.accountid[0].id,
+        educationid: this.education.educationid,
+        datestart: this.education.datestart,
+        dateend: this.education.dateend,
+        name: this.education.name,
+        degree: this.education.degree,
+      };
       try {
-        await axios.put(
-          `api/educations/${education.educationid}/`,
-          this.education
-        );
-        this.closeEdit();
-        this.setFormData();
-        this.getSuccessEditMessage();
+        await axiosBase
+          .put(`api/educations/${education.educationid}/`, data, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeEdit();
+            this.setFormData();
+          })
+          .catch((err) => {
+            console.log(err);
+            this.getEducation();
+            this.getFailEditMessage();
+          });
       } catch (error) {
-        this.getFailEditMessage();
+        console.log(error);
       }
     },
     closeDelete() {
@@ -291,6 +346,9 @@ export default {
       this.dialogedit = false;
       this.getEducation();
       this.setFormData();
+    },
+    gotoNextPage() {
+      this.$router.push({ name: "Work" });
     },
   },
 };

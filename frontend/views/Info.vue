@@ -1,10 +1,7 @@
 <template>
   <v-app id="app">
-    <validation-observer
-      class="container d-flex card"
-      ref="observer"
-      v-slot="{ invalid }"
-    >
+    <Navbar></Navbar>
+    <validation-observer class="container d-flex card" ref="observer">
       <h2 style="text-align: center">บันทึกข้อมูล</h2>
       <v-form>
         <v-container>
@@ -171,15 +168,15 @@
             </v-row>
           </validation-provider>
         </v-container>
-        <v-btn @click="submitForm" :disabled="invalid" class="btn btn-success"
-          >บันทึก</v-btn
-        >
+        <v-btn @click="submitForm" class="btn btn-success">บันทึก</v-btn>
       </v-form>
     </validation-observer>
   </v-app>
 </template>
 <script>
-import axios from "axios";
+import Navbar from "../src/components/Navbar";
+import { axiosBase, getAPI } from "../axios-api";
+import { mapState } from "vuex";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
 import {
   extend,
@@ -217,24 +214,70 @@ extend("email", {
 
 export default {
   name: "Info",
+  computed: { ...mapState(["APIData"]) },
   components: {
     ValidationProvider,
     ValidationObserver,
+    Navbar,
   },
   data() {
     return {
       student: {},
       yearsitem: ["1", "2", "3", "4"],
+      accountid: {},
     };
+  },
+  created() {
+    this.getAccountid();
   },
   methods: {
     submitForm() {
       this.createStudent();
     },
+    getAccountid() {
+      getAPI
+        .get("/account/", {
+          headers: {
+            Authorization: `Bearer ${this.$store.state.accessToken}`,
+          },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.accountid = this.$store.state.APIData;
+          return this.accountid;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     async createStudent() {
+      await this.getAccountid();
       try {
-        await axios.post("api/students/", this.student);
-        this.$router.push({ name: "Skill" });
+        axiosBase
+          .post(
+            "/api/students/",
+            {
+              accountid: this.accountid[0].id,
+              studentcode: this.student.studentcode,
+              year: this.student.year,
+              name: this.student.name,
+              surname: this.student.surname,
+              idcard: this.student.idcard,
+              email: this.student.email,
+              telphoneNumber: this.student.telphoneNumber,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
+          .then(() => {
+            this.$router.push({ name: "Skill" });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } catch (error) {
         console.log(error);
       }

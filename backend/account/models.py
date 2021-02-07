@@ -16,8 +16,7 @@ class MyAccountManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             username=username,
-            password=password,
-
+            password=password
         )
 
         user.set_password(password)
@@ -28,9 +27,9 @@ class MyAccountManager(BaseUserManager):
         user = self.create_user(
             email=self.normalize_email(email),
             username=username,
-            password=password,
-
+            password=password
         )
+
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
@@ -44,6 +43,7 @@ class Account(AbstractBaseUser):
     email = models.EmailField(verbose_name="email",
                               max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
+    password = models.CharField(max_length=2000)
     date_joined = models.DateTimeField(
         verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(

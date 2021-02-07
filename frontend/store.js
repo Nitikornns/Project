@@ -1,18 +1,23 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { getAPI } from "./axios-api";
+import { axiosBase } from "./axios-api";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
-    accessToken: null,
-    refreshToken: null,
+    accessToken: localStorage.getItem("access_token") || null,
+    refreshToken: localStorage.getItem("refresh_token") || null,
     APIData: "",
   },
   mutations: {
-    updateStorage(state, { access, refresh }) {
+    updateLocalStorage(state, { access, refresh }) {
+      localStorage.setItem("access_token", access);
+      localStorage.setItem("refresh_token", refresh);
       state.accessToken = access;
       state.refreshToken = refresh;
+    },
+    updateAccess(state, access) {
+      state.accessToken = access;
     },
     destroyToken(state) {
       state.accessToken = null;
@@ -25,23 +30,71 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    userLogout(context) {
-      if (context.getters.loggedIn) {
-        context.commit("destroyToken");
-      }
-    },
-    userLogin(context, usercredentials) {
+    // run the below action to get a new access token on expiration
+    refreshToken(context) {
       return new Promise((resolve, reject) => {
-        getAPI
-          .post("/api/token/", {
-            email: usercredentials.email,
-            password: usercredentials.password,
+        axiosBase
+          .post("/api/token/refresh/", {
+            refresh: context.state.refreshToken,
+          }) // send the stored refresh token to the backend API
+          .then((response) => {
+            // if API sends back new access and refresh token update the store
+            console.log("New access successfully generated");
+            context.commit("updateAccess", response.data.access);
+            resolve(response.data.access);
+          })
+          .catch((err) => {
+            console.log("error in refreshToken Task");
+            reject(err); // error generating new access and refresh token because refresh token has expired
+          });
+      });
+    },
+    registerUser(context, data) {
+      return new Promise((resolve, reject) => {
+        axiosBase
+          .post("/account/", {
+            email: data.email,
+            username: data.username,
+            password: data.password,
           })
           .then((response) => {
-            context.commit("updateStorage", {
+            resolve(response);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    userLogout(context) {
+      if (context.getters.loggedIn) {
+        return new Promise((resolve) => {
+          try {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            context.commit("destroyToken");
+          } catch (error) {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("refresh_token");
+            context.commit("destroyToken");
+            resolve(error);
+          }
+        });
+      }
+    },
+    userLogin(context, credentials) {
+      return new Promise((resolve, reject) => {
+        // send the username and password to the backend API:
+        axiosBase
+          .post("/api/token/", {
+            email: credentials.email,
+            password: credentials.password,
+          })
+          // if successful update local storage:
+          .then((response) => {
+            context.commit("updateLocalStorage", {
               access: response.data.access,
               refresh: response.data.refresh,
-            });
+            }); // store the access and refresh token in localstorage
             resolve();
           })
           .catch((err) => {

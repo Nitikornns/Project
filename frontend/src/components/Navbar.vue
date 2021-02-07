@@ -1,16 +1,16 @@
 <template>
   <div class="nav-bar">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white nav-1">
-      <div class="container mw-0 px-3">
-        <v-btn
-          v-if="accessToken != null"
-          color="accent"
-          elevation="5"
-          @click="goToLogout"
-          >Logout</v-btn
-        >
-      </div>
-    </nav>
+    <ul>
+      <li v-if="accessToken == null">
+        <router-link :to="{ name: 'Register' }">REGISTER</router-link>
+      </li>
+      <li v-if="accessToken == null">
+        <router-link :to="{ name: 'Login' }">LOGIN</router-link>
+      </li>
+      <li v-if="accessToken != null">
+        <router-link :to="{ name: 'Logout' }">LOGOUT</router-link>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -19,16 +19,50 @@ import { mapState } from "vuex";
 export default {
   name: "Navbar",
   computed: mapState(["accessToken"]),
-  methods: {
-    goToLogout() {
-      this.$router.push({ name: "Logout" });
-    },
-  },
 };
 </script>
 
-<style scoped>
-a {
-  color: #000;
+<style>
+@import url(https://fonts.googleapis.com/css?family=Quicksand);
+.nav-bar {
+  background-color: #2f3033;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+.nav-bar ul {
+  list-style: none;
+  margin: 0 14%;
+  padding: 0;
+  text-align: center;
+  color: white;
+}
+.nav-bar ul li {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 25px;
+  float: right;
+}
+.nav-bar:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.nav-bar ul li a {
+  text-decoration: none;
+  font-family: "Quicksand", sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  padding: 10px;
+  border-radius: 7px;
+}
+.nav-bar ul li a:hover {
+  background-color: #a72a64;
+}
+.router-link-active {
+  background-color: #a72a64;
 }
 </style>

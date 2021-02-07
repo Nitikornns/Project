@@ -11,7 +11,7 @@
             <p v-if="incorrectAuth">
               อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
             </p>
-            <form v-on:submit.prevent="login">
+            <form v-on:submit.prevent="userLogin">
               <div class="form-group">
                 <v-text-field
                   v-model="email"
@@ -45,12 +45,20 @@
 export default {
   name: "login",
   data() {
-    return { email: "", password: "", incorrectAuth: false, show: false };
+    return {
+      email: "",
+      password: "",
+      incorrectAuth: false,
+      show: false,
+    };
   },
   methods: {
-    login() {
+    userLogin() {
       this.$store
-        .dispatch("userLogin", { email: this.email, password: this.password })
+        .dispatch("userLogin", {
+          email: this.email,
+          password: this.password,
+        })
         .then(() => {
           this.$router.push({ name: "Info" });
         })

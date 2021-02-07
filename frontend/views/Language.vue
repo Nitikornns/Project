@@ -1,5 +1,6 @@
-<template
-  ><v-app
+<template>
+  <v-app
+    ><Navbar></Navbar
     ><v-dialog v-model="dialogDelete" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center"
@@ -67,7 +68,7 @@
     <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
-          <tr v-for="language in languages" :key="language.languageid">
+          <tr v-for="language in APIData" :key="language.languageid">
             <td>{{ language.name }}</td>
             <td>{{ language.sumscore }}</td>
             <v-btn
@@ -91,25 +92,9 @@
       </template>
     </v-data-table>
     <h6 class="message">{{ messagecreate }}</h6>
-    <validation-observer
-      class="container d-flex card"
-      ref="observer"
-      v-slot="{ invalid }"
-    >
+    <div class="container d-flex card">
       <h2 style="text-align: center">ทักษะภาษา</h2>
       <v-form>
-        <validation-provider
-          name="รหัสผู้ใช้"
-          :rules="{ required: true, max: 8, digits: 8 }"
-        >
-          <v-text-field
-            v-model="language.studentname"
-            label="รหัสผู้ใช้"
-            outlined
-            dense
-            :counter="8"
-          ></v-text-field>
-        </validation-provider>
         <v-selects v-model="language.name" :options="itemlistlanguages">
         </v-selects
         ><br />
@@ -121,10 +106,7 @@
           class="rounded-pill"
         >
           <strong>{{ Math.trunc(language.score) }}%</strong> </v-progress-linear
-        ><br /><v-btn
-          @click="submitForm"
-          :disabled="invalid"
-          class="btn btn-success buttonleft"
+        ><br /><v-btn @click="submitForm" class="btn btn-success buttonleft"
           >บันทึก</v-btn
         ><v-btn @click="maxBar" class="btn btn-success maxbuttoncenter"
           >100%เต็ม</v-btn
@@ -133,19 +115,16 @@
           >ถัดไป</v-btn
         >
       </v-form>
-    </validation-observer>
+    </div>
   </v-app>
 </template>
 <script>
-import axios from "axios";
+import Navbar from "../src/components/Navbar";
 import "vue-select/dist/vue-select.css";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationObserver,
-  ValidationProvider,
-  setInteractionMode,
-} from "vee-validate";
+import { extend, setInteractionMode } from "vee-validate";
+import { getAPI, axiosBase } from "../axios-api";
+import { mapState } from "vuex";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
 extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
@@ -154,7 +133,7 @@ extend("regex", { ...regex, message: "{_field_} {_value_} รูปแบบไ�
 extend("email", { ...email, message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง" });
 export default {
   name: "Language",
-  components: { ValidationProvider, ValidationObserver },
+  components: { Navbar },
   data() {
     return {
       language: {},
@@ -169,6 +148,7 @@ export default {
         { text: "ความถนัด (%)", sortable: false },
         { text: "ตัวเลือก", sortable: false },
       ],
+      accountid: {},
       itemlistlanguages: [
         "กัมพูชา",
         "กาตาร์",
@@ -225,6 +205,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["APIData"]),
     formTitle() {
       return this.editedIndex === -1 ? "แก้ไข" : "";
     },
@@ -235,85 +216,145 @@ export default {
   },
   methods: {
     submitForm() {
-      this.createSkill();
-    },
-    getMessageCreate() {
-      this.messagecreate = "";
-    },
-    getAlreadyExistMessage() {
-      this.messagecreate = "เพิ่มไม่สำเร็จ รายการนี้มีอยู่ก่อนแล้ว";
-    },
-    getFailMessage() {
-      this.messagecreate = "กรอกข้อมูลให้ครบ";
+      this.createLanguage();
     },
     setFormData() {
       this.language = { score: 0 };
       this.getMessageEdit();
       this.getMessageCreate();
     },
-    maxBar() {
-      this.language = { score: 100 };
-    },
-    async createSkill() {
-      if (this.language.name) {
-        try {
-          await axios.post("api/languages/", this.language);
-          this.setFormData();
-          this.getLanguage();
-        } catch (error) {
-          this.getAlreadyExistMessage();
-        }
-      } else {
-        this.getFailMessage();
-      }
-    },
-    gotoNextPage() {
-      this.$router.push({ name: "Education" });
-    },
-    async getLanguage() {
-      let languages = await axios.get("api/languages/").then((r) => r.data);
-      this.languages = languages;
-    },
-    intervalFetchData() {
-      setInterval(this.getLanguage, 1000);
-    },
-    getSuccessDeleteMessage() {
-      this.$dialog.alert("ลบสำเร็จ");
-    },
-    getFailDeleteMessage() {
-      this.$dialog.alert("ลบไม่สำเร็จ");
-    },
-    getSuccessEditMessage() {
-      this.$dialog.alert("แก้ไขสำเร็จ");
-    },
-    getFailEditMessage() {
-      this.messageedit = "ภาษาที่เลือกถูกเพิ่มอยู่ก่อนแล้ว";
+    getMessageCreate() {
+      this.messagecreate = "";
     },
     getMessageEdit() {
       this.messageedit = "";
     },
-    async deleteItemConfirm(language) {
+    getFailEditMessage() {
+      this.messageedit = "ภาษาที่เลือกถูกเพิ่มอยู่ก่อนแล้ว";
+    },
+    getAlreadyExistMessage() {
+      let message = "ข้อมูลไม่ครบหรือเป็นรายการที่มีอยู่แล้ว";
+      let options = {
+        okText: "ปิด",
+        cancelText: "Cancel",
+        animation: "bounce",
+        type: "basic",
+      };
+      this.$dialog.alert(message, options);
+    },
+    getFailDeleteMessage() {
+      let message = "ลบไม่สำเร็จ";
+      let options = {
+        okText: "ปิด",
+        cancelText: "Cancel",
+        animation: "bounce",
+        type: "basic",
+      };
+      this.$dialog.alert(message, options);
+    },
+    async getLanguage() {
+      await getAPI
+        .get("/api/languages/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async getAccountid() {
+      await getAPI
+        .get("/account/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.accountid = response.data;
+          return this.accountid;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async createLanguage() {
+      await this.getAccountid();
       try {
-        await axios.delete(
-          `api/languages/${language.languageid}/`,
-          this.language
-        );
-        this.closeDelete();
-        this.getSuccessDeleteMessage();
-        this.setFormData();
+        await axiosBase
+          .post(
+            "/api/languages/",
+            {
+              accountid: this.accountid[0].id,
+              name: this.language.name,
+              score: this.language.score,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
+          .then(() => {
+            this.getLanguage();
+            this.setFormData();
+          })
+          .catch(() => {
+            this.getLanguage();
+            this.getAlreadyExistMessage();
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteItemConfirm(language) {
+      await this.getAccountid();
+      try {
+        await axiosBase
+          .delete(`api/languages/${language.languageid}/`, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeDelete();
+            this.setFormData();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } catch (error) {
         this.closeDelete();
         this.getFailDeleteMessage();
       }
     },
     async editItemConfirm(language) {
+      await this.getAccountid();
+      let data = {
+        accountid: this.accountid[0].id,
+        languageid: this.language.languageid,
+        name: this.language.name,
+        score: this.language.score,
+        sumscore: this.language.sumscore,
+      };
       try {
-        await axios.put(`api/languages/${language.languageid}/`, this.language);
-        this.closeEdit();
-        this.setFormData();
-        this.getSuccessEditMessage();
+        await axiosBase
+          .put(`api/languages/${language.languageid}/`, data, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeEdit();
+            this.setFormData();
+          })
+          .catch((err) => {
+            console.log(err);
+            this.getLanguage();
+            this.getFailEditMessage();
+          });
       } catch (error) {
-        this.getFailEditMessage();
+        console.log(error);
       }
     },
     closeDelete() {
@@ -325,6 +366,12 @@ export default {
       this.dialogedit = false;
       this.getLanguage();
       this.setFormData();
+    },
+    maxBar() {
+      this.language = { score: 100 };
+    },
+    gotoNextPage() {
+      this.$router.push({ name: "Education" });
     },
   },
 };

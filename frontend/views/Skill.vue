@@ -1,6 +1,7 @@
-<template
-  ><v-app
-    ><v-dialog v-model="dialogDelete" persistent max-width="500px">
+<template>
+  <v-app id="app">
+    <Navbar></Navbar>
+    <v-dialog v-model="dialogDelete" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center"
           >ต้องการจะลบใช่หรือไม่?</v-card-title
@@ -52,11 +53,14 @@
           <v-btn class="btn btn-success" text @click="editItemConfirm(skill)">
             ยืนยัน
           </v-btn>
-          <v-btn class="btn btn-danger" text @click="closeEdit"> ยกเลิก </v-btn>
+          <v-btn class="btn btn-danger" text @click="closeEdit">
+            ยกเลิก
+          </v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
+
     <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
@@ -84,25 +88,9 @@
       </template>
     </v-data-table>
     <h6 class="message">{{ messagecreate }}</h6>
-    <validation-observer
-      class="container d-flex card"
-      ref="observer"
-      v-slot="{ invalid }"
-    >
+    <div class="container d-flex card">
       <h2 style="text-align: center">ทักษะภาษาโปรแกรมมิ่ง</h2>
       <v-form>
-        <validation-provider
-          name="รหัสผู้ใช้"
-          :rules="{ required: true, max: 8, digits: 8 }"
-        >
-          <v-text-field
-            v-model="skill.studentname"
-            label="รหัสผู้ใช้"
-            outlined
-            dense
-            :counter="8"
-          ></v-text-field>
-        </validation-provider>
         <v-selects v-model="skill.name" :options="itemlistskill"> </v-selects
         ><br />
         <v-progress-linear
@@ -113,10 +101,7 @@
           class="rounded-pill"
         >
           <strong>{{ Math.trunc(skill.score) }}%</strong> </v-progress-linear
-        ><br /><v-btn
-          @click="submitForm"
-          :disabled="invalid"
-          class="btn btn-success buttonleft"
+        ><br /><v-btn @click="submitForm" class="btn btn-success buttonleft"
           >บันทึก</v-btn
         ><v-btn @click="maxBar" class="btn btn-success maxbuttoncenter"
           >100%เต็ม</v-btn
@@ -125,20 +110,15 @@
           >ถัดไป</v-btn
         >
       </v-form>
-    </validation-observer>
+    </div>
   </v-app>
 </template>
 <script>
-import axios from "axios";
+import Navbar from "../src/components/Navbar";
 import "vue-select/dist/vue-select.css";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
-import {
-  extend,
-  ValidationObserver,
-  ValidationProvider,
-  setInteractionMode,
-} from "vee-validate";
-import { getAPI } from "../axios-api";
+import { extend, setInteractionMode } from "vee-validate";
+import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
@@ -153,11 +133,10 @@ export default {
       this.$router.push({ name: "login" });
     });
   },
-  components: { ValidationProvider, ValidationObserver },
+  components: { Navbar },
   data() {
     return {
       skill: {},
-      //skills: [],
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
@@ -169,6 +148,7 @@ export default {
         { text: "ตัวเลือก", sortable: false },
       ],
       itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
+      accountid: {},
     };
   },
   computed: {
@@ -185,52 +165,42 @@ export default {
     submitForm() {
       this.createSkill();
     },
-    getMessageCreate() {
-      this.messagecreate = "";
-    },
-    getAlreadyExistMessage() {
-      this.messagecreate = "เพิ่มไม่สำเร็จ รายการนี้มีอยู่ก่อนแล้ว";
-    },
-    getFailMessage() {
-      this.messagecreate = "กรอกข้อมูลให้ครบ";
-    },
     setFormData() {
       this.skill = { score: 0 };
       this.getMessageEdit();
       this.getMessageCreate();
     },
-    maxBar() {
-      this.skill = { score: 100 };
+    getMessageCreate() {
+      this.messagecreate = "";
     },
-    async createSkill() {
-      if (this.skill.name) {
-        try {
-          getAPI
-            .get("/api/skills/", this.skill, {
-              headers: {
-                Authorization: `Bearer ${this.$store.state.accessToken}`,
-              },
-            })
-            .then((response) => {
-              this.$store.state.APIData = response.data;
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-          this.setFormData();
-          this.getSkill();
-        } catch (error) {
-          this.getAlreadyExistMessage();
-        }
-      } else {
-        this.getFailMessage();
-      }
+    getMessageEdit() {
+      this.messageedit = "";
     },
-    gotoNextPage() {
-      this.$router.push({ name: "Language" });
+    getFailEditMessage() {
+      this.messageedit = "ภาษาที่เลือกถูกเพิ่มอยู่ก่อนแล้ว";
+    },
+    getAlreadyExistMessage() {
+      let message = "ข้อมูลไม่ครบหรือเป็นรายการที่มีอยู่แล้ว";
+      let options = {
+        okText: "ปิด",
+        cancelText: "Cancel",
+        animation: "bounce",
+        type: "basic",
+      };
+      this.$dialog.alert(message, options);
+    },
+    getFailDeleteMessage() {
+      let message = "ลบไม่สำเร็จ";
+      let options = {
+        okText: "ปิด",
+        cancelText: "Cancel",
+        animation: "bounce",
+        type: "basic",
+      };
+      this.$dialog.alert(message, options);
     },
     async getSkill() {
-      getAPI
+      await getAPI
         .get("/api/skills/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
@@ -241,43 +211,97 @@ export default {
           console.log(err);
         });
     },
-    intervalFetchData() {
-      setInterval(this.getSkill, 1000);
+    async getAccountid() {
+      await getAPI
+        .get("/account/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.accountid = response.data;
+          return this.accountid;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-    getSuccessDeleteMessage() {
-      this.$dialog.alert("ลบสำเร็จ");
-    },
-    getFailDeleteMessage() {
-      this.$dialog.alert("ลบไม่สำเร็จ");
-    },
-    getSuccessEditMessage() {
-      this.$dialog.alert("แก้ไขสำเร็จ");
-    },
-    getFailEditMessage() {
-      this.messageedit = "ภาษาที่เลือกถูกเพิ่มอยู่ก่อนแล้ว";
-    },
-    getMessageEdit() {
-      this.messageedit = "";
+    async createSkill() {
+      await this.getAccountid();
+      try {
+        await axiosBase
+          .post(
+            "/api/skills/",
+            {
+              accountid: this.accountid[0].id,
+              name: this.skill.name,
+              score: this.skill.score,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
+          .then(() => {
+            this.getSkill();
+            this.setFormData();
+          })
+          .catch(() => {
+            this.getSkill();
+            this.getAlreadyExistMessage();
+          });
+      } catch (error) {
+        console.log(error);
+      }
     },
     async deleteItemConfirm(skill) {
+      await this.getAccountid();
       try {
-        await axios.delete(`api/skills/${skill.skillid}/`, this.skill);
-        this.closeDelete();
-        this.getSuccessDeleteMessage();
-        this.setFormData();
+        await axiosBase
+          .delete(`api/skills/${skill.skillid}/`, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeDelete();
+            this.setFormData();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } catch (error) {
         this.closeDelete();
         this.getFailDeleteMessage();
       }
     },
     async editItemConfirm(skill) {
+      await this.getAccountid();
+      let data = {
+        accountid: this.accountid[0].id,
+        skillid: this.skill.skillid,
+        name: this.skill.name,
+        score: this.skill.score,
+        sumscore: this.skill.sumscore,
+      };
       try {
-        await axios.put(`api/skills/${skill.skillid}/`, this.skill);
-        this.closeEdit();
-        this.setFormData();
-        this.getSuccessEditMessage();
+        await axiosBase
+          .put(`api/skills/${skill.skillid}/`, data, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeEdit();
+            this.setFormData();
+          })
+          .catch((err) => {
+            console.log(err);
+            this.getSkill();
+            this.getFailEditMessage();
+          });
       } catch (error) {
-        this.getFailEditMessage();
+        console.log(error);
       }
     },
     closeDelete() {
@@ -290,9 +314,16 @@ export default {
       this.getSkill();
       this.setFormData();
     },
+    maxBar() {
+      this.skill = { score: 100 };
+    },
+    gotoNextPage() {
+      this.$router.push({ name: "Language" });
+    },
   },
 };
 </script>
+
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

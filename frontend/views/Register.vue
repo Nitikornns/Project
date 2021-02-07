@@ -46,19 +46,22 @@
   </v-app>
 </template>
 <script>
-import { getAPI } from "../axios-api";
 export default {
   name: "Register",
   data() {
     return {
-      account: {},
+      account: [],
       show: false,
     };
   },
   methods: {
     createUser() {
-      getAPI
-        .post("/account/", this.account)
+      this.$store
+        .dispatch("registerUser", {
+          email: this.account.email,
+          username: this.account.username,
+          password: this.account.password,
+        })
         .then(() => {
           this.$router.push({ name: "Login" });
         })

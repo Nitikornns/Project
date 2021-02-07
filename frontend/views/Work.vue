@@ -1,5 +1,6 @@
 <template>
   <v-app
+    ><Navbar></Navbar
     ><v-dialog v-model="dialogDelete" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center"
@@ -53,7 +54,7 @@
     <v-data-table :headers="headers" class="elevation-1">
       <template v-slot:body>
         <tbody>
-          <tr v-for="work in works" :key="work.workid">
+          <tr v-for="work in APIData" :key="work.workid">
             <td>{{ work.name }}</td>
             <td>{{ work.detail }}</td>
             <v-btn
@@ -76,27 +77,11 @@
         </tbody>
       </template>
     </v-data-table>
-
-    <validation-observer
-      class="container d-flex card"
-      ref="observer"
-      v-slot="{ invalid }"
-    >
+    <h6 class="message">{{ messagecreate }}</h6>
+    <validation-observer class="container d-flex card" ref="observer">
       <h2 style="text-align: center">การทำงาน</h2>
       <v-form>
         <v-col cols="12">
-          <validation-provider
-            name="รหัสผู้ใช้"
-            :rules="{ required: true, max: 8, digits: 8 }"
-          >
-            <v-text-field
-              v-model="work.studentname"
-              label="รหัสผู้ใช้"
-              outlined
-              dense
-              :counter="8"
-            ></v-text-field>
-          </validation-provider>
           <validation-provider name="ชื่อ" :rules="{ required: true }">
             <v-text-field
               v-model="work.name"
@@ -115,10 +100,7 @@
             ></v-textarea>
           </validation-provider>
         </v-col>
-        <br /><v-btn
-          @click="submitForm"
-          :disabled="invalid"
-          class="btn btn-success buttonleft"
+        <br /><v-btn @click="submitForm" class="btn btn-success buttonleft"
           >บันทึก</v-btn
         >
         <v-btn @click="gotoNextPage" class="btn btn-success buttonright"
@@ -130,7 +112,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import Navbar from "../src/components/Navbar";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
 import {
   extend,
@@ -138,6 +120,8 @@ import {
   ValidationProvider,
   setInteractionMode,
 } from "vee-validate";
+import { getAPI, axiosBase } from "../axios-api";
+import { mapState } from "vuex";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
 extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
@@ -146,7 +130,7 @@ extend("regex", { ...regex, message: "{_field_} {_value_} รูปแบบไ�
 extend("email", { ...email, message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง" });
 export default {
   name: "Work",
-  components: { ValidationProvider, ValidationObserver },
+  components: { ValidationProvider, ValidationObserver, Navbar },
   data() {
     return {
       work: {},
@@ -154,7 +138,9 @@ export default {
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
+      messagecreate: "",
       messageedit: "",
+      accountid: {},
       headers: [
         { text: "ชื่อ", align: "start", sortable: false },
         { text: "รายละเอียด", sortable: false },
@@ -163,6 +149,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["APIData"]),
     formTitle() {
       return this.editedIndex === -1 ? "แก้ไข" : "";
     },
@@ -173,62 +160,129 @@ export default {
   },
   methods: {
     submitForm() {
-      this.createEducation();
+      this.createWork();
     },
     setFormData() {
       this.work = {};
       this.getMessageEdit();
+      this.getMessageCreate();
     },
-    async createEducation() {
-      try {
-        await axios.post("api/works/", this.work);
-        this.setFormData();
-        this.getWork();
-      } catch (error) {
-        this.getFailMessage();
-      }
-    },
-    gotoNextPage() {
-      this.$router.push({ name: "Picture" });
-    },
-    async getWork() {
-      let works = await axios.get("api/works/").then((r) => r.data);
-      this.works = works;
-    },
-    getSuccessDeleteMessage() {
-      this.$dialog.alert("ลบสำเร็จ");
-    },
-    getFailDeleteMessage() {
-      this.$dialog.alert("ลบไม่สำเร็จ");
-    },
-    getSuccessEditMessage() {
-      this.$dialog.alert("แก้ไขสำเร็จ");
-    },
-    getFailEditMessage() {
-      this.messageedit = "กรอกข้อมูลให้ครบ";
+    getMessageCreate() {
+      this.messagecreate = "";
     },
     getMessageEdit() {
       this.messageedit = "";
     },
-    async deleteItemConfirm(work) {
+    getFailEditMessage() {
+      this.messageedit = "กรอกข้อมูลไม่ครบ";
+    },
+    getFailMessage() {
+      this.messagecreate = "กรอกข้อมูลไม่ครบ";
+    },
+    async getWork() {
+      await getAPI
+        .get("/api/works/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async getAccountid() {
+      await getAPI
+        .get("/account/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.accountid = response.data;
+          return this.accountid;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async createWork() {
+      await this.getAccountid();
       try {
-        await axios.delete(`api/works/${work.workid}/`, this.work);
-        this.closeDelete();
-        this.getSuccessDeleteMessage();
-        this.setFormData();
+        await axiosBase
+          .post(
+            "/api/works/",
+            {
+              accountid: this.accountid[0].id,
+              workid: this.work.workid,
+              name: this.work.name,
+              detail: this.work.detail,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
+          .then(() => {
+            this.setFormData();
+            this.getWork();
+          })
+          .catch(() => {
+            this.getWork();
+            this.getFailMessage();
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async deleteItemConfirm(work) {
+      await this.getAccountid();
+      try {
+        await axiosBase
+          .delete(`api/works/${work.workid}/`, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeDelete();
+            this.setFormData();
+          })
+          .catch(() => {
+            this.closeDelete();
+            this.getFailDeleteMessage();
+          });
       } catch (error) {
         this.closeDelete();
         this.getFailDeleteMessage();
       }
     },
     async editItemConfirm(work) {
+      await this.getAccountid();
+      let data = {
+        accountid: this.accountid[0].id,
+        workid: this.work.workid,
+        name: this.work.name,
+        detail: this.work.detail,
+      };
       try {
-        await axios.put(`api/works/${work.workid}/`, this.work);
-        this.closeEdit();
-        this.setFormData();
-        this.getSuccessEditMessage();
+        await axiosBase
+          .put(`api/works/${work.workid}/`, data, {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          })
+          .then(() => {
+            this.closeEdit();
+            this.setFormData();
+          })
+          .catch((err) => {
+            console.log(err);
+            this.getWork();
+            this.getFailEditMessage();
+          });
       } catch (error) {
-        this.getFailEditMessage();
+        console.log(error);
       }
     },
     closeDelete() {
@@ -240,6 +294,9 @@ export default {
       this.dialogedit = false;
       this.getWork();
       this.setFormData();
+    },
+    gotoNextPage() {
+      this.$router.push({ name: "Picture" });
     },
   },
 };
