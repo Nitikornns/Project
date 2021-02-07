@@ -28,9 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8080'
-]
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+)
 
 CORS_ALLOW_HEADERS = default_headers + (
     'contenttype',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'students.apps.StudentsConfig',
     'account',
+
 
 ]
 
