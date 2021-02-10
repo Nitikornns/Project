@@ -44,6 +44,7 @@ export default {
   margin: 0 5px;
   padding: 25px;
   float: right;
+  left: 100%;
 }
 .nav-bar:after {
   content: "";

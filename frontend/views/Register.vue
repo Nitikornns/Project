@@ -36,7 +36,7 @@
                 ></v-text-field>
               </div>
               <button type="submit" class="btn btn-lg btn-primary btn-block">
-                sign up
+                ยืนยัน
               </button>
             </form>
           </div>

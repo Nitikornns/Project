@@ -236,7 +236,7 @@ export default {
     },
     getAccountid() {
       getAPI
-        .get("/account/", {
+        .get("/accounts/", {
           headers: {
             Authorization: `Bearer ${this.$store.state.accessToken}`,
           },
@@ -244,6 +244,7 @@ export default {
         .then((response) => {
           this.$store.state.APIData = response.data;
           this.accountid = this.$store.state.APIData;
+          console.log(this.accountid);
           return this.accountid;
         })
         .catch((err) => {

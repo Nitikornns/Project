@@ -1,4 +1,3 @@
-from rest_framework.response import Response
 from rest_framework import viewsets
 from .models import Student, Skill, Language, Education, Picture, Work
 from .serializers import StudentSerializer, SkillSerializer, LanguageSerializer, EducationSerializer, PictureSerializer, WorkSerializer

@@ -1,49 +1,40 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.conf import settings
+
 # Create your models here.
 
 
 class MyAccountManager(BaseUserManager):
-    def create_user(self, email, username, password):
-        if not email:
-            raise ValueError('Users must have an email address')
-        if not username:
-            raise ValueError('Users must have a username')
-        if not password:
-            raise ValueError('Users must have a passwords')
+    def create_user(self, username, email, password=None):
+        if username is None:
+            raise TypeError('Users should have a username')
+        if email is None:
+            raise TypeError('Users should have a Email')
 
-        user = self.model(
-            email=self.normalize_email(email),
-            username=username,
-            password=password
-        )
-
+        user = self.model(username=username, email=self.normalize_email(email))
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
-    def create_superuser(self, email, username, password):
-        user = self.create_user(
-            email=self.normalize_email(email),
-            username=username,
-            password=password
-        )
+    def create_superuser(self, username, email, password=None):
+        if password is None:
+            raise TypeError('Password should not be none')
 
-        user.is_admin = True
-        user.is_staff = True
+        user = self.create_user(username, email, password)
         user.is_superuser = True
-        user.save(using=self._db)
+        user.is_staff = True
+        user.is_admin = True
+        user.save()
         return user
 
 
-class Account(AbstractBaseUser):
+class Account(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(auto_created=True, primary_key=True,
                           serialize=False, verbose_name='ID')
     email = models.EmailField(verbose_name="email",
                               max_length=60, unique=True)
     username = models.CharField(max_length=30, unique=True)
-    password = models.CharField(max_length=2000)
     date_joined = models.DateTimeField(
         verbose_name='date joined', auto_now_add=True)
     last_login = models.DateTimeField(
@@ -61,7 +52,8 @@ class Account(AbstractBaseUser):
     def __str__(self):
         return self.email
 
-    # For checking permissions. to keep it simple all admin have ALL permissons
+      # For checking permissions. to keep it simple all admin have ALL permissons
+
     def has_perm(self, perm, obj=None):
         return self.is_admin
 

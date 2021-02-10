@@ -75,7 +75,7 @@ export default {
     },
     async getAccountid() {
       await getAPI
-        .get("/account/", {
+        .get("/accounts/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {

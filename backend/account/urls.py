@@ -5,6 +5,6 @@ from rest_framework import routers
 from .views import *
 
 router = routers.SimpleRouter()
-router.register('account', AccountsViewSet),
+router.register('accounts', AccountsViewSet),
 
 urlpatterns = router.urls

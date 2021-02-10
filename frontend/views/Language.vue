@@ -45,7 +45,7 @@
                   height="30"
                   class="rounded-pill"
                 >
-                  <strong>{{ Math.trunc(language.score) }}%</strong>
+                  <strong>{{ Math.trunc(language.score) }}</strong>
                 </v-progress-linear>
               </v-col>
             </v-row>
@@ -105,11 +105,11 @@
           height="30"
           class="rounded-pill"
         >
-          <strong>{{ Math.trunc(language.score) }}%</strong> </v-progress-linear
+          <strong>{{ Math.trunc(language.score) }}</strong> </v-progress-linear
         ><br /><v-btn @click="submitForm" class="btn btn-success buttonleft"
           >บันทึก</v-btn
         ><v-btn @click="maxBar" class="btn btn-success maxbuttoncenter"
-          >100%เต็ม</v-btn
+          >100เต็ม</v-btn
         >
         <v-btn @click="gotoNextPage" class="btn btn-success buttonright"
           >ถัดไป</v-btn
@@ -145,7 +145,7 @@ export default {
       messageedit: "",
       headers: [
         { text: "ภาษา", align: "start", sortable: false },
-        { text: "ความถนัด (%)", sortable: false },
+        { text: "ระดับความถนัด", sortable: false },
         { text: "ตัวเลือก", sortable: false },
       ],
       accountid: {},
@@ -266,7 +266,7 @@ export default {
     },
     async getAccountid() {
       await getAPI
-        .get("/account/", {
+        .get("/accounts/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {

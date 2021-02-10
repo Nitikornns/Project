@@ -50,8 +50,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'students.apps.StudentsConfig',
     'account',
-
-
 ]
 
 AUTH_USER_MODEL = 'account.Account'

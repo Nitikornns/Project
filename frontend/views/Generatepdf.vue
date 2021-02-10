@@ -1,7 +1,10 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <v-btn @click="generateReport">ดาวโหลดpdf</v-btn>
+    <v-container class="container d-flex card">
+      <h2 style="text-align: center">ดาวโหลดpdf</h2>
+      <v-btn @click="generateReport">ดาวโหลด</v-btn>
+    </v-container>
     <vue-html2pdf
       :show-layout="false"
       :float-layout="true"
@@ -110,7 +113,7 @@
                             height="19"
                           >
                             <td style="text-align:center;font-size:12px">
-                              <strong>{{ Math.trunc(skill.score) }}%</strong>
+                              <strong>{{ Math.trunc(skill.score) }}</strong>
                             </td>
                           </v-progress-linear>
                         </div>
@@ -138,9 +141,9 @@
                               color="#009383"
                               height="19"
                               ><td style="text-align:center;font-size:12px">
-                                <strong
-                                  >{{ Math.trunc(language.score) }}%</strong
-                                >
+                                <strong>{{
+                                  Math.trunc(language.score)
+                                }}</strong>
                               </td>
                             </v-progress-linear>
                           </div>

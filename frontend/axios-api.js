@@ -21,7 +21,7 @@ getAPI.interceptors.response.use(undefined, function(err) {
           baseURL: APIUrl,
           method: "get",
           headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-          url: "/account/",
+          url: "/accounts/",
         }),
           axios.request({
             baseURL: APIUrl,
