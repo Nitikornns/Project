@@ -143,6 +143,7 @@
 
 <script>
 import "vue-select/dist/vue-select.css";
+import jwt_decode from "jwt-decode";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
 import DatePicker from "vue2-datepicker";
@@ -240,13 +241,14 @@ export default {
         });
     },
     async getAccountid() {
+      let token = localStorage.getItem("access_token");
+      let decoded = jwt_decode(token);
       await getAPI
         .get("/accounts/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.accountid = response.data;
+        .then(() => {
+          this.accountid = decoded.user_id;
           return this.accountid;
         })
         .catch((err) => {
@@ -260,7 +262,7 @@ export default {
           .post(
             "/api/educations/",
             {
-              accountid: this.accountid[0].id,
+              accountid: this.accountid,
               educationid: this.education.educationid,
               datestart: this.education.datestart,
               dateend: this.education.dateend,
@@ -309,21 +311,24 @@ export default {
     },
     async editItemConfirm(education) {
       await this.getAccountid();
-      let data = {
-        accountid: this.accountid[0].id,
-        educationid: this.education.educationid,
-        datestart: this.education.datestart,
-        dateend: this.education.dateend,
-        name: this.education.name,
-        degree: this.education.degree,
-      };
       try {
         await axiosBase
-          .put(`api/educations/${education.educationid}/`, data, {
-            headers: {
-              Authorization: `Bearer ${this.$store.state.accessToken}`,
+          .put(
+            `api/educations/${education.educationid}/`,
+            {
+              accountid: this.accountid,
+              educationid: this.education.educationid,
+              datestart: this.education.datestart,
+              dateend: this.education.dateend,
+              name: this.education.name,
+              degree: this.education.degree,
             },
-          })
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
           .then(() => {
             this.closeEdit();
             this.setFormData();

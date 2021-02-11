@@ -120,6 +120,7 @@ import { required, digits, email, max, regex } from "vee-validate/dist/rules";
 import { extend, setInteractionMode } from "vee-validate";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
+import jwt_decode from "jwt-decode";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
 extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
@@ -137,6 +138,7 @@ export default {
   data() {
     return {
       skill: {},
+      accountid: {},
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
@@ -148,7 +150,6 @@ export default {
         { text: "ตัวเลือก", sortable: false },
       ],
       itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
-      accountid: {},
     };
   },
   computed: {
@@ -212,13 +213,14 @@ export default {
         });
     },
     async getAccountid() {
+      let token = localStorage.getItem("access_token");
+      let decoded = jwt_decode(token);
       await getAPI
         .get("/accounts/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.accountid = response.data;
+        .then(() => {
+          this.accountid = decoded.user_id;
           return this.accountid;
         })
         .catch((err) => {
@@ -232,7 +234,7 @@ export default {
           .post(
             "/api/skills/",
             {
-              accountid: this.accountid[0].id,
+              accountid: this.accountid,
               name: this.skill.name,
               score: this.skill.score,
             },
@@ -277,20 +279,23 @@ export default {
     },
     async editItemConfirm(skill) {
       await this.getAccountid();
-      let data = {
-        accountid: this.accountid[0].id,
-        skillid: this.skill.skillid,
-        name: this.skill.name,
-        score: this.skill.score,
-        sumscore: this.skill.sumscore,
-      };
       try {
         await axiosBase
-          .put(`api/skills/${skill.skillid}/`, data, {
-            headers: {
-              Authorization: `Bearer ${this.$store.state.accessToken}`,
+          .put(
+            `api/skills/${skill.skillid}/`,
+            {
+              accountid: this.accountid,
+              skillid: this.skill.skillid,
+              name: this.skill.name,
+              score: this.skill.score,
+              sumscore: this.skill.sumscore,
             },
-          })
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
           .then(() => {
             this.closeEdit();
             this.setFormData();

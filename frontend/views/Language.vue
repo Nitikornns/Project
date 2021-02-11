@@ -120,6 +120,7 @@
 </template>
 <script>
 import Navbar from "../src/components/Navbar";
+import jwt_decode from "jwt-decode";
 import "vue-select/dist/vue-select.css";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
 import { extend, setInteractionMode } from "vee-validate";
@@ -138,6 +139,7 @@ export default {
     return {
       language: {},
       languages: [],
+      accountid: {},
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
@@ -148,7 +150,6 @@ export default {
         { text: "ระดับความถนัด", sortable: false },
         { text: "ตัวเลือก", sortable: false },
       ],
-      accountid: {},
       itemlistlanguages: [
         "กัมพูชา",
         "กาตาร์",
@@ -265,13 +266,14 @@ export default {
         });
     },
     async getAccountid() {
+      let token = localStorage.getItem("access_token");
+      let decoded = jwt_decode(token);
       await getAPI
         .get("/accounts/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.accountid = response.data;
+        .then(() => {
+          this.accountid = decoded.user_id;
           return this.accountid;
         })
         .catch((err) => {
@@ -285,7 +287,7 @@ export default {
           .post(
             "/api/languages/",
             {
-              accountid: this.accountid[0].id,
+              accountid: this.accountid,
               name: this.language.name,
               score: this.language.score,
             },
@@ -330,20 +332,23 @@ export default {
     },
     async editItemConfirm(language) {
       await this.getAccountid();
-      let data = {
-        accountid: this.accountid[0].id,
-        languageid: this.language.languageid,
-        name: this.language.name,
-        score: this.language.score,
-        sumscore: this.language.sumscore,
-      };
       try {
         await axiosBase
-          .put(`api/languages/${language.languageid}/`, data, {
-            headers: {
-              Authorization: `Bearer ${this.$store.state.accessToken}`,
+          .put(
+            `api/languages/${language.languageid}/`,
+            {
+              accountid: this.accountid,
+              languageid: this.language.languageid,
+              name: this.language.name,
+              score: this.language.score,
+              sumscore: this.language.sumscore,
             },
-          })
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
           .then(() => {
             this.closeEdit();
             this.setFormData();

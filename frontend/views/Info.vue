@@ -7,32 +7,6 @@
         <v-container>
           <validation-provider
             v-slot="{ errors }"
-            name="รหัสผู้ใช้"
-            :rules="{
-              required: true,
-              max: 8,
-              digits: 8,
-            }"
-          >
-            <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>รหัสผู้ใช้</v-subheader>
-              </v-col>
-              <v-col cols="7">
-                <v-text-field
-                  v-model="student.studentcode"
-                  outlined
-                  dense
-                  :error-messages="errors"
-                  required
-                  :counter="8"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </validation-provider>
-
-          <validation-provider
-            v-slot="{ errors }"
             name="ชั้นปี"
             rules="required"
           >
@@ -175,6 +149,7 @@
 </template>
 <script>
 import Navbar from "../src/components/Navbar";
+import jwt_decode from "jwt-decode";
 import { axiosBase, getAPI } from "../axios-api";
 import { mapState } from "vuex";
 import { required, digits, email, max, regex } from "vee-validate/dist/rules";
@@ -227,24 +202,19 @@ export default {
       accountid: {},
     };
   },
-  created() {
-    this.getAccountid();
-  },
   methods: {
     submitForm() {
       this.createStudent();
     },
-    getAccountid() {
-      getAPI
+    async getAccountid() {
+      let token = localStorage.getItem("access_token");
+      let decoded = jwt_decode(token);
+      await getAPI
         .get("/accounts/", {
-          headers: {
-            Authorization: `Bearer ${this.$store.state.accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.accountid = this.$store.state.APIData;
-          console.log(this.accountid);
+        .then(() => {
+          this.accountid = decoded.user_id;
           return this.accountid;
         })
         .catch((err) => {
@@ -258,8 +228,7 @@ export default {
           .post(
             "/api/students/",
             {
-              accountid: this.accountid[0].id,
-              studentcode: this.student.studentcode,
+              accountid: this.accountid,
               year: this.student.year,
               name: this.student.name,
               surname: this.student.surname,

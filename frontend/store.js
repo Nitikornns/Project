@@ -52,7 +52,7 @@ export default new Vuex.Store({
     registerUser(context, data) {
       return new Promise((resolve, reject) => {
         axiosBase
-          .post("/account/", {
+          .post("/accounts/", {
             email: data.email,
             username: data.username,
             password: data.password,

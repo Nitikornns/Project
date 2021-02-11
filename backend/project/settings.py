@@ -90,12 +90,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project.wsgi.application'
 
-
-#LOGIN_URL = '/myproject/skill/'
-
-#LOGOUT_REDIRECT_URL = '/myproject/login/'
-
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 

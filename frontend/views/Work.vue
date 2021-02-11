@@ -122,6 +122,7 @@ import {
 } from "vee-validate";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
+import jwt_decode from "jwt-decode";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
 extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
@@ -135,12 +136,12 @@ export default {
     return {
       work: {},
       works: [],
+      accountid: {},
       dialogedit: false,
       dialogDelete: false,
       editedIndex: -1,
       messagecreate: "",
       messageedit: "",
-      accountid: {},
       headers: [
         { text: "ชื่อ", align: "start", sortable: false },
         { text: "รายละเอียด", sortable: false },
@@ -192,13 +193,14 @@ export default {
         });
     },
     async getAccountid() {
+      let token = localStorage.getItem("access_token");
+      let decoded = jwt_decode(token);
       await getAPI
         .get("/accounts/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.accountid = response.data;
+        .then(() => {
+          this.accountid = decoded.user_id;
           return this.accountid;
         })
         .catch((err) => {
@@ -212,7 +214,7 @@ export default {
           .post(
             "/api/works/",
             {
-              accountid: this.accountid[0].id,
+              accountid: this.accountid,
               workid: this.work.workid,
               name: this.work.name,
               detail: this.work.detail,
@@ -259,19 +261,22 @@ export default {
     },
     async editItemConfirm(work) {
       await this.getAccountid();
-      let data = {
-        accountid: this.accountid[0].id,
-        workid: this.work.workid,
-        name: this.work.name,
-        detail: this.work.detail,
-      };
       try {
         await axiosBase
-          .put(`api/works/${work.workid}/`, data, {
-            headers: {
-              Authorization: `Bearer ${this.$store.state.accessToken}`,
+          .put(
+            `api/works/${work.workid}/`,
+            {
+              accountid: this.accountid,
+              workid: this.work.workid,
+              name: this.work.name,
+              detail: this.work.detail,
             },
-          })
+            {
+              headers: {
+                Authorization: `Bearer ${this.$store.state.accessToken}`,
+              },
+            }
+          )
           .then(() => {
             this.closeEdit();
             this.setFormData();

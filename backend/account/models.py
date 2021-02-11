@@ -50,7 +50,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     objects = MyAccountManager()
 
     def __str__(self):
-        return self.email
+        return f"{self.username}"
 
       # For checking permissions. to keep it simple all admin have ALL permissons
 

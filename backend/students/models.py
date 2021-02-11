@@ -89,7 +89,6 @@ LISTLANGUAGE_CHOICES = (
 class Student(models.Model):
     accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    studentcode = models.CharField(max_length=10, null=False, blank=False)
     year = models.CharField(
         max_length=6, choices=YEAR_CHOICES, default="1")
     name = models.CharField(max_length=140, verbose_name="firstName")
@@ -102,7 +101,7 @@ class Student(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
     class Meta:
         ordering = ["name"]
@@ -114,7 +113,7 @@ class Skill(models.Model):
     skillid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="SkillId")
     name = models.CharField(
-        max_length=140, choices=PROGRAMING_LANGUAGES, unique=True, verbose_name="SkillName")
+        max_length=140, choices=PROGRAMING_LANGUAGES, verbose_name="SkillName")
     score = models.DecimalField(default=0.0, validators=[
         MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="SkillScore")
     sumscore = models.DecimalField(validators=[
@@ -125,7 +124,7 @@ class Skill(models.Model):
         super(Skill, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.skillid}", f"{self.skillid}"
 
     class Meta:
         ordering = ["name"]
@@ -137,7 +136,7 @@ class Language(models.Model):
     languageid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="LanguageId")
     name = models.CharField(
-        max_length=140, choices=LISTLANGUAGE_CHOICES, unique=True, verbose_name="LanguageName")
+        max_length=140, choices=LISTLANGUAGE_CHOICES, verbose_name="LanguageName")
     score = models.DecimalField(default=0.0, validators=[
         MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="LanguageScore")
     sumscore = models.DecimalField(validators=[
@@ -163,7 +162,7 @@ class Education(models.Model):
     dateend = models.DateField()
     name = models.CharField(max_length=140, verbose_name="EducationName")
     degree = models.CharField(
-        choices=EDUCATION_DEEGREE, unique=True, max_length=150)
+        choices=EDUCATION_DEEGREE, max_length=150)
 
     def __str__(self):
         return f"{self.name}"

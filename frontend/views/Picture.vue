@@ -26,6 +26,7 @@ import { required, digits, email, max, regex } from "vee-validate/dist/rules";
 import { extend, ValidationObserver, setInteractionMode } from "vee-validate";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
+import jwt_decode from "jwt-decode";
 setInteractionMode("eager");
 extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
 extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
@@ -39,9 +40,9 @@ export default {
   data: () => ({
     picture: [],
     pictures: [],
+    accountid: {},
     message: "",
     studentname: [],
-    accountid: {},
     pictureid: {},
   }),
   computed: {
@@ -74,13 +75,14 @@ export default {
       this.message = "";
     },
     async getAccountid() {
+      let token = localStorage.getItem("access_token");
+      let decoded = jwt_decode(token);
       await getAPI
         .get("/accounts/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.accountid = response.data;
+        .then(() => {
+          this.accountid = decoded.user_id;
           return this.accountid;
         })
         .catch((err) => {
@@ -105,7 +107,7 @@ export default {
       await this.getAccountid();
       try {
         let formData = new FormData();
-        formData.append("accountid", this.accountid[0].id);
+        formData.append("accountid", this.accountid);
         formData.append("picturefile", this.picture);
         await axiosBase
           .post("/api/pictures/", formData, {

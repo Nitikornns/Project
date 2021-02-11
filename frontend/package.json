@@ -15,6 +15,7 @@
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
     "idle-vue": "^2.0.5",
+    "jwt-decode": "^3.1.2",
     "moment": "^2.29.1",
     "package.json": "^2.0.1",
     "vee-validate": "^3.4.5",
