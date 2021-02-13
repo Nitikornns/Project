@@ -1,27 +1,39 @@
 <template>
   <div class="nav-bar">
-    <ul>
-      <li v-if="accessToken == null">
-        <router-link :to="{ name: 'Register' }">REGISTER</router-link>
-      </li>
-      <li v-if="accessToken == null">
-        <router-link :to="{ name: 'Login' }">LOGIN</router-link>
-      </li>
-      <li v-if="accessToken != null">
-        <router-link :to="{ name: 'Logout' }">LOGOUT</router-link>
-      </li>
-    </ul>
+    <v-toolbar
+      dark
+      prominent
+      src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
+    >
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-toolbar-title>Vuetify</v-toolbar-title> <v-spacer></v-spacer>
+      <ul v-if="accessToken == null">
+        <v-btn icon :to="{ name: 'Register' }"
+          ><v-icon>mdi-export</v-icon>Logout
+        </v-btn>
+      </ul>
+      <ul v-if="accessToken == null">
+        <v-btn icon :to="{ name: 'Login' }"
+          ><v-icon>mdi-export</v-icon>Logout
+        </v-btn>
+      </ul>
+      <ul v-if="accessToken != null">
+        <v-btn icon :to="{ name: 'Generatepdf' }"
+          ><v-icon>mdi-file-pdf</v-icon>บันทึกข้อมูลเป็นไฟล์pdf
+        </v-btn>
+      </ul>
+      <ul v-if="accessToken != null">
+        <v-btn icon :to="{ name: 'Logout' }"
+          ><v-icon>mdi-export</v-icon>ออกจากระบบ
+        </v-btn>
+      </ul>
+    </v-toolbar>
   </div>
 </template>
-
 <script>
 import { mapState } from "vuex";
-export default {
-  name: "Navbar",
-  computed: mapState(["accessToken"]),
-};
+export default { name: "Navbar", computed: mapState(["accessToken"]) };
 </script>
-
 <style>
 @import url(https://fonts.googleapis.com/css?family=Quicksand);
 .nav-bar {

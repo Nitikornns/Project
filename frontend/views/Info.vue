@@ -11,9 +11,7 @@
             rules="required"
           >
             <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>ชั้นปี</v-subheader>
-              </v-col>
+              <v-col cols="3"> <v-subheader>ชั้นปี</v-subheader> </v-col>
               <v-col cols="7">
                 <v-select
                   v-model="student.year"
@@ -26,16 +24,13 @@
               </v-col>
             </v-row>
           </validation-provider>
-
           <validation-provider
             v-slot="{ errors }"
             name="ชื่อจริง"
             rules="required|max:100"
           >
             <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>ชื่อ</v-subheader>
-              </v-col>
+              <v-col cols="3"> <v-subheader>ชื่อ</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
                   v-model="student.name"
@@ -47,16 +42,13 @@
               </v-col>
             </v-row>
           </validation-provider>
-
           <validation-provider
             v-slot="{ errors }"
             name="นามสกุล"
             rules="required|max:100"
           >
             <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>นามสกุล</v-subheader>
-              </v-col>
+              <v-col cols="3"> <v-subheader>นามสกุล</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
                   v-model="student.surname"
@@ -68,15 +60,10 @@
               </v-col>
             </v-row>
           </validation-provider>
-
           <validation-provider
             v-slot="{ errors }"
             name="เลขบัตรประชาชน"
-            :rules="{
-              required: true,
-              max: 13,
-              digits: 13,
-            }"
+            :rules="{ required: true, max: 13, digits: 13 }"
           >
             <v-row align="center" justify="center">
               <v-col cols="3">
@@ -94,16 +81,13 @@
               </v-col>
             </v-row>
           </validation-provider>
-
           <validation-provider
             v-slot="{ errors }"
             name="อีเมล"
             rules="required|email"
           >
             <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>อีเมล</v-subheader>
-              </v-col>
+              <v-col cols="3"> <v-subheader>อีเมล</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
                   v-model="student.email"
@@ -115,20 +99,12 @@
               </v-col>
             </v-row>
           </validation-provider>
-
           <validation-provider
             v-slot="{ errors }"
             name="เบอร์โทรศัพท์"
-            :rules="{
-              required: true,
-              max: 10,
-              digits: 10,
-              regex: '0',
-            }"
+            :rules="{ required: true, max: 10, digits: 10, regex: '0' }"
             ><v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>เบอร์โทรศัพท์</v-subheader>
-              </v-col>
+              <v-col cols="3"> <v-subheader>เบอร์โทรศัพท์</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
                   v-model="student.telphoneNumber"
@@ -142,7 +118,7 @@
             </v-row>
           </validation-provider>
         </v-container>
-        <v-btn @click="submitForm" class="btn btn-success">บันทึก</v-btn>
+        <v-btn @click="submitForm" depressed color="primary" dark>บันทึก</v-btn>
       </v-form>
     </validation-observer>
   </v-app>
@@ -159,47 +135,22 @@ import {
   ValidationProvider,
   setInteractionMode,
 } from "vee-validate";
-
 setInteractionMode("eager");
-
-extend("digits", {
-  ...digits,
-  message: "{_field_} เป็นตัวเลข {length} หลัก",
-});
-
-extend("required", {
-  ...required,
-  message: "{_field_} ไม่สามารถเว้นว่างได้",
-});
-
-extend("max", {
-  ...max,
-  message: "{_field_} ไม่เกิน {length} หลัก",
-});
-
-extend("regex", {
-  ...regex,
-  message: "{_field_} {_value_} รูปแบบไม่ถูกต้อง ",
-});
-
-extend("email", {
-  ...email,
-  message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง",
-});
-
+extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
+extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
+extend("max", { ...max, message: "{_field_} ไม่เกิน {length} หลัก" });
+extend("regex", { ...regex, message: "{_field_} {_value_} รูปแบบไม่ถูกต้อง " });
+extend("email", { ...email, message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง" });
 export default {
   name: "Info",
   computed: { ...mapState(["APIData"]) },
-  components: {
-    ValidationProvider,
-    ValidationObserver,
-    Navbar,
-  },
+  components: { ValidationProvider, ValidationObserver, Navbar },
   data() {
     return {
       student: {},
       yearsitem: ["1", "2", "3", "4"],
       accountid: {},
+      messageedit: "",
     };
   },
   methods: {
@@ -223,39 +174,34 @@ export default {
     },
     async createStudent() {
       await this.getAccountid();
-      try {
-        axiosBase
-          .post(
-            "/api/students/",
-            {
-              accountid: this.accountid,
-              year: this.student.year,
-              name: this.student.name,
-              surname: this.student.surname,
-              idcard: this.student.idcard,
-              email: this.student.email,
-              telphoneNumber: this.student.telphoneNumber,
+      axiosBase
+        .post(
+          "/api/students/",
+          {
+            accountid: this.accountid,
+            year: this.student.year,
+            name: this.student.name,
+            surname: this.student.surname,
+            idcard: this.student.idcard,
+            email: this.student.email,
+            telphoneNumber: this.student.telphoneNumber,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
             },
-            {
-              headers: {
-                Authorization: `Bearer ${this.$store.state.accessToken}`,
-              },
-            }
-          )
-          .then(() => {
-            this.$router.push({ name: "Skill" });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } catch (error) {
-        console.log(error);
-      }
+          }
+        )
+        .then(() => {
+          this.$router.push({ name: "Skill" });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
 </script>
-
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

@@ -1,0 +1,24 @@
+.buttonleft {
+  float: left;
+}
+.buttonright {
+  float: right;
+}
+.buttonleft2 {
+  left: 10px;
+}
+.message {
+  color: red;
+}
+.messages {
+  color: red;
+}
+.dateend {
+  left: 10px;
+}
+.messagesuccess {
+  color: green;
+}
+.buttoncenter {
+  left: 10px;
+}

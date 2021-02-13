@@ -87,6 +87,8 @@ LISTLANGUAGE_CHOICES = (
 
 
 class Student(models.Model):
+    studentid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="StudentId")
     accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     year = models.CharField(

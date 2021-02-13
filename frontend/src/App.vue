@@ -11,4 +11,4 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style src="../src/assets/styles/styles.css"></style>

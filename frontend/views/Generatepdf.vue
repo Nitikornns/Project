@@ -2,8 +2,9 @@
   <v-app>
     <Navbar></Navbar>
     <v-container class="container d-flex card">
-      <h2 style="text-align: center">ดาวโหลดpdf</h2>
-      <v-btn @click="generateReport">ดาวโหลด</v-btn>
+      <v-btn @click="generateFilePdf"
+        ><v-icon>mdi-file-pdf</v-icon>ดาวโหลด
+      </v-btn>
     </v-container>
     <vue-html2pdf
       :show-layout="false"
@@ -36,7 +37,6 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
           />
-
           <body class="w3-light-grey">
             <!-- Page Container -->
             <div class="w3-content w3-margin-top" style="max-width:1400px;">
@@ -53,16 +53,7 @@
                           alt="Avatar"
                         />
                       </ul>
-
-                      <div
-                        class="w3-display-bottomleft w3-container w3-text-black"
-                      >
-                        <h2 v-for="student in students" :key="student.name">
-                          {{ student.name }}
-                        </h2>
-                      </div>
                     </div>
-
                     <div class="w3-container">
                       <p v-for="student in students" :key="student.name">
                         <i
@@ -70,14 +61,12 @@
                         ></i
                         >{{ student.name }} {{ student.surname }}
                       </p>
-
                       <p v-for="student in students" :key="student.email">
                         <i
                           class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"
                         ></i
                         >{{ student.email }}
                       </p>
-
                       <p
                         v-for="student in students"
                         :key="student.telphoneNumber"
@@ -87,9 +76,7 @@
                         ></i
                         >{{ student.telphoneNumber }}
                       </p>
-
                       <hr />
-
                       <p class="w3-mediam">
                         <b
                           ><i
@@ -98,12 +85,10 @@
                           >ภาษาโปรแกรมมิ่ง</b
                         >
                       </p>
-
                       <ul v-for="skill in skills" :key="skill.name">
                         {{
                           skill.name
                         }}
-
                         <div>
                           <v-progress-linear
                             class="w3-round-xlarge"
@@ -131,7 +116,6 @@
                         {{
                           language.name
                         }}
-
                         <div class="w3-light-grey w3-round-xlarge">
                           <div>
                             <v-progress-linear
@@ -153,10 +137,8 @@
                     </div>
                   </div>
                   <br />
-
                   <!-- End Left Column -->
                 </div>
-
                 <!-- Right Column -->
                 <div class="w3-twothird">
                   <div class="w3-container w3-card w3-white w3-margin-bottom">
@@ -178,13 +160,10 @@
                         <i class="fa fa-calendar fa-fw w3-margin-right"></i>
                         {{ education.datestart }} - {{ education.dateend }}
                       </h6>
-                      <p>
-                        {{ education.degree }}
-                      </p>
+                      <p>{{ education.degree }}</p>
                       <hr />
                     </div>
                   </div>
-
                   <div class="w3-container w3-card w3-white">
                     <h2 class="w3-text-grey w3-padding-16">
                       <i
@@ -197,23 +176,17 @@
                         <h5 class="w3-opacity">
                           <b>{{ work.name }}</b>
                         </h5>
-                        <p>
-                          {{ work.degree }}
-                        </p>
+                        <p>{{ work.degree }}</p>
                         <hr />
                       </div>
                     </ul>
                   </div>
-
                   <!-- End Right Column -->
                 </div>
-
                 <!-- End Grid -->
               </div>
-
               <!-- End Page Container -->
             </div>
-
             <footer
               class="w3-container w3-teal w3-center w3-margin-top"
             ></footer>
@@ -223,7 +196,6 @@
     </vue-html2pdf>
   </v-app>
 </template>
-
 <script>
 import Navbar from "../src/components/Navbar";
 import VueHtml2pdf from "vue-html2pdf";
@@ -231,10 +203,7 @@ import { getAPI } from "../axios-api";
 import { mapState } from "vuex";
 export default {
   name: "Generatepdf",
-  components: {
-    VueHtml2pdf,
-    Navbar,
-  },
+  components: { VueHtml2pdf, Navbar },
   computed: { ...mapState(["APIData"]) },
   data() {
     return {
@@ -253,57 +222,24 @@ export default {
     };
   },
   created() {
-    this.getStudent();
-    this.getSkill();
-    this.getLanguage();
-    this.getEducation();
-    this.getPicture();
-    this.getWork();
+    this.getAPIData();
   },
   methods: {
-    generateReport() {
+    generateFilePdf() {
       this.$refs.html2Pdf.generatePdf();
     },
-    async getStudent() {
+    async getAPIData() {
       await getAPI
-        .get("/api/students/", {
+        .get("/api/works/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.students = this.$store.state.APIData;
+          this.works = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    async getSkill() {
-      await getAPI
-        .get("/api/skills/", {
-          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
-        })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.skills = this.$store.state.APIData;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    async getLanguage() {
-      await getAPI
-        .get("/api/languages/", {
-          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
-        })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.languages = this.$store.state.APIData;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    async getEducation() {
       await getAPI
         .get("/api/educations/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
@@ -315,8 +251,39 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    async getPicture() {
+      await getAPI
+        .get("/api/skills/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.skills = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      await getAPI
+        .get("/api/students/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.students = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      await getAPI
+        .get("/api/languages/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.languages = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       await getAPI
         .get("/api/pictures/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
@@ -329,23 +296,9 @@ export default {
           console.log(err);
         });
     },
-    async getWork() {
-      await getAPI
-        .get("/api/works/", {
-          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
-        })
-        .then((response) => {
-          this.$store.state.APIData = response.data;
-          this.works = this.$store.state.APIData;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
   },
 };
 </script>
-
 <style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -365,5 +318,4 @@ h6 {
   font-family: "Roboto", sans-serif;
 }
 </style>
-
 <style scoped></style>

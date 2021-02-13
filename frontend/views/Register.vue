@@ -20,7 +20,7 @@
                 <v-text-field
                   v-model="account.username"
                   filled
-                  label="ชื่อผู้ใช้"
+                  label="username"
                   prepend-inner-icon="mdi-account"
                 ></v-text-field>
               </div>
@@ -50,7 +50,7 @@ export default {
   name: "Register",
   data() {
     return {
-      account: [],
+      account: {},
       show: false,
     };
   },

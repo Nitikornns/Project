@@ -10,6 +10,7 @@ import Work from "./views/Work.vue";
 import Login from "./views/Login.vue";
 import Logout from "./views/Logout.vue";
 import Register from "./views/Register.vue";
+import Dashboard from "./views/Dashboard.vue";
 
 Vue.use(VueRouter);
 export default new VueRouter({
@@ -17,11 +18,19 @@ export default new VueRouter({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/",
+      path: "/login",
       name: "Login",
       component: Login,
       meta: {
         requiresLogged: true,
+      },
+    },
+    {
+      path: "/",
+      name: "Dashboard",
+      component: Dashboard,
+      meta: {
+        requiresAuth: true,
       },
     },
     {
@@ -40,6 +49,7 @@ export default new VueRouter({
         requiresLogged: true,
       },
     },
+
     {
       path: "/info",
       name: "Info",
