@@ -11,7 +11,7 @@ class SkillAdmin(admin.ModelAdmin):
 
 class StudentAdmin(admin.ModelAdmin):
     # a list of displayed columns name.
-    list_display = ['accountid', 'year', 'name',
+    list_display = ['accountid', 'name',
                     'surname', 'email', 'telphoneNumber']
 
 

@@ -299,17 +299,6 @@
           <v-container>
             <h6 class="message">{{ messageeditinfo }}</h6>
             <v-row align="center" justify="center">
-              <v-col cols="3"> <v-subheader>ชั้นปี</v-subheader> </v-col>
-              <v-col cols="7">
-                <v-select
-                  v-model="student.year"
-                  :items="yearsitem"
-                  dense
-                  outlined
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>ชื่อ</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
@@ -432,7 +421,6 @@
             <template v-slot:body>
               <tbody>
                 <tr v-for="student in students" :key="student.id">
-                  <td>{{ student.year }}</td>
                   <td>{{ student.name }}</td>
                   <td>{{ student.surname }}</td>
                   <td>{{ student.idcard }}</td>
@@ -672,7 +660,6 @@ export default {
         { text: "วันจบ", sortable: false },
       ],
       headersinfo: [
-        { text: "ชั้นปี", align: "start", sortable: false },
         { text: "ชื่อ", sortable: false },
         { text: "นามสกุล", sortable: false },
         { text: "รหัสบัตรประชาชน", sortable: false },
@@ -752,7 +739,6 @@ export default {
         "โอมาน",
         "อังกฤษ",
       ],
-      yearsitem: ["1", "2", "3", "4"],
       itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
     };
   },
@@ -1046,7 +1032,6 @@ export default {
           `api/students/${student.studentid}/`,
           {
             accountid: this.accountid,
-            year: this.student.year,
             name: this.student.name,
             surname: this.student.surname,
             idcard: this.student.idcard,

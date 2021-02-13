@@ -7,25 +7,6 @@
         <v-container>
           <validation-provider
             v-slot="{ errors }"
-            name="ชั้นปี"
-            rules="required"
-          >
-            <v-row align="center" justify="center">
-              <v-col cols="3"> <v-subheader>ชั้นปี</v-subheader> </v-col>
-              <v-col cols="7">
-                <v-select
-                  v-model="student.year"
-                  :items="yearsitem"
-                  dense
-                  outlined
-                  :error-messages="errors"
-                  required
-                ></v-select>
-              </v-col>
-            </v-row>
-          </validation-provider>
-          <validation-provider
-            v-slot="{ errors }"
             name="ชื่อจริง"
             rules="required|max:100"
           >
@@ -148,7 +129,6 @@ export default {
   data() {
     return {
       student: {},
-      yearsitem: ["1", "2", "3", "4"],
       accountid: {},
       messageedit: "",
     };
@@ -179,7 +159,6 @@ export default {
           "/api/students/",
           {
             accountid: this.accountid,
-            year: this.student.year,
             name: this.student.name,
             surname: this.student.surname,
             idcard: this.student.idcard,

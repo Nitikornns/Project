@@ -4,13 +4,6 @@ from django.conf import settings
 from django.db import models
 
 
-YEAR_CHOICES = (
-    ("1", "1"),
-    ("2", "2"),
-    ("3", "3"),
-    ("4", "4"),
-)
-
 EDUCATION_DEEGREE = (
     ("มัธยมศึกษา", "มัธยมศึกษา"),
     ("ประกาศนียบัตรวิชาชีพ (ปวช.)", "ประกาศนียบัตรวิชาชีพ (ปวช.)"),
@@ -91,8 +84,6 @@ class Student(models.Model):
         primary_key=True, serialize=False, verbose_name="StudentId")
     accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    year = models.CharField(
-        max_length=6, choices=YEAR_CHOICES, default="1")
     name = models.CharField(max_length=140, verbose_name="firstName")
     surname = models.CharField(max_length=140)
     idcard = models.CharField(max_length=13)
