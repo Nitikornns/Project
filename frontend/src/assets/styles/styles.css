@@ -1,11 +1,18 @@
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: black;
+}
 .buttonleft {
-  float: left;
+  left: 10px;
 }
 .buttonright {
   float: right;
 }
 .buttonleft2 {
-  left: 10px;
+  float: left;
 }
 .message {
   color: red;

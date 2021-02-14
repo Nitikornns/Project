@@ -5,41 +5,54 @@
       <h2 style="text-align: center">การศึกษา</h2>
       <h6 class="message">{{ messagecreate }}</h6>
       <v-form>
-        <v-col cols="12">
-          <v-selects v-model="education.degree" :options="educationdegree">
-          </v-selects>
-        </v-col>
-        <v-col cols="12"
-          ><v-text-field
-            v-model="education.name"
-            label="ชื่อ"
-            outlined
-            dense
-          ></v-text-field
-        ></v-col>
-        <v-col cols="12"
-          ><date-picker
-            v-model="education.datestart"
-            valueType="format"
-            name="วันเริ่ม"
-            placeholder="วันเริ่ม"
-          ></date-picker>
-          <date-picker
-            v-model="education.dateend"
-            valueType="format"
-            name="วันจบ"
-            placeholder="วันจบ"
-            class="dateend"
-          ></date-picker
-        ></v-col>
+        <v-row align="center" justify="center">
+          <v-col cols="3"> <v-subheader>ระดับ</v-subheader> </v-col>
+          <v-col cols="7"
+            ><v-selects v-model="education.degree" :options="educationdegree">
+            </v-selects>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center">
+          <v-col cols="3"> <v-subheader>ชื่อ</v-subheader> </v-col>
+          <v-col cols="7"
+            ><v-text-field
+              v-model="education.name"
+              label="ชื่อ"
+              outlined
+              dense
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center">
+          <v-col cols="3"> <v-subheader>วันเริ่ม</v-subheader> </v-col>
+          <v-col cols="7">
+            <date-picker
+              v-model="education.datestart"
+              valueType="format"
+              name="วันเริ่ม"
+              placeholder="วันเริ่ม"
+            ></date-picker>
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center">
+          <v-col cols="3"> <v-subheader>วันจบ</v-subheader></v-col>
+          <v-col cols="7">
+            <date-picker
+              v-model="education.dateend"
+              valueType="format"
+              name="วันจบ"
+              placeholder="วันจบ"
+              class="dateend"
+            ></date-picker>
+          </v-col>
+        </v-row>
         <br />
-        <v-btn @click="submitForm" color="primary" depressed class="buttonleft"
-          >บันทึก</v-btn
+        <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
         ><v-btn
           @click="gotoPreviuosPage"
           color="primary"
           depressed
-          class="buttonleft2"
+          class="buttonleft"
           >ย้อนกลับ</v-btn
         >
       </v-form></v-container
@@ -85,7 +98,7 @@ export default {
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "กรอกข้อมูลไม่ครบ";
+      this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");

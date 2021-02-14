@@ -5,16 +5,20 @@
       <h2 style="text-align: center">การทำงาน</h2>
       <h6 class="message">{{ messagecreate }}</h6>
       <v-form>
-        <v-col cols="12">
-          <validation-provider name="ชื่อ" :rules="{ required: true }">
+        <v-row align="center" justify="center">
+          <v-col cols="3"> <v-subheader>ชื่อสถานที่</v-subheader> </v-col>
+          <v-col cols="7">
             <v-text-field
               v-model="work.name"
               label="ชื่อ"
               outlined
               dense
             ></v-text-field>
-          </validation-provider>
-          <validation-provider name="ชื่อ" :rules="{ required: true }">
+          </v-col>
+        </v-row>
+        <v-row align="center" justify="center">
+          <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
+          <v-col cols="7">
             <v-textarea
               v-model="work.detail"
               label="รายละเอียด"
@@ -22,16 +26,15 @@
               dense
               height="150"
             ></v-textarea>
-          </validation-provider>
-        </v-col>
+          </v-col>
+        </v-row>
         <br />
-        <v-btn @click="submitForm" color="primary" depressed class="buttonleft"
-          >บันทึก</v-btn
+        <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
         ><v-btn
           @click="gotoPreviuosPage"
           color="primary"
           depressed
-          class="buttonleft2"
+          class="buttonleft"
           >ย้อนกลับ</v-btn
         >
       </v-form>
@@ -71,7 +74,7 @@ export default {
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "กรอกข้อมูลไม่ครบ";
+      this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");

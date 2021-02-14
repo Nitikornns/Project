@@ -11,8 +11,13 @@
           placeholder="เลือกรูปภาพ"
           :show-size="1000"
         ></v-file-input>
-        <v-btn color="primary" depressed class="buttonleft" @click="submitForm"
-          >บันทึก</v-btn
+        <v-btn color="primary" depressed @click="submitForm">บันทึก</v-btn>
+        <v-btn
+          @click="gotoPreviuosPage"
+          color="primary"
+          depressed
+          class="buttonleft"
+          >ย้อนกลับ</v-btn
         >
       </v-form>
     </div>

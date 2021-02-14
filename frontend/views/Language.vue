@@ -1,39 +1,40 @@
 <template>
   <v-app
     ><Navbar></Navbar>
-    <div class="container d-flex card">
-      <h2 style="text-align: center">ทักษะภาษา</h2>
-      <h6 class="message">{{ messagecreate }}</h6>
-      <v-form>
-        <v-selects v-model="language.name" :options="itemlistlanguages">
-        </v-selects
-        ><br />
-        <v-progress-linear
-          v-model="language.score"
-          background-color="#607D8B"
-          color="#E91E63"
-          height="30"
-          class="rounded-pill"
-        >
-          <strong>{{ Math.trunc(language.score) }}</strong></v-progress-linear
-        ><br /><v-btn
-          @click="submitForm"
-          color="primary"
-          depressed
-          class="buttonleft"
-          >บันทึก</v-btn
-        ><v-btn
-          @click="gotoPreviuosPage"
-          color="primary"
-          depressed
-          class="buttonleft2"
-          >ย้อนกลับ</v-btn
-        >
-        ><v-btn @click="maxBar" color="primary" depressed class="buttonright"
-          >100เต็ม</v-btn
-        >
-      </v-form>
-    </div>
+    <v-card weight="1000">
+      <v-card-text>
+        <h2 style="text-align: center">ทักษะภาษา</h2>
+        <h6 class="message">{{ messagecreate }}</h6>
+        <v-form>
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>ภาษา</v-subheader> </v-col>
+            <v-col cols="7">
+              <v-selects
+                v-model="language.name"
+                :options="itemlistlanguages"
+              ></v-selects>
+            </v-col>
+          </v-row>
+          <br />
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>ระดับ</v-subheader> </v-col>
+            <v-col cols="7"
+              ><v-selects v-model="language.degree" :options="degree">
+              </v-selects>
+            </v-col>
+          </v-row>
+          <br /><v-btn @click="submitForm" color="primary" depressed
+            >บันทึก</v-btn
+          ><v-btn
+            class="buttonleft"
+            @click="gotoPreviuosPage"
+            color="primary"
+            depressed
+            >ย้อนกลับ</v-btn
+          >
+        </v-form>
+      </v-card-text>
+    </v-card>
   </v-app>
 </template>
 <script>
@@ -50,6 +51,7 @@ export default {
       language: {},
       accountid: {},
       messagecreate: "",
+      degree: ["พื้นฐานเล็กน้อย", "ปานกลาง", "ดี", "ดีเยี่ยม", "เชี่ยวชาญ"],
       itemlistlanguages: [
         "กัมพูชา",
         "กาตาร์",
@@ -114,11 +116,10 @@ export default {
       this.createLanguage();
     },
     setFormData() {
-      this.language = { score: 0 };
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "กรอกข้อมูลไม่ครบ";
+      this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
@@ -143,7 +144,7 @@ export default {
           {
             accountid: this.accountid,
             name: this.language.name,
-            score: this.language.score,
+            degree: this.language.degree,
           },
           {
             headers: {
@@ -158,9 +159,6 @@ export default {
           console.log(err);
           this.getFailCreateMessage();
         });
-    },
-    maxBar() {
-      this.language = { score: 100 };
     },
     gotoPreviuosPage() {
       this.$router.push({ name: "Dashboard" });

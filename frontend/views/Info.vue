@@ -99,7 +99,20 @@
             </v-row>
           </validation-provider>
         </v-container>
-        <v-btn @click="submitForm" depressed color="primary" dark>บันทึก</v-btn>
+        <v-btn
+          @click="submitForm"
+          depressed
+          color="primary"
+          class="buttononleft"
+          dark
+          >บันทึก</v-btn
+        ><v-btn
+          @click="gotoPreviuosPage"
+          color="primary"
+          depressed
+          class="buttonleft"
+          >ย้อนกลับ</v-btn
+        >
       </v-form>
     </validation-observer>
   </v-app>
@@ -127,11 +140,7 @@ export default {
   computed: { ...mapState(["APIData"]) },
   components: { ValidationProvider, ValidationObserver, Navbar },
   data() {
-    return {
-      student: {},
-      accountid: {},
-      messageedit: "",
-    };
+    return { student: {}, accountid: {}, messageedit: "" };
   },
   methods: {
     submitForm() {
@@ -172,21 +181,15 @@ export default {
           }
         )
         .then(() => {
-          this.$router.push({ name: "Skill" });
+          this.gotoPreviuosPage();
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    gotoPreviuosPage() {
+      this.$router.push({ name: "Dashboard" });
+    },
   },
 };
 </script>
-<style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-</style>

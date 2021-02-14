@@ -2,18 +2,20 @@
   <div class="nav-bar">
     <v-toolbar
       dark
-      prominent
       src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
     >
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-toolbar-title>Vuetify</v-toolbar-title> <v-spacer></v-spacer>
+      <v-btn plain :to="{ name: 'Dashboard' }"
+        ><v-icon>mdi-home</v-icon>
+        หน้าหลัก
+      </v-btn>
       <ul v-if="accessToken != null">
-        <v-btn icon :to="{ name: 'Generatepdf' }"
+        <v-btn plain icon :to="{ name: 'Generatepdf' }"
           ><v-icon>mdi-file-pdf</v-icon>บันทึกข้อมูลเป็นไฟล์pdf
         </v-btn>
       </ul>
+      <v-spacer></v-spacer>
       <ul v-if="accessToken != null">
-        <v-btn icon :to="{ name: 'Logout' }"
+        <v-btn plain icon :to="{ name: 'Logout' }"
           ><v-icon>mdi-export</v-icon>ออกจากระบบ
         </v-btn>
       </ul>

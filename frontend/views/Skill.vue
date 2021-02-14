@@ -1,35 +1,36 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <div class="container d-flex card">
-      <h2 style="text-align: center">ทักษะภาษาโปรแกรมมิ่ง</h2>
-      <h6 class="message">{{ messagecreate }}</h6>
-      <v-form>
-        <v-selects v-model="skill.name" :options="itemlistskill"> </v-selects
-        ><br />
-        <v-progress-linear
-          v-model="skill.score"
-          background-color="#607D8B"
-          color="#E91E63"
-          height="30"
-          class="rounded-pill"
-        >
-          <strong>{{ Math.trunc(skill.score) }}</strong> </v-progress-linear
-        ><br />
-        <v-btn @click="submitForm" color="primary" depressed class="buttonleft"
-          >บันทึก</v-btn
-        ><v-btn
-          @click="gotoPreviuosPage"
-          color="primary"
-          depressed
-          class="buttonleft2"
-          >ย้อนกลับ</v-btn
-        >
-        ><v-btn @click="maxBar" color="primary" depressed class="buttonright"
-          >100เต็ม</v-btn
-        >
-      </v-form>
-    </div>
+    <v-card weight="1000">
+      <v-card-text>
+        <h2 style="text-align: center">ทักษะภาษาโปรแกรมมิ่ง</h2>
+        <h6 class="message">{{ messagecreate }}</h6>
+        <v-form>
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>ภาษา</v-subheader> </v-col>
+            <v-col cols="7">
+              <v-selects v-model="skill.name" :options="itemlistskill">
+              </v-selects>
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>ระดับ</v-subheader> </v-col>
+            <v-col cols="7">
+              <v-selects v-model="skill.degree" :options="degree"> </v-selects
+            ></v-col>
+          </v-row>
+          <br />
+          <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
+          ><v-btn
+            @click="gotoPreviuosPage"
+            color="primary"
+            depressed
+            class="buttonleft"
+            >ย้อนกลับ</v-btn
+          >
+        </v-form></v-card-text
+      >
+    </v-card>
   </v-app>
 </template>
 <script>
@@ -48,6 +49,7 @@ export default {
       messagecreate: "",
       messageedit: "",
       itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
+      degree: ["พื้นฐานเล็กน้อย", "ปานกลาง", "ดี", "ดีเยี่ยม", "เชี่ยวชาญ"],
     };
   },
   computed: { ...mapState(["APIData"]) },
@@ -59,11 +61,10 @@ export default {
       this.createSkill();
     },
     setFormData() {
-      this.skill = { score: 0 };
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "กรอกข้อมูลไม่ครบ";
+      this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
@@ -88,7 +89,7 @@ export default {
           {
             accountid: this.accountid,
             name: this.skill.name,
-            score: this.skill.score,
+            degree: this.skill.degree,
           },
           {
             headers: {
@@ -103,9 +104,6 @@ export default {
           console.log(err);
           this.getFailCreateMessage();
         });
-    },
-    maxBar() {
-      this.skill = { score: 100 };
     },
     gotoPreviuosPage() {
       this.$router.push({ name: "Dashboard" });

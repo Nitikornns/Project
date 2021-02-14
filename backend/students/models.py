@@ -3,6 +3,13 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.db import models
 
+DEGREE = (
+    ("พื้นฐานเล็กน้อย", "พื้นฐานเล็กน้อย"),
+    ("ปานกลาง", "ปานกลาง"),
+    ("ดี", "ดี"),
+    ("ดีเยี่ยม", "ดีเยี่ยม"),
+    ("เชี่ยวชาญ", "เชี่ยวชาญ"),
+)
 
 EDUCATION_DEEGREE = (
     ("มัธยมศึกษา", "มัธยมศึกษา"),
@@ -107,17 +114,11 @@ class Skill(models.Model):
         primary_key=True, serialize=False, verbose_name="SkillId")
     name = models.CharField(
         max_length=140, choices=PROGRAMING_LANGUAGES, verbose_name="SkillName")
-    score = models.DecimalField(default=0.0, validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="SkillScore")
-    sumscore = models.DecimalField(validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=0, blank=True, verbose_name="SkillSumScore")
-
-    def save(self, *args, **kwargs):
-        self.sumscore = round(int(self.score))
-        super(Skill, self).save(*args, **kwargs)
+    degree = models.CharField(
+        choices=DEGREE, max_length=150, verbose_name="SkillDegree")
 
     def __str__(self):
-        return f"{self.skillid}", f"{self.skillid}"
+        return f"{self.accountid}"
 
     class Meta:
         ordering = ["name"]
@@ -130,14 +131,8 @@ class Language(models.Model):
         primary_key=True, serialize=False, verbose_name="LanguageId")
     name = models.CharField(
         max_length=140, choices=LISTLANGUAGE_CHOICES, verbose_name="LanguageName")
-    score = models.DecimalField(default=0.0, validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=20, verbose_name="LanguageScore")
-    sumscore = models.DecimalField(validators=[
-        MaxValueValidator(100), MinValueValidator(0)], max_digits=30, decimal_places=0, blank=True, verbose_name="LanguageSumScore")
-
-    def save(self, *args, **kwargs):
-        self.sumscore = round(int(self.score))
-        super(Language, self).save(*args, **kwargs)
+    degree = models.CharField(
+        choices=DEGREE, max_length=150, verbose_name="LanguageDegree")
 
     def __str__(self):
         return f"{self.name}"

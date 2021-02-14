@@ -39,15 +39,8 @@
                 </v-select>
               </v-col>
               <v-col cols="12">
-                <v-progress-linear
-                  v-model="skill.score"
-                  background-color="#607D8B"
-                  color="#E91E63"
-                  height="30"
-                  class="rounded-pill"
-                >
-                  <strong>{{ Math.trunc(skill.score) }}</strong>
-                </v-progress-linear>
+                <v-select v-model="skill.degree" :items="degree" dense outlined>
+                </v-select>
               </v-col>
             </v-row>
           </v-container>
@@ -241,15 +234,13 @@
                 </v-select>
               </v-col>
               <v-col cols="12">
-                <v-progress-linear
-                  v-model="language.score"
-                  background-color="#607D8B"
-                  color="#E91E63"
-                  height="30"
-                  class="rounded-pill"
+                <v-select
+                  v-model="language.degree"
+                  :items="degree"
+                  dense
+                  outlined
                 >
-                  <strong>{{ Math.trunc(language.score) }}</strong>
-                </v-progress-linear>
+                </v-select>
               </v-col>
             </v-row>
           </v-container>
@@ -370,36 +361,29 @@
       </v-card>
     </v-dialog>
     <!----------------------------- datatable ----------------------------->
-    <v-card>
-      <v-card-text>
-        <div class="w3-display-container">
-          <ul v-for="picture in pictures" :key="picture.pictureid">
-            <img :src="picture.picturefile" style="width:30%" alt="Avatar" />
-          </ul>
-        </div>
-        <div id="messages">
-          {{ messages }}
-        </div>
-        <v-btn
-          color="primary"
-          dark
-          class="buttonleft"
-          depressed
-          @click="gotoAddPicturePage"
-          ><v-icon left>mdi-image</v-icon>เพิ่มรูปภาพ</v-btn
-        >
-        <v-btn
-          color="red"
-          dark
-          class="buttonleft2"
-          depressed
-          @click="deletePicture"
-          ><v-icon left>mdi-delete</v-icon>ลบรูปภาพ</v-btn
-        >
-      </v-card-text>
-    </v-card>
+    <v-card> </v-card>
     <v-container>
       <v-card>
+        <v-card-text>
+          <v-toolbar flat><v-toolbar-title>รูปภาพ</v-toolbar-title></v-toolbar>
+          <div class="w3-display-container">
+            <ul v-for="picture in pictures" :key="picture.pictureid">
+              <img :src="picture.picturefile" style="width:30%" alt="Avatar" />
+            </ul>
+          </div>
+          <div id="messages">{{ messages }}</div>
+          <v-btn color="primary" dark depressed @click="gotoAddPicturePage"
+            ><v-icon left>mdi-image</v-icon>เพิ่ม</v-btn
+          >
+          <v-btn
+            color="red"
+            dark
+            class="buttonleft"
+            depressed
+            @click="deletePicture"
+            ><v-icon left>mdi-delete</v-icon>ลบ</v-btn
+          >
+        </v-card-text>
         <v-card-text
           ><v-toolbar flat>
             <v-toolbar-title>ข้อมูลส่วนตัว</v-toolbar-title
@@ -466,7 +450,7 @@
               <tbody>
                 <tr v-for="language in languages" :key="language.languageid">
                   <td>{{ language.name }}</td>
-                  <td>{{ language.sumscore }}</td>
+                  <td>{{ language.degree }}</td>
                   <v-btn
                     @click.stop="dialogeditlanguage = true"
                     @click="$data.language = language"
@@ -580,7 +564,7 @@
               <tbody>
                 <tr v-for="skill in skills" :key="skill.skillid">
                   <td>{{ skill.name }}</td>
-                  <td>{{ skill.sumscore }}</td>
+                  <td>{{ skill.degree }}</td>
                   <v-btn
                     @click.stop="dialogeditskill = true"
                     @click="$data.skill = skill"
@@ -678,6 +662,7 @@ export default {
         { text: "ชื่อ", align: "start", sortable: false },
         { text: "รายละเอียด", sortable: false },
       ],
+      degree: ["พื้นฐานเล็กน้อย", "ปานกลาง", "ดี", "ดีเยี่ยม", "เชี่ยวชาญ"],
       educationdegree: [
         "มัธยมศึกษา",
         "ประกาศนียบัตรวิชาชีพ (ปวช.)",
@@ -768,15 +753,14 @@ export default {
       this.$dialog.alert(message, options);
     },
     getFailedEditMessage() {
-      this.messageeditinfo = "กรอกข้อมูลให้ถูกต้องตามรูปแบบให้ครบถ้วน";
-      this.messageediteducation = "กรอกข้อมูลให้ถูกต้องตามรูปแบบให้ครบถ้วน";
+      this.messageeditinfo = "กรุณากรอกข้อมูลให้ถูกต้องตามรูปแบบและครบถ้วน";
+      this.messageediteducation =
+        "กรุณากรอกข้อมูลให้ถูกต้องตามรูปแบบและให้ครบถ้วน";
     },
     setFormData() {
       this.work = {};
-      this.language = { score: 0 };
       this.student = {};
       this.education = {};
-      this.skill = { score: 0 };
       this.picture = {};
       this.messages = "";
       this.messageeditinfo = "";
@@ -909,8 +893,7 @@ export default {
             accountid: this.accountid,
             skillid: this.skill.skillid,
             name: this.skill.name,
-            score: this.skill.score,
-            sumscore: this.skill.sumscore,
+            degree: this.skill.degree,
           },
           {
             headers: {
@@ -992,8 +975,7 @@ export default {
             accountid: this.accountid,
             languageid: this.language.languageid,
             name: this.language.name,
-            score: this.language.score,
-            sumscore: this.language.sumscore,
+            degree: this.language.degree,
           },
           {
             headers: {
@@ -1116,9 +1098,7 @@ export default {
       await this.getPictureid();
       await axiosBase
         .delete(`api/pictures/${this.pictureid[0].pictureid}/`, {
-          headers: {
-            Authorization: `Bearer ${this.$store.state.accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then(() => {
           this.setFormData();
@@ -1128,7 +1108,6 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-          console.log(this.pictureid[0].pictureid);
         });
     },
     fetchStatusMessage() {

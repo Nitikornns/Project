@@ -1,17 +1,21 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <v-container class="container d-flex card">
-      <v-btn @click="generateFilePdf"
-        ><v-icon>mdi-file-pdf</v-icon>ดาวโหลด
-      </v-btn>
-    </v-container>
+    <v-card class="container">
+      <v-card-text>
+        <v-btn color="blue" height="100" width="600" @click="generateFilePdf"
+          ><v-icon>mdi-file-pdf</v-icon>ดาวโหลด</v-btn
+        ></v-card-text
+      >
+      <v-btn @click="gotoPreviuosPage" color="primary" depressed
+        >ย้อนกลับ</v-btn
+      >
+    </v-card>
     <vue-html2pdf
       :show-layout="false"
       :float-layout="true"
       :enable-download="true"
-      :preview-modal="true"
-      :paginate-elements-by-height="1400"
+      :paginate-elements-by-height="2000"
       filename="MyCV"
       :pdf-quality="2"
       :manual-pagination="false"
@@ -86,21 +90,9 @@
                         >
                       </p>
                       <ul v-for="skill in skills" :key="skill.name">
-                        {{
-                          skill.name
-                        }}
-                        <div>
-                          <v-progress-linear
-                            class="w3-round-xlarge"
-                            v-model="skill.score"
-                            background-color="w3-light-grey"
-                            color="#009383"
-                            height="19"
-                          >
-                            <td style="text-align:center;font-size:12px">
-                              <strong>{{ Math.trunc(skill.score) }}</strong>
-                            </td>
-                          </v-progress-linear>
+                        <div class="w3-container">
+                          {{ skill.name }}
+                          <div>ระดับ : {{ skill.degree }}</div>
                         </div>
                       </ul>
                       <br />
@@ -113,24 +105,9 @@
                         >
                       </p>
                       <ul v-for="language in languages" :key="language.name">
-                        {{
-                          language.name
-                        }}
-                        <div class="w3-light-grey w3-round-xlarge">
-                          <div>
-                            <v-progress-linear
-                              class="w3-round-xlarge"
-                              v-model="language.score"
-                              background-color="w3-light-grey"
-                              color="#009383"
-                              height="19"
-                              ><td style="text-align:center;font-size:12px">
-                                <strong>{{
-                                  Math.trunc(language.score)
-                                }}</strong>
-                              </td>
-                            </v-progress-linear>
-                          </div>
+                        <div class="w3-container">
+                          {{ language.name }}
+                          <div>ระดับ : {{ language.degree }}</div>
                         </div>
                       </ul>
                       <br />
@@ -176,7 +153,7 @@
                         <h5 class="w3-opacity">
                           <b>{{ work.name }}</b>
                         </h5>
-                        <p>{{ work.degree }}</p>
+                        <p>{{ work.detail }}</p>
                         <hr />
                       </div>
                     </ul>
@@ -225,7 +202,8 @@ export default {
     this.getAPIData();
   },
   methods: {
-    generateFilePdf() {
+    async generateFilePdf() {
+      await this.getAPIData();
       this.$refs.html2Pdf.generatePdf();
     },
     async getAPIData() {
@@ -296,6 +274,9 @@ export default {
           console.log(err);
         });
     },
+    gotoPreviuosPage() {
+      this.$router.push({ name: "Dashboard" });
+    },
   },
 };
 </script>
@@ -318,4 +299,3 @@ h6 {
   font-family: "Roboto", sans-serif;
 }
 </style>
-<style scoped></style>

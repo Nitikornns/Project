@@ -3,9 +3,7 @@
     <v-card class="mx-auto" width="500">
       <v-card-title class="title font-weight-regular justify-space-between">
       </v-card-title>
-      <h1 class="h3 mb-3 font-weight-normal text-center">
-        เข้าสู่ระบบ
-      </h1>
+      <h1 class="h3 mb-3 font-weight-normal text-center">เข้าสู่ระบบ</h1>
       <v-card-text>
         <p v-if="incorrectAuth">
           อีเมลหรือรหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง
@@ -28,13 +26,18 @@
               @click:append="show = !show"
             ></v-text-field>
           </div>
-          <v-btn block type="submit" color="primary" depressed>
-            ยืนยัน </v-btn
-          ><v-spacer></v-spacer>
-          <v-btn block @click="gotoRegisterPage" color="primary" depressed>
-            สมัครสมาชิก
-          </v-btn>
         </form>
+        <v-btn type="submit" color="primary" depressed @click="userLogin">
+          เข้าสู่ระบบ
+        </v-btn>
+        <v-btn
+          class="buttonleft"
+          @click="gotoRegisterPage"
+          color="primary"
+          depressed
+        >
+          สมัครสมาชิก
+        </v-btn>
       </v-card-text>
     </v-card>
   </v-app>

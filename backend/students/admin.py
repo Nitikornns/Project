@@ -6,7 +6,7 @@ from .models import Student, Skill, Language, Picture, Work, Education
 
 class SkillAdmin(admin.ModelAdmin):
     # a list of displayed columns name.
-    list_display = ['accountid', 'name', 'sumscore']
+    list_display = ['accountid', 'name', 'degree']
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -17,7 +17,7 @@ class StudentAdmin(admin.ModelAdmin):
 
 class LanguageAdmin(admin.ModelAdmin):
     # a list of displayed columns name.
-    list_display = ['accountid', 'name', 'sumscore']
+    list_display = ['accountid', 'name', 'degree']
 
 
 class PictureAdmin(admin.ModelAdmin):
