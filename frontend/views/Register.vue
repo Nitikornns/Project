@@ -5,7 +5,8 @@
       <v-card-title class="title font-weight-regular justify-space-between">
         <span>{{ Title }}</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text
+        ><div class="message text-left">{{ message }}</div>
         <v-form>
           <v-text-field
             v-model="account.email"
@@ -37,7 +38,7 @@ import Navbar from "../src/components/Navbar";
 export default {
   name: "Register",
   data() {
-    return { account: {}, show: false, step: 1 };
+    return { account: {}, show: false, step: 1, message: "" };
   },
   components: { Navbar },
   computed: {
@@ -46,6 +47,12 @@ export default {
     },
   },
   methods: {
+    getFailMessage() {
+      this.message = "อีเมลถูกใช้แล้ว";
+    },
+    getStatusMessage() {
+      this.message = "";
+    },
     createUser() {
       this.$store
         .dispatch("registerUser", {
@@ -54,14 +61,16 @@ export default {
           password: this.account.password,
         })
         .then(() => {
-          this.gotoPreviuosPage();
+          this.gotoLoginPage();
+          this.getStatusMessage();
         })
         .catch((error) => {
           console.log(error);
+          this.getFailMessage();
         });
     },
-    gotoPreviuosPage() {
-      this.$router.push({ name: "Dashboard" });
+    gotoLoginPage() {
+      this.$router.push({ name: "Login" });
     },
   },
 };
