@@ -29,7 +29,6 @@ pylint==2.6.0
 PyPDF2==1.26.0
 python-bidi==0.4.2
 pytz==2020.5
-reportlab==3.5.60
 six==1.15.0
 sqlparse==0.4.1
 swapper==1.1.2.post1

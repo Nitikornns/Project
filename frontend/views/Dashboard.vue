@@ -1,6 +1,25 @@
 <template>
   <v-app>
     <Navbar></Navbar>
+    <v-dialog v-model="dialogDeletepicture" persistent max-width="500px">
+      <v-card>
+        <v-card-title class="headline justify-center"
+          >ต้องการจะลบใช่หรือไม่?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            depressed
+            text
+            @click="deleteItemConfirmPicture()"
+            >ยืนยัน</v-btn
+          >
+          <v-btn color="error" depressed text @click="closeDelete">ยกเลิก</v-btn
+          ><v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="dialogDeleteskill" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center"
@@ -282,7 +301,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogeditinfo" persistent max-width="800px">
-      <v-card height="900px">
+      <v-card height="550px">
         <v-card-title>
           <span class="headline">{{ formTitleEditInfo }}</span>
         </v-card-title>
@@ -365,24 +384,37 @@
     <v-container>
       <v-card>
         <v-card-text>
-          <v-toolbar flat><v-toolbar-title>รูปภาพ</v-toolbar-title></v-toolbar>
+          <v-toolbar flat
+            ><v-toolbar-title>รูปภาพ</v-toolbar-title><v-spacer></v-spacer
+            ><v-btn
+              color="primary"
+              dark
+              depressed
+              class="buttonleft"
+              @click="gotoAddPicturePage"
+              ><v-icon left>mdi-plus-thick</v-icon>เพิ่ม</v-btn
+            >
+          </v-toolbar>
           <div class="w3-display-container">
-            <ul v-for="picture in pictures" :key="picture.pictureid">
-              <img :src="picture.picturefile" style="width:30%" alt="Avatar" />
-            </ul>
+            <tr v-for="picture in pictures" :key="picture.pictureid">
+              <td>
+                <img
+                  :src="picture.picturefile"
+                  style="width:30%"
+                  alt="Avatar"
+                />
+              </td>
+              <td>
+                <v-btn
+                  color="red"
+                  class="buttonleft"
+                  @click="$data.picture = picture"
+                  @click.stop="dialogDeletepicture = true"
+                  ><v-icon left>mdi-delete</v-icon>ลบ</v-btn
+                >
+              </td>
+            </tr>
           </div>
-          <div id="messages">{{ messages }}</div>
-          <v-btn color="primary" dark depressed @click="gotoAddPicturePage"
-            ><v-icon left>mdi-image</v-icon>เพิ่ม</v-btn
-          >
-          <v-btn
-            color="red"
-            dark
-            class="buttonleft"
-            depressed
-            @click="deletePicture"
-            ><v-icon left>mdi-delete</v-icon>ลบ</v-btn
-          >
         </v-card-text>
         <v-card-text
           ><v-toolbar flat>
@@ -621,6 +653,7 @@ export default {
       formTitleEditWork: "แก้ไขการทำงาน",
       formTitleEditInfo: "แก้ไขข้อมูลส่วนตัว",
       formTitleEditLanguage: "แก้ไขภาษา",
+      dialogDeletepicture: false,
       dialogediteducation: false,
       dialogDeleteEducation: false,
       dialogeditwork: false,
@@ -636,7 +669,6 @@ export default {
       messageeditlanguage: "",
       messageeditwork: "",
       messageediteducation: "",
-      messages: "",
       headerseducation: [
         { text: "ระดับ", align: "start", sortable: false },
         { text: "ชื่อ", sortable: false },
@@ -762,7 +794,6 @@ export default {
       this.student = {};
       this.education = {};
       this.picture = {};
-      this.messages = "";
       this.messageeditinfo = "";
       this.messageeditskill = "";
       this.messageeditlanguage = "";
@@ -776,6 +807,7 @@ export default {
       this.dialogDeletework = false;
       this.dialogDeleteinfo = false;
       this.dialogDeletelanguage = false;
+      this.dialogDeletepicture = false;
     },
     closeEdit() {
       this.getAPIData();
@@ -1094,15 +1126,16 @@ export default {
           console.log(err);
         });
     },
-    async deletePicture() {
+    async deleteItemConfirmPicture() {
       await this.getPictureid();
       await axiosBase
         .delete(`api/pictures/${this.pictureid[0].pictureid}/`, {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then(() => {
+          this.closeDelete();
           this.setFormData();
-          this.successDeleteMessage();
+          this.getSuccessDeleteMessage();
           this.fetchStatusMessage();
           this.getAPIData();
         })
@@ -1112,13 +1145,6 @@ export default {
     },
     fetchStatusMessage() {
       setInterval(this.setStatusMessage, 5000);
-    },
-    setStatusMessage() {
-      this.messages = "";
-    },
-    successDeleteMessage() {
-      document.getElementById("messages").style.color = "green";
-      this.message = "ลบรูปภาพสำเร็จ";
     },
     gotoAddEducationPage() {
       this.$router.push({ name: "Education" });

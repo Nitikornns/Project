@@ -1,7 +1,10 @@
 <template>
-  <v-app id="app">
+  <v-app>
     <Navbar></Navbar>
-    <validation-observer class="container d-flex card" ref="observer">
+    <validation-observer
+      class="container d-flex card text-center"
+      ref="observer"
+    >
       <h2 style="text-align: center">บันทึกข้อมูล</h2>
       <v-form>
         <v-container>
@@ -193,3 +196,4 @@ export default {
   },
 };
 </script>
+<style src="../src/assets/styles/styles.css" scoped></style>

@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-card class="mx-auto" width="500">
+    <v-card class="mx-auto text-center" width="500">
       <v-card-title class="title font-weight-regular justify-space-between">
       </v-card-title>
       <h1 class="h3 mb-3 font-weight-normal text-center">เข้าสู่ระบบ</h1>
@@ -72,4 +72,4 @@ export default {
   },
 };
 </script>
-<style></style>
+<style src="../src/assets/styles/styles.css" scoped></style>

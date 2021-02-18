@@ -1,44 +1,74 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <div class="container d-flex card">
+    <v-card class="text-center">
+      <v-data-table
+        :headers="headerswork"
+        class="elevation-1"
+        hide-default-footer
+      >
+        <template v-slot:body>
+          <tbody>
+            <tr v-for="work in works" :key="work.workid">
+              <td>{{ work.name }}</td>
+              <td>{{ work.detail }}</td>
+              <v-btn
+                @click.stop="dialogeditwork = true"
+                @click="$data.work = work"
+                color="success"
+              >
+                <v-icon small>mdi-pencil</v-icon>แก้ไข
+              </v-btn>
+              <v-btn
+                @click="$data.work = work"
+                @click.stop="dialogDeletework = true"
+                color="red"
+              >
+                <v-icon small>mdi-delete</v-icon>ลบ
+              </v-btn>
+            </tr>
+          </tbody>
+        </template>
+      </v-data-table>
       <h2 style="text-align: center">การทำงาน</h2>
       <h6 class="message">{{ messagecreate }}</h6>
-      <v-form>
-        <v-row align="center" justify="center">
-          <v-col cols="3"> <v-subheader>ชื่อสถานที่</v-subheader> </v-col>
-          <v-col cols="7">
-            <v-text-field
-              v-model="work.name"
-              label="ชื่อ"
-              outlined
-              dense
-            ></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row align="center" justify="center">
-          <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
-          <v-col cols="7">
-            <v-textarea
-              v-model="work.detail"
-              label="รายละเอียด"
-              outlined
-              dense
-              height="150"
-            ></v-textarea>
-          </v-col>
-        </v-row>
-        <br />
-        <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
-        ><v-btn
-          @click="gotoPreviuosPage"
-          color="primary"
-          depressed
-          class="buttonleft"
-          >ย้อนกลับ</v-btn
-        >
-      </v-form>
-    </div>
+      <v-card-text>
+        <v-form>
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>ชื่อสถานที่</v-subheader> </v-col>
+            <v-col cols="7">
+              <v-text-field
+                v-model="work.name"
+                label="ชื่อ"
+                outlined
+                dense
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
+            <v-col cols="7">
+              <v-textarea
+                v-model="work.detail"
+                label="รายละเอียด"
+                outlined
+                dense
+                height="150"
+              ></v-textarea>
+            </v-col>
+          </v-row>
+          <br />
+          <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
+          ><v-btn
+            @click="gotoPreviuosPage"
+            color="primary"
+            depressed
+            class="buttonleft"
+            >ย้อนกลับ</v-btn
+          >
+        </v-form>
+      </v-card-text>
+    </v-card>
   </v-app>
 </template>
 <script>
@@ -52,18 +82,19 @@ export default {
   data() {
     return {
       work: {},
+      works: [],
       accountid: {},
       messagecreate: "",
-      headers: [
-        { text: "ชื่อ", align: "start", sortable: false },
-        { text: "รายละเอียด", sortable: false },
-        { text: "ตัวเลือก", sortable: false },
+      headerswork: [
+        { text: "ชื่อ", align: "center", sortable: false },
+        { text: "รายละเอียด", align: "center", sortable: false },
       ],
     };
   },
   computed: { ...mapState(["APIData"]) },
   created() {
     this.setFormData();
+    this.getAPIData();
   },
   methods: {
     submitForm() {
@@ -75,6 +106,19 @@ export default {
     },
     getFailCreateMessage() {
       this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
+    },
+    async getAPIData() {
+      await getAPI
+        .get("/api/works/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.works = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
@@ -109,7 +153,8 @@ export default {
           }
         )
         .then(() => {
-          this.gotoPreviuosPage();
+          this.setFormData();
+          this.getAPIData();
         })
         .catch((err) => {
           console.log(err);
@@ -122,3 +167,4 @@ export default {
   },
 };
 </script>
+<style src="../src/assets/styles/styles.css" scoped></style>

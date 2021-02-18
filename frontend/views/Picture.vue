@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <div class="container d-flex card">
+    <div class="container d-flex card text-center">
       <v-form
         ><h2 style="text-align: center">เลือกรูปภาพ</h2>
         <div id="message">{{ message }}</div>
@@ -120,3 +120,4 @@ export default {
   },
 };
 </script>
+<style src="../src/assets/styles/styles.css" scoped></style>

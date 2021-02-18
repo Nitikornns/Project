@@ -1,7 +1,22 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <v-card weight="1000">
+
+    <v-card class="text-center" weight="1000">
+      <v-data-table
+        :headers="headersskill"
+        class="elevation-1"
+        hide-default-footer
+      >
+        <template v-slot:body>
+          <tbody>
+            <tr v-for="skill in skills" :key="skill.skillid">
+              <td>{{ skill.name }}</td>
+              <td>{{ skill.degree }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-data-table>
       <v-card-text>
         <h2 style="text-align: center">ทักษะภาษาโปรแกรมมิ่ง</h2>
         <h6 class="message">{{ messagecreate }}</h6>
@@ -45,26 +60,46 @@ export default {
   data() {
     return {
       skill: {},
+      skills: [],
       accountid: {},
       messagecreate: "",
       messageedit: "",
       itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
       degree: ["พื้นฐานเล็กน้อย", "ปานกลาง", "ดี", "ดีเยี่ยม", "เชี่ยวชาญ"],
+      headersskill: [
+        { text: "ภาษา", align: "center", sortable: false },
+        { text: "ระดับความถนัด", align: "center", sortable: false },
+      ],
     };
   },
   computed: { ...mapState(["APIData"]) },
   created() {
     this.setFormData();
+    this.getAPIData();
   },
   methods: {
     submitForm() {
       this.createSkill();
     },
     setFormData() {
+      this.skill = {};
       this.messagecreate = "";
     },
     getFailCreateMessage() {
       this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
+    },
+    async getAPIData() {
+      await getAPI
+        .get("/api/skills/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.skills = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
@@ -98,7 +133,8 @@ export default {
           }
         )
         .then(() => {
-          this.gotoPreviuosPage();
+          this.getAPIData();
+          this.setFormData();
         })
         .catch((err) => {
           console.log(err);
@@ -111,3 +147,4 @@ export default {
   },
 };
 </script>
+<style src="../src/assets/styles/styles.css" scoped></style>

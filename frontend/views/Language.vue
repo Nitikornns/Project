@@ -2,6 +2,20 @@
   <v-app
     ><Navbar></Navbar>
     <v-card weight="1000">
+      <v-data-table
+        :headers="headerslanguage"
+        class="elevation-1"
+        hide-default-footer
+      >
+        <template v-slot:body>
+          <tbody>
+            <tr v-for="language in languages" :key="language.languageid">
+              <td>{{ language.name }}</td>
+              <td>{{ language.degree }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-data-table>
       <v-card-text>
         <h2 style="text-align: center">ทักษะภาษา</h2>
         <h6 class="message">{{ messagecreate }}</h6>
@@ -23,7 +37,11 @@
               </v-selects>
             </v-col>
           </v-row>
-          <br /><v-btn @click="submitForm" color="primary" depressed
+          <br /><v-btn
+            @click="submitForm"
+            color="primary"
+            class="buttoncenters"
+            depressed
             >บันทึก</v-btn
           ><v-btn
             class="buttonleft"
@@ -49,9 +67,14 @@ export default {
   data() {
     return {
       language: {},
+      languages: [],
       accountid: {},
       messagecreate: "",
       degree: ["พื้นฐานเล็กน้อย", "ปานกลาง", "ดี", "ดีเยี่ยม", "เชี่ยวชาญ"],
+      headerslanguage: [
+        { text: "ภาษา", align: "center", sortable: false },
+        { text: "ระดับความถนัด", align: "center", sortable: false },
+      ],
       itemlistlanguages: [
         "กัมพูชา",
         "กาตาร์",
@@ -110,16 +133,31 @@ export default {
   computed: { ...mapState(["APIData"]) },
   created() {
     this.setFormData();
+    this.getAPIData();
   },
   methods: {
     submitForm() {
       this.createLanguage();
     },
     setFormData() {
+      this.language = {};
       this.messagecreate = "";
     },
     getFailCreateMessage() {
       this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
+    },
+    async getAPIData() {
+      await getAPI
+        .get("/api/languages/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.languages = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
@@ -153,7 +191,8 @@ export default {
           }
         )
         .then(() => {
-          this.gotoPreviuosPage();
+          this.getAPIData();
+          this.setFormData();
         })
         .catch((err) => {
           console.log(err);
@@ -166,3 +205,4 @@ export default {
   },
 };
 </script>
+<style src="../src/assets/styles/styles.css" scoped></style>

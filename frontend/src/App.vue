@@ -9,4 +9,4 @@ export default {
 };
 </script>
 
-<style src="../src/assets/styles/styles.css"></style>
+<style></style>
