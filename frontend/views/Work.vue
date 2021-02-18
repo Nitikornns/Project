@@ -12,20 +12,6 @@
             <tr v-for="work in works" :key="work.workid">
               <td>{{ work.name }}</td>
               <td>{{ work.detail }}</td>
-              <v-btn
-                @click.stop="dialogeditwork = true"
-                @click="$data.work = work"
-                color="success"
-              >
-                <v-icon small>mdi-pencil</v-icon>แก้ไข
-              </v-btn>
-              <v-btn
-                @click="$data.work = work"
-                @click.stop="dialogDeletework = true"
-                color="red"
-              >
-                <v-icon small>mdi-delete</v-icon>ลบ
-              </v-btn>
             </tr>
           </tbody>
         </template>

@@ -11,7 +11,6 @@
           v-text="step"
         ></v-avatar>
       </v-card-title>
-
       <v-window v-model="step">
         <v-window-item :value="1">
           <v-card-text
@@ -38,14 +37,11 @@
             </v-form>
           </v-card-text>
         </v-window-item>
-
         <v-window-item :value="2">
           <div class="pa-4 text-center"></div>
         </v-window-item>
       </v-window>
-
       <v-divider></v-divider>
-
       <v-card-actions>
         <v-btn
           :disabled="step === 2"
@@ -105,7 +101,7 @@ export default {
           password: this.account.password,
         })
         .then(() => {
-          //this.gotoLoginPage();
+          this.gotoLoginPage();
           this.getStatusMessage();
           this.step++;
         })

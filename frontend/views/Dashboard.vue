@@ -389,8 +389,8 @@
             ><v-btn
               color="primary"
               dark
+              class="btn mb-2"
               depressed
-              class="buttonleft"
               @click="gotoAddPicturePage"
               ><v-icon left>mdi-plus-thick</v-icon>เพิ่ม</v-btn
             >

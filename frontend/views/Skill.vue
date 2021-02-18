@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-
     <v-card class="text-center" weight="1000">
       <v-data-table
         :headers="headersskill"
