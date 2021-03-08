@@ -7,6 +7,12 @@
           ><v-icon>mdi-file-pdf</v-icon>ดาวโหลด</v-btn
         ></v-card-text
       >
+      <ul v-if="work == null">
+        have
+      </ul>
+      <div v-if="works.length == 1">
+        have
+      </div>
       <v-btn @click="gotoPreviuosPage" color="primary" depressed
         >ย้อนกลับ</v-btn
       >
@@ -59,57 +65,58 @@
                       </ul>
                     </div>
                     <div class="w3-container">
-                      <p v-for="student in students" :key="student.name">
+                      <p v-for="info in infos" :key="info.name">
                         <i
                           class="fa fa-user fa-fw w3-margin-right w3-large w3-text-teal"
                         ></i
-                        >{{ student.name }} {{ student.surname }}
+                        >{{ info.name }} {{ info.surname }}
                       </p>
-                      <p v-for="student in students" :key="student.email">
+                      <p v-for="info in infos" :key="info.email">
                         <i
                           class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"
                         ></i
-                        >{{ student.email }}
+                        >{{ info.email }}
                       </p>
-                      <p
-                        v-for="student in students"
-                        :key="student.telphoneNumber"
-                      >
+                      <p v-for="info in infos" :key="info.telphoneNumber">
                         <i
                           class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"
                         ></i
-                        >{{ student.telphoneNumber }}
+                        >{{ info.telphoneNumber }}
                       </p>
                       <hr />
-                      <p class="w3-mediam">
-                        <b
-                          ><i
-                            class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
-                          ></i
-                          >ภาษาโปรแกรมมิ่ง</b
-                        >
-                      </p>
-                      <ul v-for="skill in skills" :key="skill.name">
-                        <div class="w3-container">
-                          {{ skill.name }}
-                          <div>ระดับ : {{ skill.degree }}</div>
-                        </div>
-                      </ul>
+                      <div v-if="skill.length >= 1">
+                        <p class="w3-mediam">
+                          <b
+                            ><i
+                              class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
+                            ></i
+                            >ภาษาโปรแกรมมิ่ง</b
+                          >
+                        </p>
+                        <ul v-for="skill in skills" :key="skill.name">
+                          <div class="w3-container">
+                            {{ skill.name }}
+                            <div>{{ skill.degree }}</div>
+                          </div>
+                        </ul>
+                      </div>
                       <br />
-                      <p class="w3-mediam">
-                        <b
-                          ><i
-                            class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
-                          ></i
-                          >ภาษา</b
-                        >
-                      </p>
-                      <ul v-for="language in languages" :key="language.name">
-                        <div class="w3-container">
-                          {{ language.name }}
-                          <div>ระดับ : {{ language.degree }}</div>
-                        </div>
-                      </ul>
+                      <div v-if="language.length >= 1">
+                        <p class="w3-mediam">
+                          <b
+                            ><i
+                              class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
+                            ></i
+                            >ภาษา</b
+                          >
+                        </p>
+                        <ul v-for="language in languages" :key="language.name">
+                          <div class="w3-container">
+                            {{ language.name }}
+                            <div>{{ language.degree }}</div>
+                          </div>
+                        </ul>
+                      </div>
                       <br />
                     </div>
                   </div>
@@ -117,46 +124,50 @@
                   <!-- End Left Column -->
                 </div>
                 <!-- Right Column -->
-                <div class="w3-twothird">
-                  <div class="w3-container w3-card w3-white w3-margin-bottom">
-                    <h2 class="w3-text-grey w3-padding-16">
-                      <i
-                        class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"
-                      ></i
-                      >การศึกษา
-                    </h2>
-                    <div
-                      class="w3-container"
-                      v-for="education in educations"
-                      :key="education.educationid"
-                    >
-                      <h5 class="w3-opacity">
-                        <b>{{ education.name }}</b>
-                      </h5>
-                      <h6 class="w3-text-teal">
-                        <i class="fa fa-calendar fa-fw w3-margin-right"></i>
-                        {{ education.datestart }} - {{ education.dateend }}
-                      </h6>
-                      <p>{{ education.degree }}</p>
-                      <hr />
-                    </div>
-                  </div>
-                  <div class="w3-container w3-card w3-white">
-                    <h2 class="w3-text-grey w3-padding-16">
-                      <i
-                        class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"
-                      ></i
-                      >การทำงาน
-                    </h2>
-                    <ul v-for="work in works" :key="work.workid">
-                      <div class="w3-container">
+                <div v-if="education.length >= 1">
+                  <div class="w3-twothird">
+                    <div class="w3-container w3-card w3-white w3-margin-bottom">
+                      <h2 class="w3-text-grey w3-padding-16">
+                        <i
+                          class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+                        ></i
+                        >การศึกษา
+                      </h2>
+                      <div
+                        class="w3-container"
+                        v-for="education in educations"
+                        :key="education.educationid"
+                      >
                         <h5 class="w3-opacity">
-                          <b>{{ work.name }}</b>
+                          <b>{{ education.degree }}</b>
                         </h5>
-                        <p>{{ work.detail }}</p>
+                        <h6 class="w3-text-teal">
+                          <i class="fa fa-calendar fa-fw w3-margin-right"></i>
+                          {{ education.datestart }} - {{ education.dateend }}
+                        </h6>
+                        <p>{{ education.name }}</p>
                         <hr />
                       </div>
-                    </ul>
+                    </div>
+                  </div>
+                  <div v-if="works.length >= 1">
+                    <div class="w3-container w3-card w3-white">
+                      <h2 class="w3-text-grey w3-padding-16">
+                        <i
+                          class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+                        ></i
+                        >การทำงาน
+                      </h2>
+                      <ul v-for="work in works" :key="work.workid">
+                        <div class="w3-container">
+                          <h5 class="w3-opacity">
+                            <b>{{ work.name }}</b>
+                          </h5>
+                          <p>{{ work.detail }}</p>
+                          <hr />
+                        </div>
+                      </ul>
+                    </div>
                   </div>
                   <!-- End Right Column -->
                 </div>
@@ -184,8 +195,8 @@ export default {
   computed: { ...mapState(["APIData"]) },
   data() {
     return {
-      student: {},
-      students: [],
+      info: {},
+      infos: [],
       skill: {},
       skills: [],
       language: {},
@@ -241,12 +252,12 @@ export default {
           console.log(err);
         });
       await getAPI
-        .get("/api/students/", {
+        .get("/api/infos/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.students = this.$store.state.APIData;
+          this.infos = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);

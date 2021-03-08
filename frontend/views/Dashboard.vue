@@ -46,7 +46,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 class="message">{{ messageeditskill }}</h6>
+            <h6 id="message">{{ messageeditskill }}</h6>
             <v-row>
               <v-col cols="12">
                 <v-select
@@ -107,7 +107,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 class="message">{{ messageediteducation }}</h6>
+            <h6 id="message">{{ messageediteducation }}</h6>
             <v-col cols="12">
               <v-selects v-model="education.degree" :options="educationdegree">
               </v-selects>
@@ -180,7 +180,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 class="message">{{ messageeditwork }}</h6>
+            <h6 id="message">{{ messageeditwork }}</h6>
             <v-col cols="12">
               <v-text-field
                 v-model="work.name"
@@ -241,7 +241,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 class="message">{{ messageeditlanguage }}</h6>
+            <h6 id="message">{{ messageeditlanguage }}</h6>
             <v-row>
               <v-col cols="12">
                 <v-select
@@ -292,7 +292,7 @@
             color="primary"
             depressed
             text
-            @click="deleteItemConfirmInfo(student)"
+            @click="deleteItemConfirmInfo(info)"
             >ยืนยัน</v-btn
           >
           <v-btn color="error" depressed text @click="closeDelete">ยกเลิก</v-btn
@@ -307,34 +307,18 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 class="message">{{ messageeditinfo }}</h6>
+            <h6 id="message">{{ messageeditinfo }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>ชื่อ</v-subheader> </v-col>
               <v-col cols="7">
-                <v-text-field
-                  v-model="student.name"
-                  outlined
-                  dense
-                ></v-text-field>
+                <v-text-field v-model="info.name" outlined dense></v-text-field>
               </v-col>
             </v-row>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>นามสกุล</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.surname"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>เลขบัตรประชาชน</v-subheader>
-              </v-col>
-              <v-col cols="7">
-                <v-text-field
-                  v-model="student.idcard"
+                  v-model="info.surname"
                   outlined
                   dense
                 ></v-text-field>
@@ -344,7 +328,7 @@
               <v-col cols="3"> <v-subheader>อีเมล</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.email"
+                  v-model="info.email"
                   outlined
                   dense
                 ></v-text-field>
@@ -354,7 +338,7 @@
               <v-col cols="3"> <v-subheader>เบอร์โทรศัพท์</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.telphoneNumber"
+                  v-model="info.telphoneNumber"
                   outlined
                   dense
                 ></v-text-field>
@@ -368,7 +352,7 @@
             color="primary"
             depressed
             text
-            @click="editItemConfirmInfo(student)"
+            @click="editItemConfirmInfo(info)"
           >
             ยืนยัน
           </v-btn>
@@ -436,21 +420,20 @@
           >
             <template v-slot:body>
               <tbody>
-                <tr v-for="student in students" :key="student.id">
-                  <td>{{ student.name }}</td>
-                  <td>{{ student.surname }}</td>
-                  <td>{{ student.idcard }}</td>
-                  <td>{{ student.email }}</td>
-                  <td>{{ student.telphoneNumber }}</td>
+                <tr v-for="info in infos" :key="info.id">
+                  <td>{{ info.name }}</td>
+                  <td>{{ info.surname }}</td>
+                  <td>{{ info.email }}</td>
+                  <td>{{ info.telphoneNumber }}</td>
                   <v-btn
                     @click.stop="dialogeditinfo = true"
-                    @click="$data.student = student"
+                    @click="$data.info = info"
                     color="success"
                   >
                     <v-icon small>mdi-pencil</v-icon>แก้ไข
                   </v-btn>
                   <v-btn
-                    @click="$data.student = student"
+                    @click="$data.info = info"
                     @click.stop="dialogDeleteinfo = true"
                     color="red"
                   >
@@ -634,8 +617,8 @@ export default {
   components: { Navbar, DatePicker },
   data() {
     return {
-      student: {},
-      students: [],
+      info: {},
+      infos: [],
       skill: {},
       skills: [],
       language: {},
@@ -785,13 +768,15 @@ export default {
       this.$dialog.alert(message, options);
     },
     getFailedEditMessage() {
+      document.getElementById("message").style.color = "red";
       this.messageeditinfo = "กรุณากรอกข้อมูลให้ถูกต้องตามรูปแบบและครบถ้วน";
       this.messageediteducation =
         "กรุณากรอกข้อมูลให้ถูกต้องตามรูปแบบและให้ครบถ้วน";
+      this.messageeditwork = "กรุณากรอกข้อมูลให้ครบถ้วน";
     },
     setFormData() {
       this.work = {};
-      this.student = {};
+      this.info = {};
       this.education = {};
       this.picture = {};
       this.messageeditinfo = "";
@@ -853,12 +838,12 @@ export default {
           console.log(err);
         });
       await getAPI
-        .get("/api/students/", {
+        .get("/api/infos/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.students = this.$store.state.APIData;
+          this.infos = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -981,6 +966,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.getFailedEditMessage();
         });
     },
     async deleteItemConfirmLanguage(language) {
@@ -1024,10 +1010,10 @@ export default {
           console.log(err);
         });
     },
-    async deleteItemConfirmInfo(student) {
+    async deleteItemConfirmInfo(info) {
       await this.getAccountid();
       await axiosBase
-        .delete(`api/students/${student.studentid}/`, {
+        .delete(`api/infos/${info.infoid}/`, {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then(() => {
@@ -1039,18 +1025,17 @@ export default {
           console.log(err);
         });
     },
-    async editItemConfirmInfo(student) {
+    async editItemConfirmInfo(info) {
       await this.getAccountid();
       await axiosBase
         .put(
-          `api/students/${student.studentid}/`,
+          `api/infos/${info.infoid}/`,
           {
             accountid: this.accountid,
-            name: this.student.name,
-            surname: this.student.surname,
-            idcard: this.student.idcard,
-            email: this.student.email,
-            telphoneNumber: this.student.telphoneNumber,
+            name: this.info.name,
+            surname: this.info.surname,
+            email: this.info.email,
+            telphoneNumber: this.info.telphoneNumber,
           },
           {
             headers: {

@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.db import models
+import datetime
 
 DEGREE = (
     ("พื้นฐานเล็กน้อย", "พื้นฐานเล็กน้อย"),
@@ -10,6 +11,8 @@ DEGREE = (
     ("ดีเยี่ยม", "ดีเยี่ยม"),
     ("เชี่ยวชาญ", "เชี่ยวชาญ"),
 )
+
+YEAR_CHOICES = [(r, r) for r in range(1900, datetime.date.today().year+1)]
 
 EDUCATION_DEEGREE = (
     ("มัธยมศึกษา", "มัธยมศึกษา"),
@@ -86,14 +89,13 @@ LISTLANGUAGE_CHOICES = (
 )
 
 
-class Student(models.Model):
-    studentid = models.AutoField(
-        primary_key=True, serialize=False, verbose_name="StudentId")
+class Info(models.Model):
+    infoid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="InfoId")
     accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=140, verbose_name="firstName")
     surname = models.CharField(max_length=140)
-    idcard = models.CharField(max_length=13)
     commencementday = models.DateField(
         blank=True, null=True, auto_now=False, auto_now_add=False)
     email = models.EmailField(max_length=140)
@@ -146,8 +148,10 @@ class Education(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     educationid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="EducationId")
-    datestart = models.DateField()
-    dateend = models.DateField()
+    datestart = models.IntegerField(
+        choices=YEAR_CHOICES, default=datetime.datetime.now().year)
+    dateend = models.IntegerField(
+        choices=YEAR_CHOICES, default=datetime.datetime.now().year)
     name = models.CharField(max_length=140, verbose_name="EducationName")
     degree = models.CharField(
         choices=EDUCATION_DEEGREE, max_length=150)

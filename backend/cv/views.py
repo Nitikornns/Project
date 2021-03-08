@@ -1,13 +1,13 @@
 from rest_framework import viewsets
-from .models import Student, Skill, Language, Education, Picture, Work
-from .serializers import StudentSerializer, SkillSerializer, LanguageSerializer, EducationSerializer, PictureSerializer, WorkSerializer
+from .models import Info, Skill, Language, Education, Picture, Work
+from .serializers import InfoSerializer, SkillSerializer, LanguageSerializer, EducationSerializer, PictureSerializer, WorkSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
-class StudentsViewSet(viewsets.ModelViewSet):
+class InfoViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
-    queryset = Student.objects.all()
-    serializer_class = StudentSerializer
+    queryset = Info.objects.all()
+    serializer_class = InfoSerializer
 
     def perform_create(self, serializer):
         return serializer.save(accountid=self.request.user)

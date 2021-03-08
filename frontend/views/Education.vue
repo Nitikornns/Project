@@ -43,24 +43,15 @@
           <v-row align="center" justify="center">
             <v-col cols="3"> <v-subheader>วันเริ่ม</v-subheader> </v-col>
             <v-col cols="7">
-              <date-picker
-                v-model="education.datestart"
-                valueType="format"
-                name="วันเริ่ม"
-                placeholder="วันเริ่ม"
-              ></date-picker>
+              <v-selects v-model="education.datestart" :options="years">
+              </v-selects>
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
             <v-col cols="3"> <v-subheader>วันจบ</v-subheader></v-col>
             <v-col cols="7">
-              <date-picker
-                v-model="education.dateend"
-                valueType="format"
-                name="วันจบ"
-                placeholder="วันจบ"
-                class="dateend"
-              ></date-picker>
+              <v-selects v-model="education.dateend" :options="years">
+              </v-selects>
             </v-col>
           </v-row>
           <br />
@@ -82,17 +73,27 @@ import "vue-select/dist/vue-select.css";
 import jwt_decode from "jwt-decode";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
-import DatePicker from "vue2-datepicker";
-import "vue2-datepicker/index.css";
 import Navbar from "../src/components/Navbar";
+
 export default {
   name: "Education",
-  components: { DatePicker, Navbar },
+  components: { Navbar },
+  computed: {
+    ...mapState(["APIData"]),
+    years() {
+      let today = new Date();
+      let year = today.getFullYear();
+      return Array.from(
+        { length: year - 1900 },
+        (value, index) => 1901 + index
+      );
+    },
+  },
   data() {
     return {
+      year: [],
       education: {},
       educations: [],
-      messagecreate: "",
       accountid: {},
       headerseducation: [
         { text: "ระดับ", align: "center", sortable: false },
@@ -110,7 +111,6 @@ export default {
       ],
     };
   },
-  computed: { ...mapState(["APIData"]) },
   created() {
     this.setFormData();
     this.getAPIData();

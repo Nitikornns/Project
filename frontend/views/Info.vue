@@ -17,7 +17,7 @@
               <v-col cols="3"> <v-subheader>ชื่อ</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.name"
+                  v-model="info.name"
                   :error-messages="errors"
                   required
                   outlined
@@ -35,32 +35,11 @@
               <v-col cols="3"> <v-subheader>นามสกุล</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.surname"
+                  v-model="info.surname"
                   outlined
                   dense
                   :error-messages="errors"
                   required
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </validation-provider>
-          <validation-provider
-            v-slot="{ errors }"
-            name="เลขบัตรประชาชน"
-            :rules="{ required: true, max: 13, digits: 13 }"
-          >
-            <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>เลขบัตรประชาชน</v-subheader>
-              </v-col>
-              <v-col cols="7">
-                <v-text-field
-                  v-model="student.idcard"
-                  outlined
-                  dense
-                  required
-                  :error-messages="errors"
-                  :counter="13"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -74,7 +53,7 @@
               <v-col cols="3"> <v-subheader>อีเมล</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.email"
+                  v-model="info.email"
                   outlined
                   dense
                   :error-messages="errors"
@@ -91,7 +70,7 @@
               <v-col cols="3"> <v-subheader>เบอร์โทรศัพท์</v-subheader> </v-col>
               <v-col cols="7">
                 <v-text-field
-                  v-model="student.telphoneNumber"
+                  v-model="info.telphoneNumber"
                   outlined
                   dense
                   required
@@ -143,11 +122,11 @@ export default {
   computed: { ...mapState(["APIData"]) },
   components: { ValidationProvider, ValidationObserver, Navbar },
   data() {
-    return { student: {}, accountid: {}, messageedit: "" };
+    return { info: {}, accountid: {}, messageedit: "" };
   },
   methods: {
     submitForm() {
-      this.createStudent();
+      this.createInfo();
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
@@ -164,18 +143,17 @@ export default {
           console.log(err);
         });
     },
-    async createStudent() {
+    async createInfo() {
       await this.getAccountid();
       axiosBase
         .post(
-          "/api/students/",
+          "/api/infos/",
           {
             accountid: this.accountid,
-            name: this.student.name,
-            surname: this.student.surname,
-            idcard: this.student.idcard,
-            email: this.student.email,
-            telphoneNumber: this.student.telphoneNumber,
+            name: this.info.name,
+            surname: this.info.surname,
+            email: this.info.email,
+            telphoneNumber: this.info.telphoneNumber,
           },
           {
             headers: {

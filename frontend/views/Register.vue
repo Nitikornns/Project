@@ -101,7 +101,6 @@ export default {
           password: this.account.password,
         })
         .then(() => {
-          this.gotoLoginPage();
           this.getStatusMessage();
           this.step++;
         })
