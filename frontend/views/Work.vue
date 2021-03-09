@@ -1,7 +1,7 @@
 <template>
-  <v-app>
-    <Navbar></Navbar>
-    <v-card class="text-center">
+  <v-app
+    ><Navbar></Navbar>
+    <v-card weight="1000">
       <v-data-table
         :headers="headerswork"
         class="elevation-1"
@@ -16,40 +16,39 @@
           </tbody>
         </template>
       </v-data-table>
-      <h2 style="text-align: center">การทำงาน</h2>
-      <h6 class="message">{{ messagecreate }}</h6>
       <v-card-text>
+        <h2 style="text-align: center">ผลงาน</h2>
+        <h6 class="message">{{ messagecreate }}</h6>
+        <br />
         <v-form>
           <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>ชื่อสถานที่</v-subheader> </v-col>
+            <v-col cols="3"> <v-subheader>ผลงาน</v-subheader> </v-col>
             <v-col cols="7">
-              <v-text-field
-                v-model="work.name"
-                label="ชื่อ"
+              <v-text-field v-model="work.name" outlined dense></v-text-field>
+            </v-col>
+          </v-row>
+          <br />
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>รายอะเอียด</v-subheader> </v-col>
+            <v-col cols="7"
+              ><v-text-field
+                v-model="work.detail"
                 outlined
                 dense
               ></v-text-field>
             </v-col>
           </v-row>
-          <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
-            <v-col cols="7">
-              <v-textarea
-                v-model="work.detail"
-                label="รายละเอียด"
-                outlined
-                dense
-                height="150"
-              ></v-textarea>
-            </v-col>
-          </v-row>
-          <br />
-          <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
+          <br /><v-btn
+            @click="submitForm"
+            color="primary"
+            class="buttoncenters"
+            depressed
+            >บันทึก</v-btn
           ><v-btn
+            class="buttonleft"
             @click="gotoPreviuosPage"
             color="primary"
             depressed
-            class="buttonleft"
             >ย้อนกลับ</v-btn
           >
         </v-form>
@@ -59,9 +58,9 @@
 </template>
 <script>
 import Navbar from "../src/components/Navbar";
+import jwt_decode from "jwt-decode";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
-import jwt_decode from "jwt-decode";
 export default {
   name: "Work",
   components: { Navbar },
@@ -72,12 +71,21 @@ export default {
       accountid: {},
       messagecreate: "",
       headerswork: [
-        { text: "ชื่อ", align: "center", sortable: false },
-        { text: "รายละเอียด", align: "center", sortable: false },
+        { text: "ผลงาน", align: "center", sortable: false },
+        { text: "รายอะเอียด", align: "center", sortable: false },
       ],
     };
   },
-  computed: { ...mapState(["APIData"]) },
+  computed: {
+    ...mapState(["APIData"]),
+    years() {
+      let year = new Date().getFullYear();
+      return Array.from(
+        { length: year - 1900 },
+        (value, index) => 1901 + index
+      );
+    },
+  },
   created() {
     this.setFormData();
     this.getAPIData();
@@ -128,7 +136,6 @@ export default {
           "/api/works/",
           {
             accountid: this.accountid,
-            workid: this.work.workid,
             name: this.work.name,
             detail: this.work.detail,
           },
@@ -139,8 +146,8 @@ export default {
           }
         )
         .then(() => {
-          this.setFormData();
           this.getAPIData();
+          this.setFormData();
         })
         .catch((err) => {
           console.log(err);

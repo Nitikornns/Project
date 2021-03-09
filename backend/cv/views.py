@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Info, Skill, Language, Education, Picture, Work
-from .serializers import InfoSerializer, SkillSerializer, LanguageSerializer, EducationSerializer, PictureSerializer, WorkSerializer
+from .models import Hobby, Info, Skill, Talent, Language, Education, Picture, Experience, Hobby, Work
+from .serializers import InfoSerializer, SkillSerializer, TalentSerializer, LanguageSerializer, EducationSerializer, PictureSerializer, ExperienceSerializer, HobbySerializer, WorkSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -20,6 +20,42 @@ class SkillsViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+    def perform_create(self, serializer):
+        return serializer.save(accountid=self.request.user)
+
+    def get_queryset(self):
+        return self.queryset.filter(accountid=self.request.user)
+
+
+class TalentsViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Talent.objects.all()
+    serializer_class = TalentSerializer
+
+    def perform_create(self, serializer):
+        return serializer.save(accountid=self.request.user)
+
+    def get_queryset(self):
+        return self.queryset.filter(accountid=self.request.user)
+
+
+class HobbiesViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Hobby.objects.all()
+    serializer_class = HobbySerializer
+
+    def perform_create(self, serializer):
+        return serializer.save(accountid=self.request.user)
+
+    def get_queryset(self):
+        return self.queryset.filter(accountid=self.request.user)
+
+
+class WorksViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer
 
     def perform_create(self, serializer):
         return serializer.save(accountid=self.request.user)
@@ -64,10 +100,10 @@ class PicturesViewSet(viewsets.ModelViewSet):
         return self.queryset.filter(accountid=self.request.user)
 
 
-class WorksViewSet(viewsets.ModelViewSet):
+class ExperiencesViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
-    queryset = Work.objects.all()
-    serializer_class = WorkSerializer
+    queryset = Experience.objects.all()
+    serializer_class = ExperienceSerializer
 
     def perform_create(self, serializer):
         return serializer.save(accountid=self.request.user)

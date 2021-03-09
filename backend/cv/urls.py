@@ -7,9 +7,12 @@ from .views import *
 router = routers.DefaultRouter()
 router.register('infos', InfoViewSet)
 router.register('skills', SkillsViewSet)
-router.register('languages', LanguagesViewSet)
+router.register('talents', TalentsViewSet)
+#router.register('languages', LanguagesViewSet)
 router.register('educations', EducationsViewSet)
 router.register('pictures', PicturesViewSet)
+router.register('experiences', ExperiencesViewSet)
+router.register('hobbies', HobbiesViewSet)
 router.register('works', WorksViewSet)
 
 

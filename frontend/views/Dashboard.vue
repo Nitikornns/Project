@@ -39,28 +39,154 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogeditskill" persistent max-width="400px">
+    <v-dialog v-model="dialogDeletehobby" persistent max-width="500px">
+      <v-card>
+        <v-card-title class="headline justify-center"
+          >ต้องการจะลบใช่หรือไม่?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            depressed
+            text
+            @click="deleteItemConfirmHobby(hobby)"
+            >ยืนยัน</v-btn
+          >
+          <v-btn color="error" depressed text @click="closeDelete">ยกเลิก</v-btn
+          ><v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogedithobby" persistent max-width="620px">
       <v-card height="320px">
+        <v-card-title>
+          <span class="headline">{{ formTitleEditHobby }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <h6 id="message">{{ messageedithobby }}</h6>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>งานอดิเรก</v-subheader> </v-col>
+              <v-col cols="7">
+                <v-text-field
+                  v-model="hobby.name"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            depressed
+            text
+            @click="editItemConfirmHobby(hobby)"
+          >
+            ยืนยัน
+          </v-btn>
+          <v-btn color="error" depressed text @click="closeEdit">
+            ยกเลิก
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogDeletework" persistent max-width="500px">
+      <v-card>
+        <v-card-title class="headline justify-center"
+          >ต้องการจะลบใช่หรือไม่?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            depressed
+            text
+            @click="deleteItemConfirmWork(work)"
+            >ยืนยัน</v-btn
+          >
+          <v-btn color="error" depressed text @click="closeDelete">ยกเลิก</v-btn
+          ><v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogeditwork" persistent max-width="620px">
+      <v-card height="340px">
+        <v-card-title>
+          <span class="headline">{{ formTitleEditWork }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <h6 id="message">{{ messageeditwork }}</h6>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>ผลงาน</v-subheader> </v-col>
+              <v-col cols="7">
+                <v-text-field v-model="work.name" outlined dense></v-text-field>
+              </v-col>
+            </v-row>
+            <br />
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>รายอะเอียด</v-subheader> </v-col>
+              <v-col cols="7"
+                ><v-text-field
+                  v-model="work.detail"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            depressed
+            text
+            @click="editItemConfirmWork(work)"
+          >
+            ยืนยัน
+          </v-btn>
+          <v-btn color="error" depressed text @click="closeEdit">
+            ยกเลิก
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="dialogeditskill" persistent max-width="620px">
+      <v-card height="350px">
         <v-card-title>
           <span class="headline">{{ formTitleEditSkill }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
             <h6 id="message">{{ messageeditskill }}</h6>
-            <v-row>
-              <v-col cols="12">
-                <v-select
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>ทักษะด้าน</v-subheader> </v-col>
+              <v-col cols="7">
+                <v-text-field
                   v-model="skill.name"
-                  :items="itemlistskill"
-                  dense
                   outlined
-                >
-                </v-select>
+                  dense
+                ></v-text-field>
               </v-col>
-              <v-col cols="12">
-                <v-select v-model="skill.degree" :items="degree" dense outlined>
-                </v-select>
-              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
+              <v-col cols="7">
+                <v-text-field
+                  v-model="skill.detail"
+                  outlined
+                  dense
+                ></v-text-field
+              ></v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -108,33 +234,46 @@
         <v-card-text>
           <v-container>
             <h6 id="message">{{ messageediteducation }}</h6>
-            <v-col cols="12">
-              <v-selects v-model="education.degree" :options="educationdegree">
-              </v-selects>
-            </v-col>
-            <v-col cols="12"
-              ><v-text-field
-                v-model="education.name"
-                label="ชื่อ"
-                outlined
-                dense
-              ></v-text-field
-            ></v-col>
-            <v-col cols="12"
-              ><date-picker
-                v-model="education.datestart"
-                valueType="format"
-                name="วันเริ่ม"
-                placeholder="วันเริ่ม"
-              ></date-picker>
-              <date-picker
-                v-model="education.dateend"
-                valueType="format"
-                name="วันจบ"
-                placeholder="วันจบ"
-                class="dateend"
-              ></date-picker
-            ></v-col>
+            <v-row align="center" justify="center">
+              <v-col cols="3">
+                <v-subheader>ระดับ</v-subheader>
+              </v-col>
+              <v-col cols="7"
+                ><v-selects
+                  v-model="education.degree"
+                  :options="educationdegree"
+                >
+                </v-selects>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>สถานศึกษา</v-subheader></v-col>
+              <v-col cols="7"
+                ><v-text-field
+                  v-model="education.name"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3">
+                <v-subheader>ปีที่เข้าศึกษา</v-subheader>
+              </v-col>
+              <v-col cols="7">
+                <v-selects v-model="education.datestart" :options="years">
+                </v-selects>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3">
+                <v-subheader>ปีที่จบการศึกษา</v-subheader></v-col
+              >
+              <v-col cols="7">
+                <v-selects v-model="education.dateend" :options="years">
+                </v-selects>
+              </v-col>
+            </v-row>
           </v-container>
         </v-card-text>
         <v-card-actions>
@@ -154,7 +293,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogDeletework" persistent max-width="500px">
+    <v-dialog v-model="dialogDeleteexperience" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center"
           >ต้องการจะลบใช่หรือไม่?</v-card-title
@@ -165,7 +304,7 @@
             color="primary"
             depressed
             text
-            @click="deleteItemConfirmWork(work)"
+            @click="deleteItemConfirmExperience(experience)"
             >ยืนยัน</v-btn
           >
           <v-btn color="error" depressed text @click="closeDelete">ยกเลิก</v-btn
@@ -173,93 +312,51 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogeditwork" persistent max-width="800px">
-      <v-card height="490px">
+    <v-dialog v-model="dialogeditexperience" persistent max-width="850px">
+      <v-card height="590px">
         <v-card-title>
-          <span class="headline">{{ formTitleEditWork }}</span>
+          <span class="headline">{{ formTitleEditExperience }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageeditwork }}</h6>
-            <v-col cols="12">
-              <v-text-field
-                v-model="work.name"
-                label="ชื่อ"
-                outlined
-                dense
-              ></v-text-field>
-              <v-textarea
-                v-model="work.detail"
-                label="รายละเอียด"
-                outlined
-                dense
-                height="150"
-              ></v-textarea>
-            </v-col>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            depressed
-            text
-            @click="editItemConfirmWork(work)"
-          >
-            ยืนยัน
-          </v-btn>
-          <v-btn color="error" depressed text @click="closeEdit">
-            ยกเลิก
-          </v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialogDeletelanguage" persistent max-width="500px">
-      <v-card>
-        <v-card-title class="headline justify-center"
-          >ต้องการจะลบใช่หรือไม่?</v-card-title
-        >
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            depressed
-            text
-            @click="deleteItemConfirmLanguage(language)"
-            >ยืนยัน</v-btn
-          >
-          <v-btn color="error" depressed text @click="closeDelete">ยกเลิก</v-btn
-          ><v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialogeditlanguage" persistent max-width="400px">
-      <v-card height="320px">
-        <v-card-title>
-          <span class="headline">{{ formTitleEditLanguage }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <h6 id="message">{{ messageeditlanguage }}</h6>
-            <v-row>
-              <v-col cols="12">
-                <v-select
-                  v-model="language.name"
-                  :items="itemlistlanguages"
-                  dense
+            <h6 id="message">{{ messageeditexperience }}</h6>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>งาน</v-subheader> </v-col>
+              <v-col cols="7">
+                <v-text-field
+                  v-model="experience.name"
                   outlined
-                >
-                </v-select>
+                  dense
+                ></v-text-field>
               </v-col>
-              <v-col cols="12">
-                <v-select
-                  v-model="language.degree"
-                  :items="degree"
-                  dense
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3">
+                <v-subheader>ปีที่เริ่มเข้าทำงาน</v-subheader>
+              </v-col>
+              <v-col cols="7">
+                <v-selects v-model="experience.datestart" :options="years">
+                </v-selects>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>ปีที่จบจากงาน</v-subheader></v-col>
+              <v-col cols="7">
+                <v-selects v-model="experience.dateend" :options="years">
+                </v-selects>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3">
+                <v-subheader>รายละเอียด</v-subheader>
+              </v-col>
+              <v-col cols="7">
+                <v-textarea
+                  v-model="experience.detail"
                   outlined
-                >
-                </v-select>
+                  dense
+                  height="150"
+                ></v-textarea>
               </v-col>
             </v-row>
           </v-container>
@@ -270,7 +367,75 @@
             color="primary"
             depressed
             text
-            @click="editItemConfirmLanguage(language)"
+            @click="editItemConfirmExperience(experience)"
+          >
+            ยืนยัน
+          </v-btn>
+          <v-btn color="error" depressed text @click="closeEdit">
+            ยกเลิก
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogDeletetalent" persistent max-width="500px">
+      <v-card>
+        <v-card-title class="headline justify-center"
+          >ต้องการจะลบใช่หรือไม่?</v-card-title
+        >
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            depressed
+            text
+            @click="deleteItemConfirmTalent(talent)"
+            >ยืนยัน</v-btn
+          >
+          <v-btn color="error" depressed text @click="closeDelete">ยกเลิก</v-btn
+          ><v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogedittalent" persistent width="700px">
+      <v-card height="380px">
+        <v-card-title>
+          <span class="headline">{{ formTitleEditTalent }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <h6 id="message">{{ messageedittalent }}</h6>
+            <v-row align="center" justify="center">
+              <v-col cols="3">
+                <v-subheader>ความสามารถด้าน</v-subheader>
+              </v-col>
+              <v-col cols="7">
+                <v-text-field
+                  v-model="talent.name"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>รายอะเอียด</v-subheader> </v-col>
+              <v-col cols="7">
+                <v-text-field
+                  v-model="talent.detail"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            depressed
+            text
+            @click="editItemConfirmTalent(talent)"
           >
             ยืนยัน
           </v-btn>
@@ -301,7 +466,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogeditinfo" persistent max-width="800px">
-      <v-card height="550px">
+      <v-card height="570px">
         <v-card-title>
           <span class="headline">{{ formTitleEditInfo }}</span>
         </v-card-title>
@@ -339,6 +504,16 @@
               <v-col cols="7">
                 <v-text-field
                   v-model="info.telphoneNumber"
+                  outlined
+                  dense
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row align="center" justify="center">
+              <v-col cols="3"> <v-subheader>ที่อยู่</v-subheader> </v-col>
+              <v-col cols="7">
+                <v-text-field
+                  v-model="info.address"
                   outlined
                   dense
                 ></v-text-field>
@@ -425,6 +600,7 @@
                   <td>{{ info.surname }}</td>
                   <td>{{ info.email }}</td>
                   <td>{{ info.telphoneNumber }}</td>
+                  <td>{{ info.address }}</td>
                   <v-btn
                     @click.stop="dialogeditinfo = true"
                     @click="$data.info = info"
@@ -446,36 +622,78 @@
         </v-card-text>
         <v-card-text
           ><v-toolbar flat>
-            <v-toolbar-title>ภาษา</v-toolbar-title><v-spacer></v-spacer>
+            <v-toolbar-title>ผลงาน</v-toolbar-title><v-spacer></v-spacer>
             <v-btn
               color="primary"
               dark
-              class="btn mb-2 buttonright"
+              class="btn mb-2"
               depressed
-              @click="gotoAddLanguagePage"
+              @click="gotoAddWorkPage"
               ><v-icon left> mdi-plus-thick</v-icon>เพิ่ม</v-btn
             >
           </v-toolbar>
           <v-data-table
-            :headers="headerslanguage"
+            :headers="headerswork"
             class="elevation-1"
             hide-default-footer
           >
             <template v-slot:body>
               <tbody>
-                <tr v-for="language in languages" :key="language.languageid">
-                  <td>{{ language.name }}</td>
-                  <td>{{ language.degree }}</td>
+                <tr v-for="work in works" :key="work.id">
+                  <td>{{ work.name }}</td>
+                  <td>{{ work.detail }}</td>
                   <v-btn
-                    @click.stop="dialogeditlanguage = true"
-                    @click="$data.language = language"
+                    @click.stop="dialogeditwork = true"
+                    @click="$data.work = work"
                     color="success"
                   >
                     <v-icon small>mdi-pencil</v-icon>แก้ไข
                   </v-btn>
                   <v-btn
-                    @click="$data.language = language"
-                    @click.stop="dialogDeletelanguage = true"
+                    @click="$data.work = work"
+                    @click.stop="dialogDeletework = true"
+                    color="red"
+                  >
+                    <v-icon small>mdi-delete</v-icon>ลบ
+                  </v-btn>
+                </tr>
+              </tbody>
+            </template>
+          </v-data-table>
+        </v-card-text>
+        <v-card-text
+          ><v-toolbar flat>
+            <v-toolbar-title>ความสามารถพิเศษ</v-toolbar-title
+            ><v-spacer></v-spacer>
+            <v-btn
+              color="primary"
+              dark
+              class="btn mb-2 buttonright"
+              depressed
+              @click="gotoAddTalentPage"
+              ><v-icon left> mdi-plus-thick</v-icon>เพิ่ม</v-btn
+            >
+          </v-toolbar>
+          <v-data-table
+            :headers="headerstalent"
+            class="elevation-1"
+            hide-default-footer
+          >
+            <template v-slot:body>
+              <tbody>
+                <tr v-for="talent in talents" :key="talent.talentid">
+                  <td>{{ talent.name }}</td>
+                  <td>{{ talent.detail }}</td>
+                  <v-btn
+                    @click.stop="dialogedittalent = true"
+                    @click="$data.talent = talent"
+                    color="success"
+                  >
+                    <v-icon small>mdi-pencil</v-icon>แก้ไข
+                  </v-btn>
+                  <v-btn
+                    @click="$data.talent = talent"
+                    @click.stop="dialogDeletetalent = true"
                     color="red"
                   >
                     <v-icon small>mdi-delete</v-icon>ลบ
@@ -528,31 +746,41 @@
         </v-card-text>
         <v-card-text
           ><v-toolbar flat>
-            <v-toolbar-title>การทำงาน</v-toolbar-title><v-spacer></v-spacer
-            ><v-btn color="primary" depressed dark @click="gotoAddWorkPage"
+            <v-toolbar-title>ประสบการณ์การทำงาน</v-toolbar-title
+            ><v-spacer></v-spacer
+            ><v-btn
+              color="primary"
+              depressed
+              dark
+              @click="gotoAddExperiencePage"
               ><v-icon left> mdi-plus-thick</v-icon>เพิ่ม</v-btn
             >
           </v-toolbar>
           <v-data-table
-            :headers="headerswork"
+            :headers="headersexperience"
             class="elevation-1"
             hide-default-footer
           >
             <template v-slot:body>
               <tbody>
-                <tr v-for="work in works" :key="work.workid">
-                  <td>{{ work.name }}</td>
-                  <td>{{ work.detail }}</td>
+                <tr
+                  v-for="experience in experiences"
+                  :key="experience.experienceid"
+                >
+                  <td>{{ experience.name }}</td>
+                  <td>{{ experience.datestart }}</td>
+                  <td>{{ experience.dateend }}</td>
+                  <td>{{ experience.detail }}</td>
                   <v-btn
-                    @click.stop="dialogeditwork = true"
-                    @click="$data.work = work"
+                    @click.stop="dialogeditexperience = true"
+                    @click="$data.experience = experience"
                     color="success"
                   >
                     <v-icon small>mdi-pencil</v-icon>แก้ไข
                   </v-btn>
                   <v-btn
-                    @click="$data.work = work"
-                    @click.stop="dialogDeletework = true"
+                    @click="$data.experience = experience"
+                    @click.stop="dialogDeleteexperience = true"
                     color="red"
                   >
                     <v-icon small>mdi-delete</v-icon>ลบ
@@ -564,8 +792,7 @@
         </v-card-text>
         <v-card-text
           ><v-toolbar flat>
-            <v-toolbar-title>ภาษาโปรแกรมมิ่ง</v-toolbar-title
-            ><v-spacer></v-spacer
+            <v-toolbar-title>ทักษะ</v-toolbar-title><v-spacer></v-spacer
             ><v-btn color="primary" dark depressed @click="gotoAddSkillPage"
               ><v-icon left> mdi-plus-thick</v-icon>เพิ่ม</v-btn
             >
@@ -579,7 +806,7 @@
               <tbody>
                 <tr v-for="skill in skills" :key="skill.skillid">
                   <td>{{ skill.name }}</td>
-                  <td>{{ skill.degree }}</td>
+                  <td>{{ skill.detail }}</td>
                   <v-btn
                     @click.stop="dialogeditskill = true"
                     @click="$data.skill = skill"
@@ -599,6 +826,41 @@
             </template>
           </v-data-table>
         </v-card-text>
+        <v-card-text
+          ><v-toolbar flat>
+            <v-toolbar-title>งานอดิเรก</v-toolbar-title><v-spacer></v-spacer
+            ><v-btn color="primary" dark depressed @click="gotoAddHobbyPage"
+              ><v-icon left> mdi-plus-thick</v-icon>เพิ่ม</v-btn
+            >
+          </v-toolbar>
+          <v-data-table
+            :headers="headershobby"
+            class="elevation-1"
+            hide-default-footer
+          >
+            <template v-slot:body>
+              <tbody>
+                <tr v-for="hobby in hobbies" :key="hobby.hobbyid">
+                  <td>{{ hobby.name }}</td>
+                  <v-btn
+                    @click.stop="dialogedithobby = true"
+                    @click="$data.hobby = hobby"
+                    color="success"
+                  >
+                    <v-icon small>mdi-pencil</v-icon>แก้ไข
+                  </v-btn>
+                  <v-btn
+                    @click="$data.hobby = hobby"
+                    @click.stop="dialogDeletehobby = true"
+                    color="red"
+                  >
+                    <v-icon small>mdi-delete</v-icon>ลบ
+                  </v-btn>
+                </tr>
+              </tbody>
+            </template>
+          </v-data-table>
+        </v-card-text>
       </v-card>
     </v-container>
   </v-app>
@@ -609,75 +871,101 @@ import { mapState } from "vuex";
 import jwt_decode from "jwt-decode";
 import Navbar from "../src/components/Navbar";
 import "vue-select/dist/vue-select.css";
-import DatePicker from "vue2-datepicker";
-import "vue2-datepicker/index.css";
 export default {
   name: "Dashboard",
-  computed: { ...mapState(["APIData"]) },
-  components: { Navbar, DatePicker },
+  computed: {
+    ...mapState(["APIData"]),
+    years() {
+      let today = new Date();
+      let year = today.getFullYear();
+      return Array.from(
+        { length: year - 1900 },
+        (value, index) => 1901 + index
+      );
+    },
+  },
+  components: { Navbar },
   data() {
     return {
       info: {},
       infos: [],
       skill: {},
       skills: [],
-      language: {},
-      languages: [],
+      work: {},
+      works: [],
+      talent: {},
+      talents: [],
+      hobby: {},
+      hobbies: {},
       education: {},
       educations: [],
       picture: {},
       pictures: [],
-      work: {},
-      works: [],
+      experience: {},
+      experiences: [],
       accountid: {},
       pictureid: {},
-      formTitleEditSkill: "แก้ไขทักษะภาษาโปรแกรมมิ่ง",
-      formTitleEditEducation: "แก้ไขการศึกษา",
-      formTitleEditWork: "แก้ไขการทำงาน",
-      formTitleEditInfo: "แก้ไขข้อมูลส่วนตัว",
-      formTitleEditLanguage: "แก้ไขภาษา",
+      formTitleEditSkill: "ทักษะ (แก้ไข)",
+      formTitleEditEducation: "การศึกษา (แก้ไข)",
+      formTitleEditExperience: "การทำงาน (แก้ไข)",
+      formTitleEditInfo: "ข้อมูลส่วนตัว (แก้ไข)",
+      formTitleEditTalent: "ความสามารถพิเศษ (แก้ไข)",
+      formTitleEditHobby: "งานอดิเรก (แก้ไข)",
+      formTitleEditWork: "ผลงาน (แก้ไข)",
       dialogDeletepicture: false,
       dialogediteducation: false,
       dialogDeleteEducation: false,
-      dialogeditwork: false,
-      dialogDeletework: false,
-      dialogeditlanguage: false,
-      dialogDeletelanguage: false,
+      dialogeditexperience: false,
+      dialogDeleteexperience: false,
+      dialogedittalent: false,
+      dialogDeletetalent: false,
       dialogeditskill: false,
       dialogDeleteskill: false,
       dialogeditinfo: false,
       dialogDeleteinfo: false,
+      dialogedithobby: false,
+      dialogDeletehobby: false,
+      dialogeditwork: false,
+      dialogDeletework: false,
       messageeditinfo: "",
       messageeditskill: "",
-      messageeditlanguage: "",
-      messageeditwork: "",
+      messageedittalent: "",
+      messageeditexperience: "",
       messageediteducation: "",
+      messageedithobby: "",
+      messageeditwork: "",
       headerseducation: [
         { text: "ระดับ", align: "start", sortable: false },
-        { text: "ชื่อ", sortable: false },
-        { text: "วันเริ่ม", sortable: false },
-        { text: "วันจบ", sortable: false },
+        { text: "สถานศึกษา", sortable: false },
+        { text: "ปีที่เข้าศึกษา", sortable: false },
+        { text: "ปีที่จบการศึกษา", sortable: false },
       ],
       headersinfo: [
         { text: "ชื่อ", sortable: false },
         { text: "นามสกุล", sortable: false },
-        { text: "รหัสบัตรประชาชน", sortable: false },
         { text: "อีเมล", sortable: false },
         { text: "หมายเลขโทรศัพท์", sortable: false },
+        { text: "ที่อยู่", sortable: false },
       ],
-      headerslanguage: [
-        { text: "ภาษา", align: "start", sortable: false },
-        { text: "ระดับความถนัด", sortable: false },
+      headerstalent: [
+        { text: "ความสามารถด้าน", align: "start", sortable: false },
+        { text: "รายอะเอียด", sortable: false },
       ],
       headersskill: [
-        { text: "ภาษา", align: "start", sortable: false },
-        { text: "ระดับความถนัด", sortable: false },
-      ],
-      headerswork: [
-        { text: "ชื่อ", align: "start", sortable: false },
+        { text: "ทักษะด้าน", align: "start", sortable: false },
         { text: "รายละเอียด", sortable: false },
       ],
-      degree: ["พื้นฐานเล็กน้อย", "ปานกลาง", "ดี", "ดีเยี่ยม", "เชี่ยวชาญ"],
+      headersexperience: [
+        { text: "งาน", align: "start", sortable: false },
+        { text: "ปีที่เริ่มเข้าทำงาน", align: "start", sortable: false },
+        { text: "ปีที่จบจากงาน", align: "start", sortable: false },
+        { text: "รายละเอียด", sortable: false },
+      ],
+      headershobby: [{ text: "งานอดิเรก", align: "start", sortable: false }],
+      headerswork: [
+        { text: "ผลงาน", align: "start", sortable: false },
+        { text: "รายอะเอียด", align: "start", sortable: false },
+      ],
       educationdegree: [
         "มัธยมศึกษา",
         "ประกาศนียบัตรวิชาชีพ (ปวช.)",
@@ -686,60 +974,6 @@ export default {
         "ปริญญาโท",
         "ปริญญาเอก",
       ],
-      itemlistlanguages: [
-        "กัมพูชา",
-        "กาตาร์",
-        "เกาหลีใต้",
-        "เกาหลีเหนือ",
-        "คาซัคสถาน",
-        "คีร์กีซสถาน",
-        "คูเวต",
-        "จอร์เจีย",
-        "จอร์แดน",
-        "จีน",
-        "ซาอุดีอาระเบีย",
-        "ซีเรีย",
-        "ไซปรัส",
-        "ญี่ปุ่น",
-        "ติมอร์ตะวันออกติมอร์-เลสเต",
-        "ตุรกี",
-        "เติร์กเมนิสถาน",
-        "ไต้หวัน",
-        "ทาจิกิสถาน",
-        "ไทย",
-        "เนปาล",
-        "บรูไน",
-        "บังกลาเทศ",
-        "บาห์เรน",
-        "ปากีสถาน",
-        "ปาเลสไตน์",
-        "ฝรั่งเศษ",
-        "พม่าเมียนมา",
-        "ฟิลิปปินส์",
-        "ภูฏาน",
-        "มองโกเลีย",
-        "มัลดีฟส์",
-        "มาเลเซีย",
-        "เยเมน",
-        "ลาว",
-        "เลบานอน",
-        "เวียดนาม",
-        "ศรีลังกา",
-        "สหรัฐอาหรับเอมิเรตส์",
-        "สิงคโปร์",
-        "อัฟกานิสถาน",
-        "อาเซอร์ไบจาน",
-        "อาร์มีเนีย",
-        "อินเดีย",
-        "อินโดนีเซีย",
-        "อิรัก",
-        "อิสราเอล",
-        "อิหร่าน",
-        "อุซเบกิสถาน",
-        "โอมาน",
-        "อังกฤษ",
-      ],
-      itemlistskill: ["Java", "Python", "Html", "C", "JavaScript", "C++", "C#"],
     };
   },
   created() {
@@ -769,48 +1003,59 @@ export default {
     },
     getFailedEditMessage() {
       document.getElementById("message").style.color = "red";
-      this.messageeditinfo = "กรุณากรอกข้อมูลให้ถูกต้องตามรูปแบบและครบถ้วน";
-      this.messageediteducation =
-        "กรุณากรอกข้อมูลให้ถูกต้องตามรูปแบบและให้ครบถ้วน";
-      this.messageeditwork = "กรุณากรอกข้อมูลให้ครบถ้วน";
+      this.messageeditinfo = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messageediteducation = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messageeditexperience = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messageedithobby = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messageeditskill = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messageeditwork = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messageedittalent = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
     },
     setFormData() {
-      this.work = {};
+      this.experience = {};
       this.info = {};
       this.education = {};
       this.picture = {};
+      this.hobby = {};
+      this.work = {};
       this.messageeditinfo = "";
       this.messageeditskill = "";
-      this.messageeditlanguage = "";
-      this.messageeditwork = "";
+      this.messageedittalent = "";
+      this.messageeditexperience = "";
       this.messageediteducation = "";
+      this.messageedithobby = "";
+      this.messageeditwork = "";
     },
     closeDelete() {
       this.getAPIData();
       this.dialogDeleteskill = false;
       this.dialogDeleteEducation = false;
-      this.dialogDeletework = false;
+      this.dialogDeleteexperience = false;
       this.dialogDeleteinfo = false;
-      this.dialogDeletelanguage = false;
+      this.dialogDeletetalent = false;
       this.dialogDeletepicture = false;
+      this.dialogDeletehobby = false;
+      this.dialogDeletework = false;
     },
     closeEdit() {
       this.getAPIData();
       this.dialogeditskill = false;
       this.dialogediteducation = false;
-      this.dialogeditwork = false;
-      this.dialogeditlanguage = false;
+      this.dialogeditexperience = false;
+      this.dialogedittalent = false;
       this.dialogeditinfo = false;
+      this.dialogedithobby = false;
+      this.dialogeditwork = false;
       this.setFormData();
     },
     async getAPIData() {
       await getAPI
-        .get("/api/works/", {
+        .get("/api/experiences/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.works = this.$store.state.APIData;
+          this.experiences = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -827,12 +1072,34 @@ export default {
           console.log(err);
         });
       await getAPI
+        .get("/api/works/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.works = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      await getAPI
         .get("/api/skills/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
           this.skills = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      await getAPI
+        .get("/api/hobbies/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.hobbies = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -849,12 +1116,12 @@ export default {
           console.log(err);
         });
       await getAPI
-        .get("/api/languages/", {
+        .get("/api/talents/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.languages = this.$store.state.APIData;
+          this.talents = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -910,7 +1177,7 @@ export default {
             accountid: this.accountid,
             skillid: this.skill.skillid,
             name: this.skill.name,
-            degree: this.skill.degree,
+            detail: this.skill.detail,
           },
           {
             headers: {
@@ -925,6 +1192,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.getFailedEditMessage();
         });
     },
     async deleteItemConfirmWork(work) {
@@ -969,10 +1237,10 @@ export default {
           this.getFailedEditMessage();
         });
     },
-    async deleteItemConfirmLanguage(language) {
+    async deleteItemConfirmHobby(hobby) {
       await this.getAccountid();
       await axiosBase
-        .delete(`api/languages/${language.languageid}/`, {
+        .delete(`api/hobbies/${hobby.hobbyid}/`, {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then(() => {
@@ -984,16 +1252,15 @@ export default {
           console.log(err);
         });
     },
-    async editItemConfirmLanguage(language) {
+    async editItemConfirmHobby(hobby) {
       await this.getAccountid();
       await axiosBase
         .put(
-          `api/languages/${language.languageid}/`,
+          `api/hobbies/${hobby.hobbyid}/`,
           {
             accountid: this.accountid,
-            languageid: this.language.languageid,
-            name: this.language.name,
-            degree: this.language.degree,
+            hobbyid: this.hobby.hobbyid,
+            name: this.hobby.name,
           },
           {
             headers: {
@@ -1008,6 +1275,93 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.getFailedEditMessage();
+        });
+    },
+    async deleteItemConfirmExperience(experience) {
+      await this.getAccountid();
+      await axiosBase
+        .delete(`api/experiences/${experience.experienceid}/`, {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then(() => {
+          this.closeDelete();
+          this.setFormData();
+          this.getSuccessDeleteMessage();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async editItemConfirmExperience(experience) {
+      await this.getAccountid();
+      await axiosBase
+        .put(
+          `api/experiences/${experience.experienceid}/`,
+          {
+            accountid: this.accountid,
+            experienceid: this.experience.experienceid,
+            name: this.experience.name,
+            datestart: this.experience.datestart,
+            dateend: this.experience.dateend,
+            detail: this.experience.detail,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          }
+        )
+        .then(() => {
+          this.closeEdit();
+          this.setFormData();
+          this.getSuccessEditMessage();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.getFailedEditMessage();
+        });
+    },
+    async deleteItemConfirmTalent(talent) {
+      await this.getAccountid();
+      await axiosBase
+        .delete(`api/talents/${talent.talentid}/`, {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then(() => {
+          this.closeDelete();
+          this.setFormData();
+          this.getSuccessDeleteMessage();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async editItemConfirmTalent(talent) {
+      await this.getAccountid();
+      await axiosBase
+        .put(
+          `api/talents/${talent.talentid}/`,
+          {
+            accountid: this.accountid,
+            talentid: this.talent.talentid,
+            name: this.talent.name,
+            detail: this.talent.detail,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.$store.state.accessToken}`,
+            },
+          }
+        )
+        .then(() => {
+          this.closeEdit();
+          this.setFormData();
+          this.getSuccessEditMessage();
+        })
+        .catch((err) => {
+          console.log(err);
+          this.getFailedEditMessage();
         });
     },
     async deleteItemConfirmInfo(info) {
@@ -1036,6 +1390,7 @@ export default {
             surname: this.info.surname,
             email: this.info.email,
             telphoneNumber: this.info.telphoneNumber,
+            address: this.info.address,
           },
           {
             headers: {
@@ -1137,17 +1492,23 @@ export default {
     gotoAddSkillPage() {
       this.$router.push({ name: "Skill" });
     },
-    gotoAddLanguagePage() {
-      this.$router.push({ name: "Language" });
+    gotoAddTalentPage() {
+      this.$router.push({ name: "Talent" });
     },
-    gotoAddWorkPage() {
-      this.$router.push({ name: "Work" });
+    gotoAddExperiencePage() {
+      this.$router.push({ name: "Experience" });
     },
     gotoAddInfoPage() {
       this.$router.push({ name: "Info" });
     },
     gotoAddPicturePage() {
       this.$router.push({ name: "Picture" });
+    },
+    gotoAddHobbyPage() {
+      this.$router.push({ name: "Hobby" });
+    },
+    gotoAddWorkPage() {
+      this.$router.push({ name: "Work" });
     },
   },
 };

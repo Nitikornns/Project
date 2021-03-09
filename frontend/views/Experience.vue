@@ -1,58 +1,67 @@
 <template>
-  <v-app
-    ><Navbar></Navbar>
+  <v-app>
+    <Navbar></Navbar>
     <v-card class="text-center">
       <v-data-table
-        :headers="headerseducation"
+        :headers="headersexperience"
         class="elevation-1"
         hide-default-footer
       >
         <template v-slot:body>
           <tbody>
-            <tr v-for="education in educations" :key="education.educationid">
-              <td>{{ education.degree }}</td>
-              <td>{{ education.name }}</td>
-              <td>{{ education.datestart }}</td>
-              <td>{{ education.dateend }}</td>
+            <tr
+              v-for="experience in experiences"
+              :key="experience.experienceid"
+            >
+              <td>{{ experience.name }}</td>
+              <td>{{ experience.datestart }}</td>
+              <td>{{ experience.dateend }}</td>
+              <td>{{ experience.detail }}</td>
             </tr>
           </tbody>
-        </template>
-      </v-data-table>
-      <v-card-text>
-        <h2 style="text-align: center">การศึกษา</h2>
+        </template> </v-data-table
+      ><v-card-text>
+        <h2 style="text-align: center">ประสบการณ์การทำงาน</h2>
         <h6 class="message">{{ messagecreate }}</h6>
-        <v-form>
-          <v-row align="center" justify="center">
-            <v-col cols="3">
-              <v-subheader>ระดับ</v-subheader>
-            </v-col>
-            <v-col cols="7"
-              ><v-selects v-model="education.degree" :options="educationdegree">
-              </v-selects>
-            </v-col>
-          </v-row>
-          <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>สถานศึกษา</v-subheader></v-col>
-            <v-col cols="7"
-              ><v-text-field
-                v-model="education.name"
+        <br />
+        <v-form
+          ><v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>งาน</v-subheader> </v-col>
+            <v-col cols="7">
+              <v-text-field
+                v-model="experience.name"
                 outlined
                 dense
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>ปีที่เข้าศึกษา</v-subheader> </v-col>
+            <v-col cols="3">
+              <v-subheader>ปีที่เริ่มเข้าทำงาน</v-subheader>
+            </v-col>
             <v-col cols="7">
-              <v-selects v-model="education.datestart" :options="years">
+              <v-selects v-model="experience.datestart" :options="years">
               </v-selects>
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>ปีที่จบการศึกษา</v-subheader></v-col>
+            <v-col cols="3"> <v-subheader>ปีที่จบจากงาน</v-subheader></v-col>
             <v-col cols="7">
-              <v-selects v-model="education.dateend" :options="years">
+              <v-selects v-model="experience.dateend" :options="years">
               </v-selects>
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="center">
+            <v-col cols="3">
+              <v-subheader>รายละเอียด</v-subheader>
+            </v-col>
+            <v-col cols="7">
+              <v-textarea
+                v-model="experience.detail"
+                outlined
+                dense
+                height="150"
+              ></v-textarea>
             </v-col>
           </v-row>
           <br />
@@ -64,20 +73,19 @@
             class="buttonleft"
             >ย้อนกลับ</v-btn
           >
-        </v-form></v-card-text
-      ></v-card
-    >
+        </v-form>
+      </v-card-text>
+    </v-card>
   </v-app>
 </template>
 <script>
 import "vue-select/dist/vue-select.css";
-import jwt_decode from "jwt-decode";
+import Navbar from "../src/components/Navbar";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
-import Navbar from "../src/components/Navbar";
-
+import jwt_decode from "jwt-decode";
 export default {
-  name: "Education",
+  name: "Experience",
   components: { Navbar },
   computed: {
     ...mapState(["APIData"]),
@@ -91,49 +99,42 @@ export default {
   },
   data() {
     return {
-      education: {},
-      educations: [],
+      experience: {},
+      experiences: [],
       accountid: {},
       messagecreate: "",
-      headerseducation: [
-        { text: "ระดับ", align: "center", sortable: false },
-        { text: "สถานศึกษา", align: "center", sortable: false },
-        { text: "ปีที่เข้าศึกษา", align: "center", sortable: false },
-        { text: "ปีที่จบการศึกษา", align: "center", sortable: false },
-      ],
-      educationdegree: [
-        "มัธยมศึกษา",
-        "ประกาศนียบัตรวิชาชีพ (ปวช.)",
-        "ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)",
-        "ปริญญาตรี",
-        "ปริญญาโท",
-        "ปริญญาเอก",
+      headersexperience: [
+        { text: "งาน", align: "center", sortable: false },
+        { text: "ปีที่เริ่มเข้าทำงาน", align: "center", sortable: false },
+        { text: "ปีที่จบจากงาน", align: "center", sortable: false },
+        { text: "รายละเอียด", align: "center", sortable: false },
       ],
     };
   },
+
   created() {
     this.setFormData();
     this.getAPIData();
   },
   methods: {
     submitForm() {
-      this.createEducation();
+      this.createExperience();
     },
     setFormData() {
-      this.education = {};
+      this.experience = {};
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "บันทึกไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
     },
     async getAPIData() {
       await getAPI
-        .get("/api/educations/", {
+        .get("/api/experiences/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.educations = this.$store.state.APIData;
+          this.experiences = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -154,18 +155,18 @@ export default {
           console.log(err);
         });
     },
-    async createEducation() {
+    async createExperience() {
       await this.getAccountid();
       await axiosBase
         .post(
-          "/api/educations/",
+          "/api/experiences/",
           {
             accountid: this.accountid,
-            educationid: this.education.educationid,
-            datestart: this.education.datestart,
-            dateend: this.education.dateend,
-            name: this.education.name,
-            degree: this.education.degree,
+            experienceid: this.experience.experienceid,
+            name: this.experience.name,
+            datestart: this.experience.datestart,
+            dateend: this.experience.dateend,
+            detail: this.experience.detail,
           },
           {
             headers: {

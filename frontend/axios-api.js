@@ -33,7 +33,13 @@ getAPI.interceptors.response.use(undefined, function(err) {
             baseURL: APIUrl,
             method: "get",
             headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-            url: "/api/languages/",
+            url: "/api/works/",
+          }),
+          axios.request({
+            baseURL: APIUrl,
+            method: "get",
+            headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
+            url: "/api/talents/",
           }),
           axios.request({
             baseURL: APIUrl,
@@ -45,7 +51,7 @@ getAPI.interceptors.response.use(undefined, function(err) {
             baseURL: APIUrl,
             method: "get",
             headers: { Authorization: `Bearer ${access}` }, // the new access token is attached to the authorization header
-            url: "/api/works/",
+            url: "/api/experiences/",
           }),
           axios
             .request({

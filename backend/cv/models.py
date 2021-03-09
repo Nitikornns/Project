@@ -96,14 +96,10 @@ class Info(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=140, verbose_name="firstName")
     surname = models.CharField(max_length=140)
-    commencementday = models.DateField(
-        blank=True, null=True, auto_now=False, auto_now_add=False)
     email = models.EmailField(max_length=140)
     telphoneNumber = models.CharField(max_length=10)
+    address = models.CharField(max_length=140, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return f"{self.name}"
 
     class Meta:
         ordering = ["name"]
@@ -115,12 +111,48 @@ class Skill(models.Model):
     skillid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="SkillId")
     name = models.CharField(
-        max_length=140, choices=PROGRAMING_LANGUAGES, verbose_name="SkillName")
-    degree = models.CharField(
-        choices=DEGREE, max_length=150, verbose_name="SkillDegree")
+        max_length=140, verbose_name="SkillName")
+    detail = models.CharField(max_length=1000, verbose_name="SkillDetail")
 
-    def __str__(self):
-        return f"{self.accountid}"
+    class Meta:
+        ordering = ["name"]
+
+
+class Work(models.Model):
+    accountid = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    workid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="WorkId")
+    name = models.CharField(
+        max_length=140, verbose_name="WorkName")
+    detail = models.CharField(
+        max_length=1000, verbose_name="WorkDetail", null=True, blank=True)
+
+    class Meta:
+        ordering = ["name"]
+
+
+class Talent(models.Model):
+    accountid = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    talentid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="TalentId")
+    name = models.CharField(
+        max_length=140, verbose_name="TalentName")
+    detail = models.CharField(
+        max_length=1000, verbose_name="TalentDetail", null=True, blank=True)
+
+    class Meta:
+        ordering = ["name"]
+
+
+class Hobby(models.Model):
+    accountid = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    hobbyid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="HobbyId")
+    name = models.CharField(
+        max_length=140, verbose_name="HobbyName")
 
     class Meta:
         ordering = ["name"]
@@ -136,9 +168,6 @@ class Language(models.Model):
     degree = models.CharField(
         choices=DEGREE, max_length=150, verbose_name="LanguageDegree")
 
-    def __str__(self):
-        return f"{self.name}"
-
     class Meta:
         ordering = ["name"]
 
@@ -149,15 +178,12 @@ class Education(models.Model):
     educationid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="EducationId")
     datestart = models.IntegerField(
-        choices=YEAR_CHOICES, default=datetime.datetime.now().year)
+        choices=YEAR_CHOICES, default=datetime.datetime.now().year, verbose_name="EducationDateStart")
     dateend = models.IntegerField(
-        choices=YEAR_CHOICES, default=datetime.datetime.now().year)
+        choices=YEAR_CHOICES, default=datetime.datetime.now().year, verbose_name="EducationDateEnd", null=True, blank=True)
     name = models.CharField(max_length=140, verbose_name="EducationName")
     degree = models.CharField(
         choices=EDUCATION_DEEGREE, max_length=150)
-
-    def __str__(self):
-        return f"{self.name}"
 
     class Meta:
         ordering = ["name"]
@@ -170,23 +196,22 @@ class Picture(models.Model):
         primary_key=True, serialize=False, verbose_name="PictureId")
     picturefile = models.FileField(null=True)
 
-    def __str__(self):
-        return f"{self.pictureid}"
-
     class Meta:
         ordering = ["pictureid"]
 
 
-class Work(models.Model):
+class Experience(models.Model):
     accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    workid = models.AutoField(
-        primary_key=True, serialize=False, verbose_name="WorkId")
-    name = models.CharField(max_length=140, verbose_name="WorkName")
-    detail = models.CharField(max_length=1000)
-
-    def __str__(self):
-        return f"{self.workid}"
+    experienceid = models.AutoField(
+        primary_key=True, serialize=False, verbose_name="ExperienceId")
+    datestart = models.IntegerField(choices=YEAR_CHOICES, default=datetime.datetime.now(
+    ).year, verbose_name="ExperienceDateStart")
+    dateend = models.IntegerField(
+        choices=YEAR_CHOICES, default=datetime.datetime.now().year, verbose_name="ExperienceDateEnd", null=True, blank=True)
+    name = models.CharField(max_length=140, verbose_name="ExperienceName")
+    detail = models.CharField(
+        max_length=1000, verbose_name="ExperienceDetail", null=True, blank=True)
 
     class Meta:
-        ordering = ["workid"]
+        ordering = ["experienceid"]

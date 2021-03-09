@@ -6,6 +6,7 @@
       ref="observer"
     >
       <h2 style="text-align: center">บันทึกข้อมูล</h2>
+      <h6 class="message">{{ messagecreate }}</h6>
       <v-form>
         <v-container>
           <validation-provider
@@ -80,6 +81,16 @@
               </v-col>
             </v-row>
           </validation-provider>
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>ที่อยู่</v-subheader> </v-col>
+            <v-col cols="7">
+              <v-text-field
+                v-model="info.address"
+                outlined
+                dense
+              ></v-text-field>
+            </v-col>
+          </v-row>
         </v-container>
         <v-btn
           @click="submitForm"
@@ -122,11 +133,14 @@ export default {
   computed: { ...mapState(["APIData"]) },
   components: { ValidationProvider, ValidationObserver, Navbar },
   data() {
-    return { info: {}, accountid: {}, messageedit: "" };
+    return { info: {}, infos: [], accountid: {}, messagecreate: "" };
   },
   methods: {
     submitForm() {
       this.createInfo();
+    },
+    getFailCreateMessage() {
+      this.messagecreate = "บันทึกไม่สำเร็จ เกิดข้อผิดพลาด";
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
@@ -154,6 +168,7 @@ export default {
             surname: this.info.surname,
             email: this.info.email,
             telphoneNumber: this.info.telphoneNumber,
+            address: this.info.address,
           },
           {
             headers: {
@@ -166,6 +181,7 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+          this.getFailCreateMessage();
         });
     },
     gotoPreviuosPage() {

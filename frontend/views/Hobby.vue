@@ -1,83 +1,77 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <v-card class="text-center" weight="1000">
+    <v-card weight="1000">
       <v-data-table
-        :headers="headersskill"
+        :headers="headershobby"
         class="elevation-1"
         hide-default-footer
       >
         <template v-slot:body>
           <tbody>
-            <tr v-for="skill in skills" :key="skill.skillid">
-              <td>{{ skill.name }}</td>
-              <td>{{ skill.detail }}</td>
+            <tr v-for="hobby in hobbies" :key="hobby.hobbyid">
+              <td>{{ hobby.name }}</td>
             </tr>
           </tbody>
         </template>
       </v-data-table>
       <v-card-text>
-        <h2 style="text-align: center">ทักษะ</h2>
+        <h2 style="text-align: center">งานอดิเรก</h2>
         <h6 class="message">{{ messagecreate }}</h6>
         <br />
         <v-form>
           <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>ทักษะด้าน</v-subheader> </v-col>
+            <v-col cols="3"> <v-subheader>งานอดิเรก</v-subheader> </v-col>
             <v-col cols="7">
-              <v-text-field v-model="skill.name" outlined dense></v-text-field>
+              <v-text-field v-model="hobby.name" outlined dense></v-text-field>
             </v-col>
           </v-row>
-          <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
-            <v-col cols="7">
-              <v-text-field v-model="skill.detail" outlined dense></v-text-field
-            ></v-col>
-          </v-row>
-          <br />
-          <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
+          <br /><v-btn
+            @click="submitForm"
+            color="primary"
+            class="buttoncenters"
+            depressed
+            >บันทึก</v-btn
           ><v-btn
+            class="buttonleft"
             @click="gotoPreviuosPage"
             color="primary"
             depressed
-            class="buttonleft"
             >ย้อนกลับ</v-btn
           >
-        </v-form></v-card-text
-      >
+        </v-form>
+      </v-card-text>
     </v-card>
   </v-app>
 </template>
 <script>
 import Navbar from "../src/components/Navbar";
-import { getAPI, axiosBase } from "../axios-api";
-import { mapState } from "vuex";
 import jwt_decode from "jwt-decode";
+import { axiosBase, getAPI } from "../axios-api";
+import { mapState } from "vuex";
 export default {
-  name: "Skill",
+  name: "Hobby",
   components: { Navbar },
-  data() {
-    return {
-      skill: {},
-      skills: [],
-      accountid: {},
-      messagecreate: "",
-      headersskill: [
-        { text: "ทักษะด้าน", align: "center", sortable: false },
-        { text: "รายละเอียด", align: "center", sortable: false },
-      ],
-    };
-  },
   computed: { ...mapState(["APIData"]) },
   created() {
     this.setFormData();
     this.getAPIData();
   },
+  data() {
+    return {
+      hobby: {},
+      hobbies: [],
+      accountid: {},
+      messagecreate: "",
+      headershobby: [{ text: "งานอดิเรก", align: "center", sortable: false }],
+    };
+  },
   methods: {
     submitForm() {
-      this.createSkill();
+      this.createHobby();
     },
     setFormData() {
-      this.skill = {};
+      this.hobby = {};
       this.messagecreate = "";
     },
     getFailCreateMessage() {
@@ -85,12 +79,12 @@ export default {
     },
     async getAPIData() {
       await getAPI
-        .get("/api/skills/", {
+        .get("/api/hobbies/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.skills = this.$store.state.APIData;
+          this.hobbies = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -111,16 +105,12 @@ export default {
           console.log(err);
         });
     },
-    async createSkill() {
+    async createHobby() {
       await this.getAccountid();
       await axiosBase
         .post(
-          "/api/skills/",
-          {
-            accountid: this.accountid,
-            name: this.skill.name,
-            detail: this.skill.detail,
-          },
+          "/api/hobbies/",
+          { accountid: this.accountid, name: this.hobby.name },
           {
             headers: {
               Authorization: `Bearer ${this.$store.state.accessToken}`,

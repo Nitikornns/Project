@@ -1,69 +1,78 @@
 <template>
-  <v-app>
-    <Navbar></Navbar>
-    <v-card class="text-center" weight="1000">
+  <v-app
+    ><Navbar></Navbar>
+    <v-card weight="1000">
       <v-data-table
-        :headers="headersskill"
+        :headers="headerstalent"
         class="elevation-1"
         hide-default-footer
       >
         <template v-slot:body>
           <tbody>
-            <tr v-for="skill in skills" :key="skill.skillid">
-              <td>{{ skill.name }}</td>
-              <td>{{ skill.detail }}</td>
+            <tr v-for="talent in talents" :key="talent.talentid">
+              <td>{{ talent.name }}</td>
+              <td>{{ talent.detail }}</td>
             </tr>
           </tbody>
         </template>
       </v-data-table>
       <v-card-text>
-        <h2 style="text-align: center">ทักษะ</h2>
+        <h2 style="text-align: center">ความสามารถพิเศษ</h2>
         <h6 class="message">{{ messagecreate }}</h6>
         <br />
         <v-form>
           <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>ทักษะด้าน</v-subheader> </v-col>
+            <v-col cols="3"> <v-subheader>ความสามารถด้าน</v-subheader> </v-col>
             <v-col cols="7">
-              <v-text-field v-model="skill.name" outlined dense></v-text-field>
+              <v-text-field v-model="talent.name" outlined dense></v-text-field>
             </v-col>
           </v-row>
-          <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
-            <v-col cols="7">
-              <v-text-field v-model="skill.detail" outlined dense></v-text-field
-            ></v-col>
-          </v-row>
           <br />
-          <v-btn @click="submitForm" color="primary" depressed>บันทึก</v-btn
+          <v-row align="center" justify="center">
+            <v-col cols="3"> <v-subheader>รายอะเอียด</v-subheader> </v-col>
+            <v-col cols="7"
+              ><v-text-field
+                v-model="talent.detail"
+                outlined
+                dense
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <br /><v-btn
+            @click="submitForm"
+            color="primary"
+            class="buttoncenters"
+            depressed
+            >บันทึก</v-btn
           ><v-btn
+            class="buttonleft"
             @click="gotoPreviuosPage"
             color="primary"
             depressed
-            class="buttonleft"
             >ย้อนกลับ</v-btn
           >
-        </v-form></v-card-text
-      >
+        </v-form>
+      </v-card-text>
     </v-card>
   </v-app>
 </template>
 <script>
 import Navbar from "../src/components/Navbar";
+import jwt_decode from "jwt-decode";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
-import jwt_decode from "jwt-decode";
 export default {
-  name: "Skill",
+  name: "Talent",
   components: { Navbar },
   data() {
     return {
-      skill: {},
-      skills: [],
+      talent: {},
+      talents: [],
       accountid: {},
       messagecreate: "",
-      headersskill: [
-        { text: "ทักษะด้าน", align: "center", sortable: false },
-        { text: "รายละเอียด", align: "center", sortable: false },
+      headerstalent: [
+        { text: "ความสามารถด้าน", align: "center", sortable: false },
+        { text: "รายอะเอียด", align: "center", sortable: false },
       ],
     };
   },
@@ -74,10 +83,10 @@ export default {
   },
   methods: {
     submitForm() {
-      this.createSkill();
+      this.createTalent();
     },
     setFormData() {
-      this.skill = {};
+      this.talent = {};
       this.messagecreate = "";
     },
     getFailCreateMessage() {
@@ -85,12 +94,12 @@ export default {
     },
     async getAPIData() {
       await getAPI
-        .get("/api/skills/", {
+        .get("/api/talents/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.skills = this.$store.state.APIData;
+          this.talents = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -111,15 +120,15 @@ export default {
           console.log(err);
         });
     },
-    async createSkill() {
+    async createTalent() {
       await this.getAccountid();
       await axiosBase
         .post(
-          "/api/skills/",
+          "/api/talents/",
           {
             accountid: this.accountid,
-            name: this.skill.name,
-            detail: this.skill.detail,
+            name: this.talent.name,
+            detail: this.talent.detail,
           },
           {
             headers: {

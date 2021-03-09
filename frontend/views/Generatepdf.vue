@@ -7,21 +7,14 @@
           ><v-icon>mdi-file-pdf</v-icon>ดาวโหลด</v-btn
         ></v-card-text
       >
-      <ul v-if="work == null">
-        have
-      </ul>
-      <div v-if="works.length == 1">
-        have
-      </div>
-      <v-btn @click="gotoPreviuosPage" color="primary" depressed
-        >ย้อนกลับ</v-btn
-      >
+      <v-btn @click="gotoPreviuosPage" color="primary" depressed>ย้อนกลับ</v-btn
+      >{{ info.address }}
     </v-card>
     <vue-html2pdf
       :show-layout="false"
       :float-layout="true"
       :enable-download="true"
-      :paginate-elements-by-height="2000"
+      :paginate-elements-by-height="1400"
       filename="MyCV"
       :pdf-quality="2"
       :manual-pagination="false"
@@ -54,7 +47,11 @@
               <div class="w3-row-padding">
                 <!-- Left Column -->
                 <div class="w3-third">
-                  <div class="w3-white w3-text-grey w3-card-4">
+                  <div
+                    class="w3-white w3-text-grey w3-card-4"
+                    id="box"
+                    style="max-width:1600px;"
+                  >
                     <div class="w3-display-container">
                       <ul v-for="picture in pictures" :key="picture.pictureid">
                         <img
@@ -83,97 +80,168 @@
                         ></i
                         >{{ info.telphoneNumber }}
                       </p>
-                      <hr />
-                      <div v-if="skill.length >= 1">
-                        <p class="w3-mediam">
-                          <b
-                            ><i
-                              class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
-                            ></i
-                            >ภาษาโปรแกรมมิ่ง</b
-                          >
+                      <ul v-if="info.address != null">
+                        <p v-for="info in infos" :key="info.address">
+                          <i
+                            class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"
+                          ></i
+                          >{{ info.address }}
                         </p>
-                        <ul v-for="skill in skills" :key="skill.name">
-                          <div class="w3-container">
-                            {{ skill.name }}
-                            <div>{{ skill.degree }}</div>
-                          </div>
-                        </ul>
-                      </div>
-                      <br />
-                      <div v-if="language.length >= 1">
-                        <p class="w3-mediam">
-                          <b
-                            ><i
-                              class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
-                            ></i
-                            >ภาษา</b
-                          >
-                        </p>
-                        <ul v-for="language in languages" :key="language.name">
-                          <div class="w3-container">
-                            {{ language.name }}
-                            <div>{{ language.degree }}</div>
-                          </div>
-                        </ul>
-                      </div>
-                      <br />
+                      </ul>
                     </div>
+                    <hr />
+                    <div class="w3-container">
+                      <div v-if="skills.length >= 1">
+                        <i
+                          class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
+                        ></i
+                        >ทักษะ
+                        <div v-for="skill in skills" :key="skill.name">
+                          <div class="w3-container">
+                            {{ skill.name }} : {{ skill.detail }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="w3-container">
+                      <div v-if="talents.length >= 1">
+                        <i
+                          class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
+                        ></i
+                        >ความสามารถพิเศษ
+                        <div v-for="talent in talents" :key="talent.name">
+                          <div class="w3-container">
+                            {{ talent.name }} : {{ talent.detail }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
+                    <div class="w3-container">
+                      <div v-if="hobbies.length >= 1">
+                        <i
+                          class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"
+                        ></i
+                        >งานอดิเรก
+                        <div v-for="hobby in hobbies" :key="hobby.name">
+                          <div class="w3-container">{{ hobby.name }}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
                   </div>
-                  <br />
                   <!-- End Left Column -->
                 </div>
                 <!-- Right Column -->
-                <div v-if="education.length >= 1">
-                  <div class="w3-twothird">
-                    <div class="w3-container w3-card w3-white w3-margin-bottom">
-                      <h2 class="w3-text-grey w3-padding-16">
-                        <i
-                          class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"
-                        ></i
-                        >การศึกษา
-                      </h2>
-                      <div
-                        class="w3-container"
-                        v-for="education in educations"
-                        :key="education.educationid"
-                      >
-                        <h5 class="w3-opacity">
-                          <b>{{ education.degree }}</b>
-                        </h5>
-                        <h6 class="w3-text-teal">
+                <div class="w3-twothird">
+                  <div
+                    class="w3-container w3-card w3-white w3-margin-bottom"
+                    id="box"
+                  >
+                    <h2 class="w3-text-grey w3-padding-16">
+                      <i
+                        class="fa fa-graduation-cap fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+                      ></i
+                      >การศึกษา
+                    </h2>
+                    <div
+                      class="w3-container"
+                      v-for="education in educations"
+                      :key="education.educationid"
+                    >
+                      <h5 class="w3-opacity">
+                        <b>{{ education.degree }} {{ education.name }}</b>
+                      </h5>
+                      <h6 class="w3-text-teal">
+                        <ul v-if="education.dateend != null">
                           <i class="fa fa-calendar fa-fw w3-margin-right"></i>
-                          {{ education.datestart }} - {{ education.dateend }}
-                        </h6>
-                        <p>{{ education.name }}</p>
-                        <hr />
-                      </div>
+                          {{
+                            education.datestart
+                          }}
+                          -
+                          {{
+                            education.dateend
+                          }}
+                        </ul>
+                        <ul v-if="education.dateend == null">
+                          <i class="fa fa-calendar fa-fw w3-margin-right"></i>
+                          {{
+                            education.datestart
+                          }}
+                          - ปัจจุบัน
+                        </ul>
+                      </h6>
+                      <hr />
                     </div>
                   </div>
-                  <div v-if="works.length >= 1">
-                    <div class="w3-container w3-card w3-white">
-                      <h2 class="w3-text-grey w3-padding-16">
-                        <i
-                          class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"
-                        ></i
-                        >การทำงาน
-                      </h2>
-                      <ul v-for="work in works" :key="work.workid">
-                        <div class="w3-container">
-                          <h5 class="w3-opacity">
-                            <b>{{ work.name }}</b>
-                          </h5>
-                          <p>{{ work.detail }}</p>
-                          <hr />
-                        </div>
-                      </ul>
+                  <div
+                    class="w3-container w3-card w3-white w3-margin-bottom"
+                    id="box"
+                  >
+                    <h2 class="w3-text-grey w3-padding-16">
+                      <i
+                        class="fa fa-briefcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+                      ></i
+                      >ประสบการณ์การทำงาน
+                    </h2>
+                    <div
+                      class="w3-container"
+                      v-for="experience in experiences"
+                      :key="experience.experienceid"
+                    >
+                      <h5 class="w3-opacity">
+                        <b>{{ experience.name }}</b>
+                      </h5>
+                      <h6 class="w3-text-teal">
+                        <ul v-if="experience.dateend != null">
+                          <i class="fa fa-calendar fa-fw w3-margin-right"></i>
+                          {{
+                            experience.datestart
+                          }}
+                          -
+                          {{
+                            experience.dateend
+                          }}
+                        </ul>
+                        <ul v-if="experience.dateend == null">
+                          <i class="fa fa-calendar fa-fw w3-margin-right"></i>
+                          {{
+                            experience.datestart
+                          }}
+                          - ปัจจุบัน
+                        </ul>
+                      </h6>
+                      <div class="w3-container">{{ experience.detail }}</div>
+                      <hr />
                     </div>
                   </div>
-                  <!-- End Right Column -->
+                  <div
+                    class="w3-container w3-card w3-white w3-margin-bottom"
+                    id="box"
+                  >
+                    <h2 class="w3-text-grey w3-padding-16">
+                      <i
+                        class="fa fa-trophy fa-fw w3-margin-right w3-xxlarge w3-text-teal"
+                      ></i
+                      >ผลงาน
+                    </h2>
+                    <div
+                      class="w3-container"
+                      v-for="work in works"
+                      :key="work.workid"
+                    >
+                      <h5 class="w3-opacity">
+                        <b>{{ work.name }}</b>
+                      </h5>
+                      <div class="w3-container">{{ work.detail }}</div>
+                      <hr />
+                    </div>
+                  </div>
                 </div>
-                <!-- End Grid -->
+                <!-- End Right Column -->
               </div>
-              <!-- End Page Container -->
+              <!-- End Grid -->
             </div>
             <footer
               class="w3-container w3-teal w3-center w3-margin-top"
@@ -199,18 +267,22 @@ export default {
       infos: [],
       skill: {},
       skills: [],
-      language: {},
-      languages: [],
+      work: {},
+      works: [],
       education: {},
       educations: [],
       picture: {},
       pictures: [],
-      work: {},
-      works: [],
+      experience: {},
+      experiences: [],
+      talent: {},
+      talents: [],
+      hobby: {},
+      hobbies: [],
     };
   },
-  created() {
-    this.getAPIData();
+  async created() {
+    await this.getAPIData();
   },
   methods: {
     async generateFilePdf() {
@@ -219,12 +291,12 @@ export default {
     },
     async getAPIData() {
       await getAPI
-        .get("/api/works/", {
+        .get("/api/experiences/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.works = this.$store.state.APIData;
+          this.experiences = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -241,12 +313,34 @@ export default {
           console.log(err);
         });
       await getAPI
+        .get("/api/works/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.works = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      await getAPI
         .get("/api/skills/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
           this.skills = this.$store.state.APIData;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      await getAPI
+        .get("/api/hobbies/", {
+          headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
+        })
+        .then((response) => {
+          this.$store.state.APIData = response.data;
+          this.hobbies = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -263,12 +357,12 @@ export default {
           console.log(err);
         });
       await getAPI
-        .get("/api/languages/", {
+        .get("/api/talents/", {
           headers: { Authorization: `Bearer ${this.$store.state.accessToken}` },
         })
         .then((response) => {
           this.$store.state.APIData = response.data;
-          this.languages = this.$store.state.APIData;
+          this.talents = this.$store.state.APIData;
         })
         .catch((err) => {
           console.log(err);
@@ -292,13 +386,6 @@ export default {
 };
 </script>
 <style scoped>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 html,
 body,
 h1,
@@ -308,5 +395,13 @@ h4,
 h5,
 h6 {
   font-family: "Roboto", sans-serif;
+}
+img {
+  border: 5px solid #555;
+}
+#box {
+  border: 1px solid;
+  padding: 10px;
+  box-shadow: 5px 10px 18px #888888;
 }
 </style>
