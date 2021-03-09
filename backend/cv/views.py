@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Hobby, Info, Skill, Talent, Language, Education, Picture, Experience, Hobby, Work
-from .serializers import InfoSerializer, SkillSerializer, TalentSerializer, LanguageSerializer, EducationSerializer, PictureSerializer, ExperienceSerializer, HobbySerializer, WorkSerializer
+from .models import Hobby, Info, Skill, Talent, Education, Picture, Experience, Hobby, Work
+from .serializers import InfoSerializer, SkillSerializer, TalentSerializer, EducationSerializer, PictureSerializer, ExperienceSerializer, HobbySerializer, WorkSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -56,18 +56,6 @@ class WorksViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Work.objects.all()
     serializer_class = WorkSerializer
-
-    def perform_create(self, serializer):
-        return serializer.save(accountid=self.request.user)
-
-    def get_queryset(self):
-        return self.queryset.filter(accountid=self.request.user)
-
-
-class LanguagesViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
 
     def perform_create(self, serializer):
         return serializer.save(accountid=self.request.user)

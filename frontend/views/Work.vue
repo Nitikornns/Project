@@ -1,7 +1,7 @@
 <template>
   <v-app
     ><Navbar></Navbar>
-    <v-card weight="1000">
+    <v-card class="container">
       <v-data-table
         :headers="headerswork"
         class="elevation-1"
@@ -16,10 +16,10 @@
           </tbody>
         </template>
       </v-data-table>
+      <hr />
+      <h2 style="text-align: center">ผลงาน</h2>
       <v-card-text>
-        <h2 style="text-align: center">ผลงาน</h2>
         <h6 class="message">{{ messagecreate }}</h6>
-        <br />
         <v-form>
           <v-row align="center" justify="center">
             <v-col cols="3"> <v-subheader>ผลงาน</v-subheader> </v-col>
@@ -89,6 +89,7 @@ export default {
   created() {
     this.setFormData();
     this.getAPIData();
+    setInterval(this.getCreateMessage, 5000);
   },
   methods: {
     submitForm() {
@@ -96,10 +97,13 @@ export default {
     },
     setFormData() {
       this.work = {};
+      this.getCreateMessage();
+    },
+    getCreateMessage() {
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
+      this.messagecreate = "บันทึกไม่สำเร็จเกิดข้อผิดพลาด ลองใหม่อีกครั้ง";
     },
     async getAPIData() {
       await getAPI

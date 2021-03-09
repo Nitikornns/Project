@@ -95,7 +95,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
     <v-dialog v-model="dialogDeletework" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline justify-center"
@@ -159,7 +158,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
     <v-dialog v-model="dialogeditskill" persistent max-width="620px">
       <v-card height="350px">
         <v-card-title>
@@ -235,9 +233,7 @@
           <v-container>
             <h6 id="message">{{ messageediteducation }}</h6>
             <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>ระดับ</v-subheader>
-              </v-col>
+              <v-col cols="3"> <v-subheader>ระดับ</v-subheader> </v-col>
               <v-col cols="7"
                 ><v-selects
                   v-model="education.degree"
@@ -347,9 +343,7 @@
               </v-col>
             </v-row>
             <v-row align="center" justify="center">
-              <v-col cols="3">
-                <v-subheader>รายละเอียด</v-subheader>
-              </v-col>
+              <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
               <v-col cols="7">
                 <v-textarea
                   v-model="experience.detail"
@@ -539,7 +533,6 @@
       </v-card>
     </v-dialog>
     <!----------------------------- datatable ----------------------------->
-    <v-card> </v-card>
     <v-container>
       <v-card>
         <v-card-text>
@@ -907,7 +900,7 @@ export default {
       pictureid: {},
       formTitleEditSkill: "ทักษะ (แก้ไข)",
       formTitleEditEducation: "การศึกษา (แก้ไข)",
-      formTitleEditExperience: "การทำงาน (แก้ไข)",
+      formTitleEditExperience: "ประสบการณ์การทำงาน (แก้ไข)",
       formTitleEditInfo: "ข้อมูลส่วนตัว (แก้ไข)",
       formTitleEditTalent: "ความสามารถพิเศษ (แก้ไข)",
       formTitleEditHobby: "งานอดิเรก (แก้ไข)",

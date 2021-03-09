@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Info, Skill, Talent, Language, Education, Picture, Experience, Hobby, Work
+from .models import Info, Skill, Talent, Education, Picture, Experience, Hobby, Work
 
 
 class InfoSerializer(ModelSerializer):
@@ -29,12 +29,6 @@ class WorkSerializer(ModelSerializer):
 class TalentSerializer(ModelSerializer):
     class Meta:
         model = Talent
-        fields = '__all__'
-
-
-class LanguageSerializer(ModelSerializer):
-    class Meta:
-        model = Language
         fields = '__all__'
 
 

@@ -1,16 +1,7 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
 from django.db import models
 import datetime
-
-DEGREE = (
-    ("พื้นฐานเล็กน้อย", "พื้นฐานเล็กน้อย"),
-    ("ปานกลาง", "ปานกลาง"),
-    ("ดี", "ดี"),
-    ("ดีเยี่ยม", "ดีเยี่ยม"),
-    ("เชี่ยวชาญ", "เชี่ยวชาญ"),
-)
 
 YEAR_CHOICES = [(r, r) for r in range(1900, datetime.date.today().year+1)]
 
@@ -21,71 +12,6 @@ EDUCATION_DEEGREE = (
     ("ปริญญาตรี", "ปริญญาตรี"),
     ("ปริญญาโท", "ปริญญาโท"),
     ("ปริญญาเอก", "ปริญญาเอก"),
-)
-
-PROGRAMING_LANGUAGES = (
-    ("Java", "Java"),
-    ("Python", "Python"),
-    ("Html", "Html"),
-    ("C", "C"),
-    ("JavaScript", "JavaScript"),
-    ("C++", "C++"),
-    ("C#", "C#"),
-)
-
-
-LISTLANGUAGE_CHOICES = (
-    ("กัมพูชา", "กัมพูชา"),
-    ("กาตาร์", "กาตาร์"),
-    ("เกาหลีใต้", "เกาหลีใต้"),
-    ("เกาหลีเหนือ", "เกาหลีเหนือ"),
-    ("คาซัคสถาน", "คาซัคสถาน"),
-    ("คีร์กีซสถาน", "คีร์กีซสถาน"),
-    ("คูเวต", "คูเวต"),
-    ("จอร์เจีย", "จอร์เจีย"),
-    ("จอร์แดน", "จอร์แดน"),
-    ("จีน", "จีน"),
-    ("ซาอุดีอาระเบีย", "ซาอุดีอาระเบีย"),
-    ("ซีเรีย", "ซีเรีย"),
-    ("ไซปรัส", "ไซปรัส"),
-    ("ญี่ปุ่น", "ญี่ปุ่น"),
-    ("ติมอร์ตะวันออกติมอร์-เลสเต", "ติมอร์ตะวันออกติมอร์-เลสเต"),
-    ("ตุรกี", "ตุรกี"),
-    ("เติร์กเมนิสถาน", "เติร์กเมนิสถาน"),
-    ("ไต้หวัน", "ไต้หวัน"),
-    ("ทาจิกิสถาน", "ทาจิกิสถาน"),
-    ("ไทย", "ไทย"),
-    ("เนปาล", "เนปาล"),
-    ("บรูไน", "บรูไน"),
-    ("บังกลาเทศ", "บังกลาเทศ"),
-    ("บาห์เรน", "บาห์เรน"),
-    ("ปากีสถาน", "ปากีสถาน"),
-    ("ปาเลสไตน์", "ปาเลสไตน์"),
-    ("ฝรั่งเศษ", "ฝรั่งเศษ"),
-    ("พม่าเมียนมา", "พม่าเมียนมา"),
-    ("ฟิลิปปินส์", "ฟิลิปปินส์"),
-    ("ภูฏาน", "ภูฏาน"),
-    ("มองโกเลีย", "มองโกเลีย"),
-    ("มัลดีฟส์", "มัลดีฟส์"),
-    ("มาเลเซีย", "มาเลเซีย"),
-    ("เยเมน", "เยเมน"),
-    ("ลาว", "ลาว"),
-    ("เลบานอน", "เลบานอน"),
-    ("เวียดนาม", "เวียดนาม"),
-    ("ศรีลังกา", "ศรีลังกา"),
-    ("สหรัฐอาหรับเอมิเรตส์", "สหรัฐอาหรับเอมิเรตส์"),
-    ("สิงคโปร์", "สิงคโปร์"),
-    ("อัฟกานิสถาน", "อัฟกานิสถาน"),
-    ("อาเซอร์ไบจาน", "อาเซอร์ไบจาน"),
-    ("อาร์มีเนีย", "อาร์มีเนีย"),
-    ("อินเดีย", "อินเดีย"),
-    ("อินโดนีเซีย", "อินโดนีเซีย"),
-    ("อิรัก", "อิรัก"),
-    ("อิสราเอล", "อิสราเอล"),
-    ("อิหร่าน", "อิหร่าน"),
-    ("อุซเบกิสถาน", "อุซเบกิสถาน"),
-    ("โอมาน", "โอมาน"),
-    ("อังกฤษ", "อังกฤษ"),
 )
 
 
@@ -112,7 +38,8 @@ class Skill(models.Model):
         primary_key=True, serialize=False, verbose_name="SkillId")
     name = models.CharField(
         max_length=140, verbose_name="SkillName")
-    detail = models.CharField(max_length=1000, verbose_name="SkillDetail")
+    detail = models.CharField(
+        max_length=1000, verbose_name="SkillDetail", null=True, blank=True)
 
     class Meta:
         ordering = ["name"]
@@ -158,29 +85,15 @@ class Hobby(models.Model):
         ordering = ["name"]
 
 
-class Language(models.Model):
-    accountid = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    languageid = models.AutoField(
-        primary_key=True, serialize=False, verbose_name="LanguageId")
-    name = models.CharField(
-        max_length=140, choices=LISTLANGUAGE_CHOICES, verbose_name="LanguageName")
-    degree = models.CharField(
-        choices=DEGREE, max_length=150, verbose_name="LanguageDegree")
-
-    class Meta:
-        ordering = ["name"]
-
-
 class Education(models.Model):
     accountid = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     educationid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="EducationId")
     datestart = models.IntegerField(
-        choices=YEAR_CHOICES, default=datetime.datetime.now().year, verbose_name="EducationDateStart")
+        choices=YEAR_CHOICES, verbose_name="EducationDateStart", null=True)
     dateend = models.IntegerField(
-        choices=YEAR_CHOICES, default=datetime.datetime.now().year, verbose_name="EducationDateEnd", null=True, blank=True)
+        choices=YEAR_CHOICES, verbose_name="EducationDateEnd", null=True)
     name = models.CharField(max_length=140, verbose_name="EducationName")
     degree = models.CharField(
         choices=EDUCATION_DEEGREE, max_length=150)
@@ -205,10 +118,10 @@ class Experience(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     experienceid = models.AutoField(
         primary_key=True, serialize=False, verbose_name="ExperienceId")
-    datestart = models.IntegerField(choices=YEAR_CHOICES, default=datetime.datetime.now(
-    ).year, verbose_name="ExperienceDateStart")
+    datestart = models.IntegerField(
+        choices=YEAR_CHOICES,  verbose_name="ExperienceDateStart", null=True)
     dateend = models.IntegerField(
-        choices=YEAR_CHOICES, default=datetime.datetime.now().year, verbose_name="ExperienceDateEnd", null=True, blank=True)
+        choices=YEAR_CHOICES, verbose_name="ExperienceDateEnd", null=True)
     name = models.CharField(max_length=140, verbose_name="ExperienceName")
     detail = models.CharField(
         max_length=1000, verbose_name="ExperienceDetail", null=True, blank=True)

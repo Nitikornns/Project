@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <v-card class="text-center">
+    <v-card class="container">
       <v-data-table
         :headers="headersexperience"
         class="elevation-1"
@@ -19,11 +19,12 @@
               <td>{{ experience.detail }}</td>
             </tr>
           </tbody>
-        </template> </v-data-table
-      ><v-card-text>
-        <h2 style="text-align: center">ประสบการณ์การทำงาน</h2>
+        </template>
+      </v-data-table>
+      <hr />
+      <h2 style="text-align: center">ประสบการณ์การทำงาน</h2>
+      <v-card-text>
         <h6 class="message">{{ messagecreate }}</h6>
-        <br />
         <v-form
           ><v-row align="center" justify="center">
             <v-col cols="3"> <v-subheader>งาน</v-subheader> </v-col>
@@ -52,9 +53,7 @@
             </v-col>
           </v-row>
           <v-row align="center" justify="center">
-            <v-col cols="3">
-              <v-subheader>รายละเอียด</v-subheader>
-            </v-col>
+            <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
             <v-col cols="7">
               <v-textarea
                 v-model="experience.detail"
@@ -111,10 +110,10 @@ export default {
       ],
     };
   },
-
   created() {
     this.setFormData();
     this.getAPIData();
+    setInterval(this.getCreateMessage, 5000);
   },
   methods: {
     submitForm() {
@@ -122,10 +121,13 @@ export default {
     },
     setFormData() {
       this.experience = {};
+      this.getCreateMessage();
+    },
+    getCreateMessage() {
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "เกิดความผิดพลาดบันทึกไม่สำเร็จ";
+      this.messagecreate = "บันทึกไม่สำเร็จเกิดข้อผิดพลาด ลองใหม่อีกครั้ง";
     },
     async getAPIData() {
       await getAPI

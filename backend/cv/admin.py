@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Info, Skill, Talent, Language, Picture, Experience, Education, Hobby, Work
+from .models import Info, Skill, Talent, Picture, Experience, Education, Hobby, Work
 
 # Register your models here.
 
@@ -25,10 +25,6 @@ class InfoAdmin(admin.ModelAdmin):
                     'surname', 'email', 'telphoneNumber', 'address']
 
 
-class LanguageAdmin(admin.ModelAdmin):
-    list_display = ['accountid', 'name', 'degree']
-
-
 class PictureAdmin(admin.ModelAdmin):
     list_display = ['accountid']
 
@@ -43,7 +39,6 @@ class EducationAdmin(admin.ModelAdmin):
 
 admin.site.register(Skill, SkillAdmin)
 admin.site.register(Info, InfoAdmin)
-admin.site.register(Language, LanguageAdmin)
 admin.site.register(Picture, PictureAdmin)
 admin.site.register(Experience, ExperienceAdmin)
 admin.site.register(Education, EducationAdmin)

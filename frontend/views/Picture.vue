@@ -53,7 +53,7 @@ export default {
     },
     failedMessage() {
       document.getElementById("message").style.color = "red";
-      this.message = "อัพโหลดรูปภาพผิดพลาด กดบันทึกอีกครั้ง";
+      this.message = "อัพโหลดรูปภาพผิดพลาด ลองใหม่อีกครั้ง";
     },
     setFormData() {
       this.picture = [];

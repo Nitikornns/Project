@@ -1,7 +1,7 @@
 <template>
   <v-app
     ><Navbar></Navbar>
-    <v-card class="text-center">
+    <v-card class="container">
       <v-data-table
         :headers="headerseducation"
         class="elevation-1"
@@ -18,14 +18,13 @@
           </tbody>
         </template>
       </v-data-table>
+      <hr />
+      <h2 style="text-align: center">การศึกษา</h2>
       <v-card-text>
-        <h2 style="text-align: center">การศึกษา</h2>
         <h6 class="message">{{ messagecreate }}</h6>
         <v-form>
           <v-row align="center" justify="center">
-            <v-col cols="3">
-              <v-subheader>ระดับ</v-subheader>
-            </v-col>
+            <v-col cols="3"> <v-subheader>ระดับ</v-subheader> </v-col>
             <v-col cols="7"
               ><v-selects v-model="education.degree" :options="educationdegree">
               </v-selects>
@@ -75,7 +74,6 @@ import jwt_decode from "jwt-decode";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
 import Navbar from "../src/components/Navbar";
-
 export default {
   name: "Education",
   components: { Navbar },
@@ -124,7 +122,7 @@ export default {
       this.messagecreate = "";
     },
     getFailCreateMessage() {
-      this.messagecreate = "บันทึกไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messagecreate = "บันทึกไม่สำเร็จเกิดข้อผิดพลาด ลองใหม่อีกครั้ง";
     },
     async getAPIData() {
       await getAPI

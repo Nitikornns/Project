@@ -40,7 +40,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
           />
-          <body class="w3-light-grey">
+          <body>
             <!-- Page Container -->
             <div class="w3-content w3-margin-top" style="max-width:1400px;">
               <!-- The Grid -->
@@ -50,7 +50,7 @@
                   <div
                     class="w3-white w3-text-grey w3-card-4"
                     id="box"
-                    style="max-width:1600px;"
+                    style="width:240px;"
                   >
                     <div class="w3-display-container">
                       <ul v-for="picture in pictures" :key="picture.pictureid">
@@ -61,7 +61,7 @@
                         />
                       </ul>
                     </div>
-                    <div class="w3-container">
+                    <div class="container">
                       <p v-for="info in infos" :key="info.name">
                         <i
                           class="fa fa-user fa-fw w3-margin-right w3-large w3-text-teal"
@@ -151,8 +151,9 @@
                       :key="education.educationid"
                     >
                       <h5 class="w3-opacity">
-                        <b>{{ education.degree }} {{ education.name }}</b>
+                        <b>{{ education.degree }}</b>
                       </h5>
+                      {{ education.name }}
                       <h6 class="w3-text-teal">
                         <ul v-if="education.dateend != null">
                           <i class="fa fa-calendar fa-fw w3-margin-right"></i>
@@ -172,7 +173,6 @@
                           - ปัจจุบัน
                         </ul>
                       </h6>
-                      <hr />
                     </div>
                   </div>
                   <div
@@ -213,7 +213,6 @@
                         </ul>
                       </h6>
                       <div class="w3-container">{{ experience.detail }}</div>
-                      <hr />
                     </div>
                   </div>
                   <div
@@ -235,7 +234,6 @@
                         <b>{{ work.name }}</b>
                       </h5>
                       <div class="w3-container">{{ work.detail }}</div>
-                      <hr />
                     </div>
                   </div>
                 </div>

@@ -135,12 +135,18 @@ export default {
   data() {
     return { info: {}, infos: [], accountid: {}, messagecreate: "" };
   },
+  created() {
+    setInterval(this.getCreateMessage, 5000);
+  },
   methods: {
     submitForm() {
       this.createInfo();
     },
+    getCreateMessage() {
+      this.messagecreate = "";
+    },
     getFailCreateMessage() {
-      this.messagecreate = "บันทึกไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messagecreate = "บันทึกไม่สำเร็จเกิดข้อผิดพลาด ลองใหม่อีกครั้ง";
     },
     async getAccountid() {
       let token = localStorage.getItem("access_token");
