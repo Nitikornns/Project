@@ -8,7 +8,7 @@
         <v-file-input
           v-model="picture"
           prepend-icon="mdi-camera"
-          placeholder="เลือกรูปภาพ"
+          placeholder="เลือก"
           :show-size="1000"
         ></v-file-input>
         <v-btn color="primary" depressed @click="submitForm">บันทึก</v-btn>

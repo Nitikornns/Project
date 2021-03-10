@@ -79,7 +79,7 @@ export default {
         case 1:
           return "สมัครสมาชิก";
         case 2:
-          return "สมัครสมาชิกเรียบร้อนแล้ว";
+          return "สมัครสมาชิกเรียบร้อยแล้ว";
         default:
           return "Account created";
       }

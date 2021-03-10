@@ -5,11 +5,11 @@ from .models import Info, Skill, Talent, Picture, Experience, Education, Hobby, 
 
 
 class SkillAdmin(admin.ModelAdmin):
-    list_display = ['accountid', 'name', 'detail']
+    list_display = ['accountid', 'name']
 
 
 class TalentAdmin(admin.ModelAdmin):
-    list_display = ['accountid', 'name', 'detail']
+    list_display = ['accountid', 'name']
 
 
 class WorkAdmin(admin.ModelAdmin):

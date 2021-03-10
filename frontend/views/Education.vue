@@ -19,7 +19,7 @@
         </template>
       </v-data-table>
       <hr />
-      <h2 style="text-align: center">การศึกษา</h2>
+      <h2 style="text-align: center">{{ title }}</h2>
       <v-card-text>
         <h6 class="message">{{ messagecreate }}</h6>
         <v-form>
@@ -50,7 +50,11 @@
           <v-row align="center" justify="center">
             <v-col cols="3"> <v-subheader>ปีที่จบการศึกษา</v-subheader></v-col>
             <v-col cols="7">
-              <v-selects v-model="education.dateend" :options="years">
+              <v-selects
+                v-model="education.dateend"
+                placeholder="หากยังคงอยู่ในช่วงศึกษาให้เว้นว่าง"
+                :options="years"
+              >
               </v-selects>
             </v-col>
           </v-row>
@@ -93,6 +97,7 @@ export default {
       educations: [],
       accountid: {},
       messagecreate: "",
+      title: "การศึกษา",
       headerseducation: [
         { text: "ระดับ", align: "center", sortable: false },
         { text: "สถานศึกษา", align: "center", sortable: false },
@@ -100,7 +105,8 @@ export default {
         { text: "ปีที่จบการศึกษา", align: "center", sortable: false },
       ],
       educationdegree: [
-        "มัธยมศึกษา",
+        "มัธยมศึกษาตอนต้น",
+        "มัธยมศึกษาตอนปลาย",
         "ประกาศนียบัตรวิชาชีพ (ปวช.)",
         "ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)",
         "ปริญญาตรี",
@@ -174,6 +180,7 @@ export default {
         .then(() => {
           this.setFormData();
           this.getAPIData();
+          this.gotoPreviuosPage();
         })
         .catch((err) => {
           console.log(err);

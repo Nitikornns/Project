@@ -65,7 +65,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageedithobby }}</h6>
+            <h6 id="message">{{ messageedit }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>งานอดิเรก</v-subheader> </v-col>
               <v-col cols="7">
@@ -121,7 +121,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageeditwork }}</h6>
+            <h6 id="message">{{ messageedit }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>ผลงาน</v-subheader> </v-col>
               <v-col cols="7">
@@ -159,13 +159,13 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogeditskill" persistent max-width="620px">
-      <v-card height="350px">
+      <v-card height="300px">
         <v-card-title>
           <span class="headline">{{ formTitleEditSkill }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageeditskill }}</h6>
+            <h6 id="message">{{ messageedit }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>ทักษะด้าน</v-subheader> </v-col>
               <v-col cols="7">
@@ -175,16 +175,6 @@
                   dense
                 ></v-text-field>
               </v-col>
-            </v-row>
-            <v-row align="center" justify="center">
-              <v-col cols="3"> <v-subheader>รายละเอียด</v-subheader> </v-col>
-              <v-col cols="7">
-                <v-text-field
-                  v-model="skill.detail"
-                  outlined
-                  dense
-                ></v-text-field
-              ></v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -231,7 +221,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageediteducation }}</h6>
+            <h6 id="message">{{ messageedit }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>ระดับ</v-subheader> </v-col>
               <v-col cols="7"
@@ -315,7 +305,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageeditexperience }}</h6>
+            <h6 id="message">{{ messageedit }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>งาน</v-subheader> </v-col>
               <v-col cols="7">
@@ -392,13 +382,13 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogedittalent" persistent width="700px">
-      <v-card height="380px">
+      <v-card height="300px">
         <v-card-title>
           <span class="headline">{{ formTitleEditTalent }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageedittalent }}</h6>
+            <h6 id="message">{{ messageedit }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3">
                 <v-subheader>ความสามารถด้าน</v-subheader>
@@ -406,16 +396,6 @@
               <v-col cols="7">
                 <v-text-field
                   v-model="talent.name"
-                  outlined
-                  dense
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row align="center" justify="center">
-              <v-col cols="3"> <v-subheader>รายอะเอียด</v-subheader> </v-col>
-              <v-col cols="7">
-                <v-text-field
-                  v-model="talent.detail"
                   outlined
                   dense
                 ></v-text-field>
@@ -459,14 +439,14 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="dialogeditinfo" persistent max-width="800px">
-      <v-card height="570px">
+    <v-dialog v-model="dialogeditinfo" persistent max-width="820px">
+      <v-card height="560px">
         <v-card-title>
           <span class="headline">{{ formTitleEditInfo }}</span>
         </v-card-title>
         <v-card-text>
           <v-container>
-            <h6 id="message">{{ messageeditinfo }}</h6>
+            <h6 id="message">{{ messageedit }}</h6>
             <v-row align="center" justify="center">
               <v-col cols="3"> <v-subheader>ชื่อ</v-subheader> </v-col>
               <v-col cols="7">
@@ -537,15 +517,17 @@
       <v-card>
         <v-card-text>
           <v-toolbar flat
-            ><v-toolbar-title>รูปภาพ</v-toolbar-title><v-spacer></v-spacer
-            ><v-btn
-              color="primary"
-              dark
-              class="btn mb-2"
-              depressed
-              @click="gotoAddPicturePage"
-              ><v-icon left>mdi-plus-thick</v-icon>เพิ่ม</v-btn
-            >
+            ><v-toolbar-title>รูปภาพ</v-toolbar-title><v-spacer></v-spacer>
+            <div v-if="this.pictures.length == 0">
+              <v-btn
+                color="primary"
+                dark
+                class="btn mb-2"
+                depressed
+                @click="gotoAddPicturePage"
+                ><v-icon left>mdi-plus-thick</v-icon>เพิ่ม</v-btn
+              >
+            </div>
           </v-toolbar>
           <div class="w3-display-container">
             <tr v-for="picture in pictures" :key="picture.pictureid">
@@ -898,6 +880,7 @@ export default {
       experiences: [],
       accountid: {},
       pictureid: {},
+      messageedit: "",
       formTitleEditSkill: "ทักษะ (แก้ไข)",
       formTitleEditEducation: "การศึกษา (แก้ไข)",
       formTitleEditExperience: "ประสบการณ์การทำงาน (แก้ไข)",
@@ -920,13 +903,6 @@ export default {
       dialogDeletehobby: false,
       dialogeditwork: false,
       dialogDeletework: false,
-      messageeditinfo: "",
-      messageeditskill: "",
-      messageedittalent: "",
-      messageeditexperience: "",
-      messageediteducation: "",
-      messageedithobby: "",
-      messageeditwork: "",
       headerseducation: [
         { text: "ระดับ", align: "start", sortable: false },
         { text: "สถานศึกษา", sortable: false },
@@ -942,12 +918,8 @@ export default {
       ],
       headerstalent: [
         { text: "ความสามารถด้าน", align: "start", sortable: false },
-        { text: "รายอะเอียด", sortable: false },
       ],
-      headersskill: [
-        { text: "ทักษะด้าน", align: "start", sortable: false },
-        { text: "รายละเอียด", sortable: false },
-      ],
+      headersskill: [{ text: "ทักษะด้าน", align: "start", sortable: false }],
       headersexperience: [
         { text: "งาน", align: "start", sortable: false },
         { text: "ปีที่เริ่มเข้าทำงาน", align: "start", sortable: false },
@@ -975,17 +947,7 @@ export default {
   },
   methods: {
     getSuccessEditMessage() {
-      let message = "แก้ไขสำเร็จ";
-      let options = {
-        okText: "ปิด",
-        cancelText: "Cancel",
-        animation: "bounce",
-        type: "basic",
-      };
-      this.$dialog.alert(message, options);
-    },
-    getSuccessDeleteMessage() {
-      let message = "ลบสำเร็จ";
+      let message = "แก้ไขข้อมูลสำเร็จ";
       let options = {
         okText: "ปิด",
         cancelText: "Cancel",
@@ -996,13 +958,7 @@ export default {
     },
     getFailedEditMessage() {
       document.getElementById("message").style.color = "red";
-      this.messageeditinfo = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
-      this.messageediteducation = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
-      this.messageeditexperience = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
-      this.messageedithobby = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
-      this.messageeditskill = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
-      this.messageeditwork = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
-      this.messageedittalent = "แก้ไขไม่สำเร็จ เกิดข้อผิดพลาด";
+      this.messageedit = "แก้ไขข้อมูลไม่สำเร็จ เกิดข้อผิดพลาด";
     },
     setFormData() {
       this.experience = {};
@@ -1011,13 +967,7 @@ export default {
       this.picture = {};
       this.hobby = {};
       this.work = {};
-      this.messageeditinfo = "";
-      this.messageeditskill = "";
-      this.messageedittalent = "";
-      this.messageeditexperience = "";
-      this.messageediteducation = "";
-      this.messageedithobby = "";
-      this.messageeditwork = "";
+      this.messageedit = "";
     },
     closeDelete() {
       this.getAPIData();
@@ -1155,7 +1105,6 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
         })
         .catch((err) => {
           console.log(err);
@@ -1197,7 +1146,6 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
         })
         .catch((err) => {
           console.log(err);
@@ -1239,7 +1187,6 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
         })
         .catch((err) => {
           console.log(err);
@@ -1280,7 +1227,6 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
         })
         .catch((err) => {
           console.log(err);
@@ -1324,7 +1270,6 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
         })
         .catch((err) => {
           console.log(err);
@@ -1366,7 +1311,6 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
         })
         .catch((err) => {
           console.log(err);
@@ -1410,7 +1354,6 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
         })
         .catch((err) => {
           console.log(err);
@@ -1468,16 +1411,10 @@ export default {
         .then(() => {
           this.closeDelete();
           this.setFormData();
-          this.getSuccessDeleteMessage();
-          this.fetchStatusMessage();
-          this.getAPIData();
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-    fetchStatusMessage() {
-      setInterval(this.setStatusMessage, 5000);
     },
     gotoAddEducationPage() {
       this.$router.push({ name: "Education" });

@@ -6,7 +6,8 @@ import datetime
 YEAR_CHOICES = [(r, r) for r in range(1900, datetime.date.today().year+1)]
 
 EDUCATION_DEEGREE = (
-    ("มัธยมศึกษา", "มัธยมศึกษา"),
+    ("มัธยมศึกษาตอนต้น", "มัธยมศึกษาตอนต้น"),
+    ("มัธยมศึกษาตอนปลาย", "มัธยมศึกษาตอนปลาย"),
     ("ประกาศนียบัตรวิชาชีพ (ปวช.)", "ประกาศนียบัตรวิชาชีพ (ปวช.)"),
     ("ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)", "ประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)"),
     ("ปริญญาตรี", "ปริญญาตรี"),
@@ -38,8 +39,6 @@ class Skill(models.Model):
         primary_key=True, serialize=False, verbose_name="SkillId")
     name = models.CharField(
         max_length=140, verbose_name="SkillName")
-    detail = models.CharField(
-        max_length=1000, verbose_name="SkillDetail", null=True, blank=True)
 
     class Meta:
         ordering = ["name"]
@@ -66,8 +65,6 @@ class Talent(models.Model):
         primary_key=True, serialize=False, verbose_name="TalentId")
     name = models.CharField(
         max_length=140, verbose_name="TalentName")
-    detail = models.CharField(
-        max_length=1000, verbose_name="TalentDetail", null=True, blank=True)
 
     class Meta:
         ordering = ["name"]

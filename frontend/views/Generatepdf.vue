@@ -1,14 +1,15 @@
 <template>
   <v-app>
     <Navbar></Navbar>
-    <v-card class="container">
-      <v-card-text>
-        <v-btn color="blue" height="100" width="600" @click="generateFilePdf"
-          ><v-icon>mdi-file-pdf</v-icon>ดาวโหลด</v-btn
-        ></v-card-text
+    <v-card class="container card text-align: center" width="400px">
+      <h2 style="text-align: center">{{ title }}</h2>
+      <v-btn
+        color="blue"
+        max-height="100"
+        max-width="600"
+        @click="generateFilePdf"
+        ><v-icon>mdi-file-pdf</v-icon>ดาวโหลด</v-btn
       >
-      <v-btn @click="gotoPreviuosPage" color="primary" depressed>ย้อนกลับ</v-btn
-      >{{ info.address }}
     </v-card>
     <vue-html2pdf
       :show-layout="false"
@@ -98,7 +99,7 @@
                         >ทักษะ
                         <div v-for="skill in skills" :key="skill.name">
                           <div class="w3-container">
-                            {{ skill.name }} : {{ skill.detail }}
+                            {{ skill.name }}
                           </div>
                         </div>
                       </div>
@@ -112,7 +113,7 @@
                         >ความสามารถพิเศษ
                         <div v-for="talent in talents" :key="talent.name">
                           <div class="w3-container">
-                            {{ talent.name }} : {{ talent.detail }}
+                            {{ talent.name }}
                           </div>
                         </div>
                       </div>
@@ -241,9 +242,7 @@
               </div>
               <!-- End Grid -->
             </div>
-            <footer
-              class="w3-container w3-teal w3-center w3-margin-top"
-            ></footer>
+            <footer class="w3-container  w3-center w3-margin-top"></footer>
           </body>
         </html>
       </section>
@@ -277,6 +276,7 @@ export default {
       talents: [],
       hobby: {},
       hobbies: [],
+      title: "ดาวโหลดไฟล์pdf",
     };
   },
   async created() {
@@ -383,23 +383,4 @@ export default {
   },
 };
 </script>
-<style scoped>
-html,
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: "Roboto", sans-serif;
-}
-img {
-  border: 5px solid #555;
-}
-#box {
-  border: 1px solid;
-  padding: 10px;
-  box-shadow: 5px 10px 18px #888888;
-}
-</style>
+<style src="../src/assets/styles/styles.css" scoped></style>

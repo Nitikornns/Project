@@ -11,48 +11,56 @@
           <tbody>
             <tr v-for="talent in talents" :key="talent.talentid">
               <td>{{ talent.name }}</td>
-              <td>{{ talent.detail }}</td>
             </tr>
           </tbody>
         </template>
       </v-data-table>
       <hr />
-      <h2 style="text-align: center">ความสามารถพิเศษ</h2>
-      <v-card-text>
-        <h6 class="message">{{ messagecreate }}</h6>
-        <v-form>
-          <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>ความสามารถด้าน</v-subheader> </v-col>
-            <v-col cols="7">
-              <v-text-field v-model="talent.name" outlined dense></v-text-field>
-            </v-col>
-          </v-row>
-          <br />
-          <v-row align="center" justify="center">
-            <v-col cols="3"> <v-subheader>รายอะเอียด</v-subheader> </v-col>
-            <v-col cols="7"
-              ><v-text-field
-                v-model="talent.detail"
-                outlined
-                dense
-              ></v-text-field>
-            </v-col>
-          </v-row>
-          <br /><v-btn
-            @click="submitForm"
-            color="primary"
-            class="buttoncenters"
-            depressed
-            >บันทึก</v-btn
-          ><v-btn
-            class="buttonleft"
-            @click="gotoPreviuosPage"
-            color="primary"
-            depressed
-            >ย้อนกลับ</v-btn
-          >
-        </v-form>
-      </v-card-text>
+      <validation-observer
+        class="container d-flex card text-center"
+        ref="observer"
+      >
+        <h2 style="text-align: center">{{ title }}</h2>
+        <v-card-text>
+          <h6 class="message">{{ messagecreate }}</h6>
+          <v-form>
+            <validation-provider
+              v-slot="{ errors }"
+              name="ความสามารถด้าน"
+              rules="required|max:100"
+            >
+              <v-row align="center" justify="center">
+                <v-col cols="3">
+                  <v-subheader>ความสามารถด้าน</v-subheader>
+                </v-col>
+                <v-col cols="7">
+                  <v-text-field
+                    v-model="talent.name"
+                    :error-messages="errors"
+                    required
+                    outlined
+                    dense
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </validation-provider>
+            <br />
+            <v-btn
+              @click="submitForm"
+              color="primary"
+              class="buttoncenters"
+              depressed
+              >บันทึก</v-btn
+            ><v-btn
+              class="buttonleft"
+              @click="gotoPreviuosPage"
+              color="primary"
+              depressed
+              >ย้อนกลับ</v-btn
+            >
+          </v-form>
+        </v-card-text>
+      </validation-observer>
     </v-card>
   </v-app>
 </template>
@@ -61,15 +69,29 @@ import Navbar from "../src/components/Navbar";
 import jwt_decode from "jwt-decode";
 import { getAPI, axiosBase } from "../axios-api";
 import { mapState } from "vuex";
+import { required, digits, email, max, regex } from "vee-validate/dist/rules";
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode,
+} from "vee-validate";
+setInteractionMode("eager");
+extend("digits", { ...digits, message: "{_field_} เป็นตัวเลข {length} หลัก" });
+extend("required", { ...required, message: "{_field_} ไม่สามารถเว้นว่างได้" });
+extend("max", { ...max, message: "{_field_} ไม่เกิน {length} หลัก" });
+extend("regex", { ...regex, message: "{_field_} {_value_} รูปแบบไม่ถูกต้อง " });
+extend("email", { ...email, message: "อีเมลต้องอยู่ในรูปแบบที่ถูกต้อง" });
 export default {
   name: "Talent",
-  components: { Navbar },
+  components: { ValidationObserver, ValidationProvider, Navbar },
   data() {
     return {
       talent: {},
       talents: [],
       accountid: {},
       messagecreate: "",
+      title: "ความสามารถพิเศษ",
       headerstalent: [
         { text: "ความสามารถด้าน", align: "center", sortable: false },
         { text: "รายอะเอียด", align: "center", sortable: false },
@@ -85,6 +107,16 @@ export default {
   methods: {
     submitForm() {
       this.createTalent();
+    },
+    getSuccessCreateMessage() {
+      let message = "เพิ่มข้อมูลสำเร็จ";
+      let options = {
+        okText: "ปิด",
+        cancelText: "Cancel",
+        animation: "bounce",
+        type: "basic",
+      };
+      this.$dialog.alert(message, options);
     },
     setFormData() {
       this.talent = {};
@@ -132,7 +164,6 @@ export default {
           {
             accountid: this.accountid,
             name: this.talent.name,
-            detail: this.talent.detail,
           },
           {
             headers: {
@@ -143,6 +174,8 @@ export default {
         .then(() => {
           this.getAPIData();
           this.setFormData();
+          this.gotoPreviuosPage();
+          this.getSuccessCreateMessage();
         })
         .catch((err) => {
           console.log(err);
